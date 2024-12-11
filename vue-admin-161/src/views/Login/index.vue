@@ -55,14 +55,24 @@ export default {
       }
     }
   },
+  created() {
+    const userPassObj = JSON.parse(localStorage.getItem('userpass'))
+    if (userPassObj) {
+      this.formData = userPassObj
+    }
+  },
   methods: {
     async login() {
       await this.$refs.form.validate()
-      console.log('通过了')
-      this.$store.dispatch('user/loginActions', {
+      await this.$store.dispatch('user/loginActions', {
         username: this.formData.username,
         password: this.formData.password
       })
+      if (this.formData.remember) {
+        localStorage.setItem('userpass', JSON.stringify(this.formData))
+      } else {
+        localStorage.removeItem('userpass')
+      }
     }
   }
 }
