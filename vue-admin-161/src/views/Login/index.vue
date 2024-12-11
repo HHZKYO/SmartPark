@@ -73,7 +73,7 @@ export default {
       } else {
         localStorage.removeItem('userpass')
       }
-      this.$router.replace('/workbench')
+      this.$router.replace(this.$route.query.redirect || '/workbench')
     }
   }
 }

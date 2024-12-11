@@ -27,7 +27,7 @@ service.interceptors.response.use(
     Message.error(error.response.data.msg)
     if (error.response.status === 401) {
       // 1. 跳转到登录
-      router.push('/login')
+      router.push(`/login?redirect=${router.currentRoute.fullPath}`)
       // 2. 清空用户数据
       store.commit('user/delTokens')
     }
