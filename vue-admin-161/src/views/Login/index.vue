@@ -59,6 +59,10 @@ export default {
     async login() {
       await this.$refs.form.validate()
       console.log('通过了')
+      this.$store.dispatch('user/loginActions', {
+        username: this.formData.username,
+        password: this.formData.password
+      })
     }
   }
 }
