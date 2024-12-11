@@ -5,3 +5,11 @@ vue-admin-161/npm-debug.log*
 vue-admin-161/yarn-debug.log*
 vue-admin-161/yarn-error.log*
 vue-admin-161/tests/**/coverage/
+
+vue-admin-161/.idea/
+vue-admin-161/.vscode/
+vue-admin-161/*.suo
+vue-admin-161/*.ntvs*
+vue-admin-161/*.njsproj
+vue-admin-161/*.sln
+vue-admin-161/*.lock
