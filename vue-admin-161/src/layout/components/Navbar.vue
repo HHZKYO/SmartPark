@@ -27,6 +27,7 @@ export default {
   methods: {
     // 退出登录
     logout() {
+      this.$store.commit('user/delTokens')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }
