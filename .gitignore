@@ -1,0 +1,7 @@
+vue-admin-161/.DS_Store
+vue-admin-161/node_modules/
+vue-admin-161/dist/
+vue-admin-161/npm-debug.log*
+vue-admin-161/yarn-debug.log*
+vue-admin-161/yarn-error.log*
+vue-admin-161/tests/**/coverage/
