@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+import store from '@/store'
 
 export const routes = [
   {
@@ -142,5 +143,20 @@ export function resetRouter() {
   // 使用新的路由记录覆盖掉老的路由记录
   router.matcher = newRouter.matcher
 }
+
+// 页面权限拦截
+router.beforeEach((to, from, next) => {
+  const token = store.state.user.token
+  const whiteList = ['/login']
+  if (token) {
+    next()
+  } else {
+    if (whiteList.includes(to.path)) {
+      next()
+    } else {
+      next('/login')
+    }
+  }
+})
 
 export default router
