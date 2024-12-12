@@ -7,7 +7,7 @@ vue-admin-161/yarn-error.log*
 vue-admin-161/tests/**/coverage/
 
 vue-admin-161/.idea/
-vue-admin-161/.vscode/
+.vscode/
 vue-admin-161/*.suo
 vue-admin-161/*.ntvs*
 vue-admin-161/*.njsproj
