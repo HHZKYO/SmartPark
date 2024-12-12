@@ -26,6 +26,7 @@
         <el-table-column label="车牌号码" prop="carNumber" />
         <el-table-column label="车辆品牌" prop="carBrand" />
         <el-table-column label="剩余有效天数" prop="totalEffectiveDate" />
+        <el-table-column label="状态" prop="cardStatus" :formatter="formatterFn" />
         <el-table-column label="操作" fixed="right" width="180">
           <template>
             <el-button size="mini" type="text">续费</el-button>
@@ -60,9 +61,18 @@ export default {
     this.getList()
   },
   methods: {
+    // 获取月卡列表
     async getList() {
       const res = await getCardListAPI(this.query)
       this.tableData = res.data.rows
+    },
+    // 格式化状态列内容
+    formatterFn(row) {
+      const keyObj = {
+        0: '可用',
+        1: '已过期'
+      }
+      return keyObj[row.cardStatus]
     }
   }
 }
