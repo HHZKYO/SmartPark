@@ -39,7 +39,14 @@
     </div>
     <!-- 分页 -->
     <div class="page-container">
-      <el-pagination layout="total, prev, pager, next" :total="0" />
+      <el-pagination
+        layout="total, prev, pager, next, sizes"
+        :total="total"
+        :page-sizes="[2, 4, 6, 8, 10]"
+        :page-size="query.pageSize"
+        @current-change="currentChangeFn"
+        @size-change="sizeChangeFn"
+      />
     </div>
   </div>
 </template>
@@ -52,9 +59,10 @@ export default {
     return {
       query: {
         page: 1,
-        pageSize: 10
+        pageSize: 2
       },
-      tableData: []
+      tableData: [],
+      total: 0
     }
   },
   created() {
@@ -65,6 +73,7 @@ export default {
     async getList() {
       const res = await getCardListAPI(this.query)
       this.tableData = res.data.rows
+      this.total = res.data.total
     },
     // 格式化状态列内容
     formatterFn(row) {
@@ -73,6 +82,14 @@ export default {
         1: '已过期'
       }
       return keyObj[row.cardStatus]
+    },
+    currentChangeFn(nowPage) {
+      this.query.page = nowPage
+      this.getList()
+    },
+    sizeChangeFn(pageSize) {
+      this.query.pageSize = pageSize
+      this.getList()
     }
   }
 }
