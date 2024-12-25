@@ -121,6 +121,10 @@ export const routes = [
     ]
   },
   {
+    path: '/add-card',
+    component: () => import('@/views/Car/CarCard/addCard.vue')
+  },
+  {
     path: '*',
     component: () => import('@/views/404'),
     hidden: true
