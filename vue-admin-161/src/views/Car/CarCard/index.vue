@@ -25,7 +25,11 @@
           :value="item.value"
         />
       </el-select>
-      <el-button type="primary" class="search-btn">查询</el-button>
+      <el-button
+        type="primary"
+        class="search-btn"
+        @click="searchFn"
+      >查询</el-button>
     </div>
     <!-- 新增删除操作区域 -->
     <div class="create-container">
@@ -115,12 +119,19 @@ export default {
       }
       return keyObj[row.cardStatus]
     },
+    // 页码切换
     currentChangeFn(nowPage) {
       this.query.page = nowPage
       this.getList()
     },
+    // 条数切换
     sizeChangeFn(pageSize) {
       this.query.pageSize = pageSize
+      this.getList()
+    },
+    // 查询按钮点击
+    searchFn() {
+      this.query.page = 1
       this.getList()
     }
   }
