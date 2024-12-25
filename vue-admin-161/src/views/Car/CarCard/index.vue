@@ -3,12 +3,27 @@
     <!-- 搜索区域 -->
     <div class="search-container">
       <span class="search-label">车牌号码：</span>
-      <el-input clearable placeholder="请输入内容" class="search-main" />
+      <el-input
+        v-model="query.carNumber"
+        clearable
+        placeholder="请输入内容"
+        class="search-main"
+      />
       <span class="search-label">车主姓名：</span>
-      <el-input clearable placeholder="请输入内容" class="search-main" />
+      <el-input
+        v-model="query.personName"
+        clearable
+        placeholder="请输入内容"
+        class="search-main"
+      />
       <span class="search-label">状态：</span>
-      <el-select value="">
-        <el-option v-for="item in []" :key="item.id" />
+      <el-select v-model="query.cardStatus">
+        <el-option
+          v-for="item in statusList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
       </el-select>
       <el-button type="primary" class="search-btn">查询</el-button>
     </div>
@@ -59,10 +74,27 @@ export default {
     return {
       query: {
         page: 1,
-        pageSize: 2
+        pageSize: 2,
+        cardStatus: '',
+        carNumber: '',
+        personName: ''
       },
       tableData: [],
-      total: 0
+      total: 0,
+      statusList: [
+        {
+          value: '',
+          label: '全部'
+        },
+        {
+          value: '0',
+          label: '可用'
+        },
+        {
+          value: '1',
+          label: '已过期'
+        }
+      ]
     }
   },
   created() {
