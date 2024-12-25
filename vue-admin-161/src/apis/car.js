@@ -12,3 +12,16 @@ export function getCardListAPI(params) {
     params
   })
 }
+
+/**
+ *
+ * @param {*} data
+ * @returns
+ */
+export function createCardAPI(data) {
+  return request({
+    url: '/parking/card',
+    method: 'POST',
+    data
+  })
+}

@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import { createCardAPI } from '@/apis/car'
 import { validCarNum, validChineseName, validMobile } from '@/utils/validate'
 
 export default {
@@ -170,6 +171,18 @@ export default {
     async confirmAdd() {
       await this.$refs.carInfo.validate()
       await this.$refs.feeForm.validate()
+
+      // 对数据进行处理后再交给后台
+      const obj = {
+        ...this.carInfoForm,
+        ...this.feeForm
+      }
+      obj.cardStartDate = this.feeForm.payTime[0]
+      obj.cardEndDate = this.feeForm.payTime[1]
+      delete obj.payTime
+      const res = await createCardAPI(obj)
+      console.log(res)
+      this.$router.back()
     }
   }
 }
