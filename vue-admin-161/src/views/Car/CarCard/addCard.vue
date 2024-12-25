@@ -7,7 +7,7 @@
       <div class="form-container">
         <div class="title">车辆信息</div>
         <div class="form">
-          <el-form :model="carInfoForm" :rules="carInfoRules" label-width="100px">
+          <el-form ref="carInfo" :model="carInfoForm" :rules="carInfoRules" label-width="100px">
             <el-form-item label="车主姓名" prop="personName">
               <el-input v-model="carInfoForm.personName" />
             </el-form-item>
@@ -26,7 +26,7 @@
       <div class="form-container">
         <div class="title">最新一次月卡缴费信息</div>
         <div class="form">
-          <el-form :model="feeForm" :rules="feeFormRules" label-width="100px">
+          <el-form ref="feeForm" :model="feeForm" :rules="feeFormRules" label-width="100px">
             <el-form-item label="有效日期" prop="payTime">
               <el-date-picker
                 v-model="feeForm.payTime"
@@ -58,7 +58,7 @@
     <footer class="add-footer">
       <div class="btn-container">
         <el-button>重置</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="confirmAdd">确定</el-button>
       </div>
     </footer>
   </div>
@@ -72,10 +72,10 @@ export default {
     return {
       // 车辆信息表单对象
       carInfoForm: {
-        personName: '',
-        phoneNumber: '',
-        carNumber: '',
-        carBrand: ''
+        personName: '小明',
+        phoneNumber: '13539999999',
+        carNumber: '京A00001',
+        carBrand: '123'
       },
       // 车辆信息校验对象
       carInfoRules: {
@@ -110,9 +110,9 @@ export default {
       },
       // 缴费信息表单
       feeForm: {
-        payTime: [], // 支付时间
-        paymentAmount: null, // 支付金额
-        paymentMethod: null // 支付方式
+        payTime: ['2024-09-02', '2024-12-10'], // 支付时间
+        paymentAmount: 123, // 支付金额
+        paymentMethod: 'weChat' // 支付方式
       },
       // 缴费规则
       feeFormRules: {
@@ -166,6 +166,10 @@ export default {
     validatorCarNumber(rule, value, callback) {
       if (validCarNum(value)) callback()
       else callback(new Error('请输入正确的车牌号'))
+    },
+    async confirmAdd() {
+      await this.$refs.carInfo.validate()
+      await this.$refs.feeForm.validate()
     }
   }
 }
