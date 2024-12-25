@@ -57,7 +57,7 @@
     </main>
     <footer class="add-footer">
       <div class="btn-container">
-        <el-button>重置</el-button>
+        <el-button @click="resetFn">重置</el-button>
         <el-button type="primary" @click="confirmAdd">确定</el-button>
       </div>
     </footer>
@@ -73,10 +73,10 @@ export default {
     return {
       // 车辆信息表单对象
       carInfoForm: {
-        personName: '小明',
-        phoneNumber: '13539999999',
-        carNumber: '京A00001',
-        carBrand: '123'
+        personName: '',
+        phoneNumber: '',
+        carNumber: '',
+        carBrand: ''
       },
       // 车辆信息校验对象
       carInfoRules: {
@@ -111,9 +111,9 @@ export default {
       },
       // 缴费信息表单
       feeForm: {
-        payTime: ['2024-09-02', '2024-12-10'], // 支付时间
-        paymentAmount: 123, // 支付金额
-        paymentMethod: 'weChat' // 支付方式
+        payTime: [], // 支付时间
+        paymentAmount: null, // 支付金额
+        paymentMethod: null // 支付方式
       },
       // 缴费规则
       feeFormRules: {
@@ -155,6 +155,19 @@ export default {
       ]
     }
   },
+  mounted() {
+    this.carInfoForm = {
+      personName: '小明',
+      phoneNumber: '13899999999',
+      carNumber: '桂A123456',
+      carBrand: '123'
+    }
+    this.feeForm = {
+      payTime: ['2014-01-01', '2025-02-09'],
+      paymentAmount: 123,
+      paymentMethod: 'weChat'
+    }
+  },
   methods: {
     validatorPersonName(rule, value, callback) {
       if (validChineseName(value)) callback()
@@ -183,6 +196,11 @@ export default {
       const res = await createCardAPI(obj)
       console.log(res)
       this.$router.back()
+    },
+    // 重置表单
+    resetFn() {
+      this.$refs.carInfo.resetFields()
+      this.$refs.feeForm.resetFields()
     }
   }
 }
