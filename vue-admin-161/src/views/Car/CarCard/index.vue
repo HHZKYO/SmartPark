@@ -47,10 +47,10 @@
         <el-table-column label="剩余有效天数" prop="totalEffectiveDate" />
         <el-table-column label="状态" prop="cardStatus" :formatter="formatterFn" />
         <el-table-column label="操作" fixed="right" width="180">
-          <template>
+          <template #default="scope">
             <el-button size="mini" type="text">续费</el-button>
             <el-button size="mini" type="text">查看</el-button>
-            <el-button size="mini" type="text">编辑</el-button>
+            <el-button size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
             <el-button size="mini" type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -133,6 +133,10 @@ export default {
     searchFn() {
       this.query.page = 1
       this.getList()
+    },
+    // 编辑月卡信息
+    edit(id) {
+      this.$router.push(`/add-card?id=${id}`)
     }
   }
 }
