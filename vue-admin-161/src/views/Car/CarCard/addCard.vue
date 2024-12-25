@@ -64,6 +64,8 @@
 </template>
 
 <script>
+import { validCarNum, validChineseName, validMobile } from '@/utils/validate'
+
 export default {
   data() {
     return {
@@ -81,22 +83,21 @@ export default {
             required: true, message: '请输入车主姓名', trigger: 'blur'
           },
           {
-            pattern: /^[\u4e00-\u9fa5]{2,10}$/, message: '只能是中文', trigger: 'blur'
+            validator: this.validatorPersonName, trigger: 'blur'
           }
         ],
         phoneNumber: [
           {
             required: true, message: '请输入联系方式', trigger: 'blur'
           },
-          { pattern: /^1[34578]\d{9}$/, message: '请输入正确格式手机号' }
+          { validator: this.validatorPersonMobile, trigger: 'blur' }
         ],
         carNumber: [
           {
             required: true, message: '请输入车辆号码', trigger: 'blur'
           },
           {
-            pattern:  /^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使]{1}[A-Z]{1}[A-Z0-9]{5,6}$/,
-            message: '请输入正确的车牌号',
+            validator: this.validatorCarNumber,
             trigger: 'blur'
           }
         ],
@@ -106,6 +107,20 @@ export default {
           }
         ]
       }
+    }
+  },
+  methods: {
+    validatorPersonName(rule, value, callback) {
+      if (validChineseName(value)) callback()
+      else callback(new Error('请输入正确的中文名2-10位'))
+    },
+    validatorPersonMobile(rule, value, callback) {
+      if (validMobile(value)) callback()
+      else callback(new Error('请输入正确的手机号'))
+    },
+    validatorCarNumber(rule, value, callback) {
+      if (validCarNum(value)) callback()
+      else callback(new Error('请输入正确的车牌号'))
     }
   }
 }
