@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { createCardAPI } from '@/apis/car'
+import { createCardAPI, getCardDetailAPI } from '@/apis/car'
 import { validCarNum, validChineseName, validMobile } from '@/utils/validate'
 
 export default {
@@ -156,26 +156,34 @@ export default {
     }
   },
   computed: {
+    id() {
+      return this.$route.query.id
+    },
     title() {
-      if (this.$route.query.id) {
+      if (this.id) {
         return '编辑月卡'
       } else {
         return '增加月卡'
       }
     }
   },
+  created() {
+    if (this.id) {
+      this.getDetail()
+    }
+  },
   mounted() {
-    this.carInfoForm = {
-      personName: '小明',
-      phoneNumber: '13899999999',
-      carNumber: '桂A123456',
-      carBrand: '123'
-    }
-    this.feeForm = {
-      payTime: ['2014-01-01', '2025-02-09'],
-      paymentAmount: 123,
-      paymentMethod: 'weChat'
-    }
+    // this.carInfoForm = {
+    //   personName: '小明',
+    //   phoneNumber: '13899999999',
+    //   carNumber: '桂A123456',
+    //   carBrand: '123'
+    // }
+    // this.feeForm = {
+    //   payTime: ['2014-01-01', '2025-02-09'],
+    //   paymentAmount: 123,
+    //   paymentMethod: 'weChat'
+    // }
   },
   methods: {
     validatorPersonName(rule, value, callback) {
@@ -210,6 +218,11 @@ export default {
     resetFn() {
       this.$refs.carInfo.resetFields()
       this.$refs.feeForm.resetFields()
+    },
+    // 获取月卡详情数据
+    async getDetail() {
+      const res = await getCardDetailAPI(this.id)
+      console.log(res)
     }
   }
 }
