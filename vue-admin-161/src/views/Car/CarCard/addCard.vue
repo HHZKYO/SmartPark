@@ -222,7 +222,17 @@ export default {
     // 获取月卡详情数据
     async getDetail() {
       const res = await getCardDetailAPI(this.id)
-      console.log(res)
+      for (const key in this.carInfoForm) {
+        this.carInfoForm[key] = res.data[key]
+      }
+      for (const key in this.feeForm) {
+        if (key === 'payTime') {
+          const { cardStartDate, cardEndDate } = res.data
+          this.feeForm.payTime = [cardStartDate, cardEndDate]
+        } else {
+          this.feeForm[key] = res.data[key]
+        }
+      }
     }
   }
 }
