@@ -34,7 +34,7 @@
     <!-- 新增删除操作区域 -->
     <div class="create-container">
       <el-button type="primary" @click="$router.push('/add-card')">添加月卡</el-button>
-      <el-button>批量删除</el-button>
+      <el-button @click="dels">批量删除</el-button>
     </div>
     <!-- 表格区域 -->
     <div class="table">
@@ -82,7 +82,7 @@ export default {
     return {
       query: {
         page: 1,
-        pageSize: 2,
+        pageSize: 10,
         cardStatus: '',
         carNumber: '',
         personName: ''
@@ -102,7 +102,8 @@ export default {
           value: '1',
           label: '已过期'
         }
-      ]
+      ],
+      selectedCarList: []
     }
   },
   created() {
@@ -165,7 +166,13 @@ export default {
     // 表格选择的选项发生变化时
     handleSelectionChange(val) {
       // val：是选中的这些行的数据对象的数组集合
-      console.log(val)
+      this.selectedCarList = val
+    },
+    // 批量删除
+    async dels() {
+      const ids = this.selectedCarList.map(obj => obj.id)
+      await delCardAPI(ids.join(','))
+      this.getList()
     }
   }
 }
