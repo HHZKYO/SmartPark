@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { createCardAPI, getCardDetailAPI } from '@/apis/car'
+import { createCardAPI, getCardDetailAPI, updateCardAPI } from '@/apis/car'
 import { validCarNum, validChineseName, validMobile } from '@/utils/validate'
 
 export default {
@@ -210,8 +210,11 @@ export default {
       obj.cardStartDate = this.feeForm.payTime[0]
       obj.cardEndDate = this.feeForm.payTime[1]
       delete obj.payTime
-      const res = await createCardAPI(obj)
-      console.log(res)
+      if (this.id) {
+        await updateCardAPI(obj)
+      } else {
+        await createCardAPI(obj)
+      }
       this.$router.back()
     },
     // 重置表单
@@ -233,6 +236,8 @@ export default {
           this.feeForm[key] = res.data[key]
         }
       }
+      this.carInfoForm.carInfoId = res.data.carInfoId
+      this.feeForm.rechargeId = res.data.rechargeId
     }
   }
 }
