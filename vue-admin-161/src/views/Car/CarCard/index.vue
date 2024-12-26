@@ -38,7 +38,11 @@
     </div>
     <!-- 表格区域 -->
     <div class="table">
-      <el-table style="width: 100%" :data="tableData">
+      <el-table style="width: 100%" :data="tableData" @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55"
+        />
         <el-table-column type="index" label="序号" />
         <el-table-column label="车主名称" prop="personName" />
         <el-table-column label="联系方式" prop="phoneNumber" />
@@ -157,6 +161,11 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    // 表格选择的选项发生变化时
+    handleSelectionChange(val) {
+      // val：是选中的这些行的数据对象的数组集合
+      console.log(val)
     }
   }
 }
