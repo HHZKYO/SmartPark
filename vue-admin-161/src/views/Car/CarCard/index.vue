@@ -51,7 +51,7 @@
             <el-button size="mini" type="text">续费</el-button>
             <el-button size="mini" type="text">查看</el-button>
             <el-button size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
-            <el-button size="mini" type="text">删除</el-button>
+            <el-button size="mini" type="text" @click="del(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { getCardListAPI } from '@/apis/car'
+import { delCardAPI, getCardListAPI } from '@/apis/car'
 
 export default {
   data() {
@@ -137,6 +137,11 @@ export default {
     // 编辑月卡信息
     edit(id) {
       this.$router.push(`/add-card?id=${id}`)
+    },
+    // 删除
+    async del(id) {
+      await delCardAPI(id)
+      this.getList()
     }
   }
 }
