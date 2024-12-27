@@ -47,6 +47,7 @@
                 :show-file-list="false"
                 :on-success="handleLicenseSuccess"
                 :before-upload="beforeLicenseUpload"
+                :http-request="uploadFn"
               >
                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon" />
@@ -82,7 +83,7 @@ export default {
         businessLicenseId: '' // 营业执照id
       },
       industryList: [], // 行业列表
-      imageUrl: '' //营业执照图片地址
+      imageUrl: '' // 营业执照图片地址
     }
   },
   created() {
@@ -101,6 +102,14 @@ export default {
     // 营业执照上传前的回调
     beforeLicenseUpload() {
 
+    },
+    // 自定义上传过程(要自定义的原因：
+    // upload组件内有原生的AJAX请求传递所选择的文件到action指定的后台接口)
+    uploadFn(fileObj) {
+      const theFile = fileObj.file
+      // URL.createObjectURL把文件数据流转成一个前端临时的URL地址做纯前端预览（文件->地址)
+      // 现在需要把File文件->Blob数据流
+      this.imageUrl = URL.createObjectURL(theFile)
     }
   }
 }
