@@ -11,11 +11,11 @@
     </div>
     <!-- 表格区域 -->
     <div class="table">
-      <el-table style="width: 100%" :data="[]">
+      <el-table style="width: 100%" :data="enterpriseList">
         <el-table-column type="index" label="序号" />
-        <el-table-column label="企业名称" width="320" />
-        <el-table-column label="联系人" />
-        <el-table-column label="联系电话" />
+        <el-table-column label="企业名称" width="320" prop="name" />
+        <el-table-column label="联系人" prop="contact" />
+        <el-table-column label="联系电话" prop="contactNumber" />
         <el-table-column label="操作">
           <template>
             <el-button size="mini" type="text">添加合同</el-button>
@@ -33,6 +33,31 @@
     </div>
   </div>
 </template>
+
+<script>
+import { getEnterpriseListAPI } from '@/apis/park'
+
+export default {
+  data() {
+    return {
+      params: { // 查询参数
+        page: 1,
+        pageSize: 10
+      },
+      enterpriseList: [] // 企业列表
+    }
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    async getList() {
+      const res = await getEnterpriseListAPI(this.params)
+      this.enterpriseList = res.data.rows
+    }
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 .department-container {
