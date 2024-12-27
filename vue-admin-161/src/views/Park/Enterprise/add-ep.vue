@@ -44,10 +44,11 @@
               <el-upload
                 class="avatar-uploader"
                 action="https://api-hmzs.itheima.net/v1/upload"
+                :headers="{Authorization: `Bearer ${$store.state.user.token}`}"
+                :data="{type: 'businessLicense'}"
                 :show-file-list="false"
                 :on-success="handleLicenseSuccess"
                 :before-upload="beforeLicenseUpload"
-                :http-request="uploadFn"
               >
                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon" />
@@ -96,8 +97,8 @@ export default {
       this.industryList = res.data
     },
     // 营业执照上传成功的回调
-    handleLicenseSuccess() {
-
+    handleLicenseSuccess(res) {
+      this.imageUrl = res.data.url
     },
     // 营业执照上传前的回调
     beforeLicenseUpload() {
