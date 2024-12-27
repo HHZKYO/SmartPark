@@ -40,7 +40,18 @@
             <el-form-item label="联系电话">
               <el-input v-model="addForm.contactNumber" />
             </el-form-item>
-            <el-form-item label="营业执照" />
+            <el-form-item label="营业执照">
+              <el-upload
+                class="avatar-uploader"
+                action="https://api-hmzs.itheima.net/v1/upload"
+                :show-file-list="false"
+                :on-success="handleLicenseSuccess"
+                :before-upload="beforeLicenseUpload"
+              >
+                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon" />
+              </el-upload>
+            </el-form-item>
           </el-form>
         </div>
       </div>
@@ -70,16 +81,26 @@ export default {
         businessLicenseUrl: '', // 营业执照url
         businessLicenseId: '' // 营业执照id
       },
-      industryList: [] // 行业列表
+      industryList: [], // 行业列表
+      imageUrl: '' //营业执照图片地址
     }
   },
   created() {
     this.getIndustryList()
   },
   methods: {
+    // 获取行业列表
     async getIndustryList() {
       const res = await getIndustryListAPI()
       this.industryList = res.data
+    },
+    // 营业执照上传成功的回调
+    handleLicenseSuccess() {
+
+    },
+    // 营业执照上传前的回调
+    beforeLicenseUpload() {
+
     }
   }
 }
@@ -149,5 +170,28 @@ export default {
     background: #fff;
     text-align: center;
   }
+}
+::v-deep .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+::v-deep .avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+::v-deep .avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+::v-deep .avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }
 </style>
