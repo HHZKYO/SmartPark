@@ -3,8 +3,8 @@
     <!-- 搜索区域 -->
     <div class="search-container">
       <div class="search-label">企业名称：</div>
-      <el-input clearable placeholder="请输入内容" class="search-main" />
-      <el-button type="primary">查询</el-button>
+      <el-input v-model="params.name" clearable placeholder="请输入内容" class="search-main" />
+      <el-button type="primary" @click="searchFn">查询</el-button>
     </div>
     <div class="create-container">
       <el-button type="primary">添加企业</el-button>
@@ -45,7 +45,8 @@ export default {
     return {
       params: { // 查询参数
         page: 1, // 这是指第几页
-        pageSize: 2 // 这是每一页的条数
+        pageSize: 2, // 这是每一页的条数
+        name: '' // 要查询的企业名字
       },
       enterpriseList: [], // 企业列表
       enterpriseTotal: 0
@@ -64,6 +65,10 @@ export default {
     // 页码切换
     currentChangeFn(page) {
       this.params.page = page
+      this.getList()
+    },
+    // 企业查询
+    searchFn() {
       this.getList()
     }
   }
