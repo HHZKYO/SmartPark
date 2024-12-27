@@ -121,8 +121,14 @@ export const routes = [
     ]
   },
   {
+    // 行车管理-月卡管理-新增月卡
     path: '/add-card',
     component: () => import('@/views/Car/CarCard/addCard.vue')
+  },
+  {
+    // 园区管理-企业管理-新增企业
+    path: '/add-ep',
+    component: () => import('@/views/Park/Enterprise/add-ep.vue')
   },
   {
     path: '*',
