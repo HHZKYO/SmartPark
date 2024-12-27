@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { getIndustryListAPI } from '@/apis/park'
+import { getIndustryListAPI, uploadAPI } from '@/apis/park'
 
 export default {
   data() {
@@ -104,12 +104,22 @@ export default {
 
     },
     // 自定义上传过程(要自定义的原因：
-    // upload组件内有原生的AJAX请求传递所选择的文件到action指定的后台接口)
-    uploadFn(fileObj) {
+    // upload组件内有原生的AJAX请求传递所选择的文件到action指定的后台接口，而我不想用组件上传)
+    async uploadFn(fileObj) {
       const theFile = fileObj.file
+      // 以下是纯前端预览
       // URL.createObjectURL把文件数据流转成一个前端临时的URL地址做纯前端预览（文件->地址)
       // 现在需要把File文件->Blob数据流
-      this.imageUrl = URL.createObjectURL(theFile)
+      // this.imageUrl = URL.createObjectURL(theFile)
+
+      // 现在希望调用接口给，让服务器端返回图片，再服务器地址浏览
+      // 文件对象->FormData容器对象->发给后台
+      const fd = new FormData()
+      fd.append('file', theFile)
+      fd.append('type', 'businessLicense')
+      const res = await uploadAPI(fd)
+      console.log(res)
+      this.imageUrl = res.data.url // 图片回显
     }
   }
 }

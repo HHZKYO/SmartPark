@@ -21,3 +21,15 @@ export function getIndustryListAPI() {
     url: '/park/industry'
   })
 }
+
+/**
+ * 上传合同
+ * @returns
+ */
+export function uploadAPI(data) {
+  return request({
+    url: '/upload',
+    method: 'POST',
+    data
+  })
+}
