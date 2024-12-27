@@ -11,3 +11,13 @@ export function getEnterpriseListAPI(params) {
     params
   })
 }
+
+/**
+ * 获取行业列表
+ * @returns
+ */
+export function getIndustryListAPI() {
+  return request({
+    url: '/park/industry'
+  })
+}

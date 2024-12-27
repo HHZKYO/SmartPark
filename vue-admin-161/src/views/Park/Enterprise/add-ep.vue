@@ -25,7 +25,14 @@
               <el-input v-model="addForm.registeredAddress" />
             </el-form-item>
             <el-form-item label="所在行业">
-              <el-select v-model="addForm.industryCode" />
+              <el-select v-model="addForm.industryCode">
+                <el-option
+                  v-for="item in industryList"
+                  :key="item.industryCode"
+                  :label="item.industryName"
+                  :value="item.industryCode"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item label="企业联系人">
               <el-input v-model="addForm.contact" />
@@ -48,6 +55,8 @@
 </template>
 
 <script>
+import { getIndustryListAPI } from '@/apis/park'
+
 export default {
   data() {
     return {
@@ -60,7 +69,17 @@ export default {
         contactNumber: '', // 联系人电话
         businessLicenseUrl: '', // 营业执照url
         businessLicenseId: '' // 营业执照id
-      }
+      },
+      industryList: [] // 行业列表
+    }
+  },
+  created() {
+    this.getIndustryList()
+  },
+  methods: {
+    async getIndustryList() {
+      const res = await getIndustryListAPI()
+      this.industryList = res.data
     }
   }
 }
