@@ -29,6 +29,9 @@
     <div class="page-container">
       <el-pagination
         layout="total, prev, pager, next"
+        :total="enterpriseTotal"
+        :page-size="params.pageSize"
+        @current-change="currentChangeFn"
       />
     </div>
   </div>
@@ -41,19 +44,27 @@ export default {
   data() {
     return {
       params: { // 查询参数
-        page: 1,
-        pageSize: 10
+        page: 1, // 这是指第几页
+        pageSize: 2 // 这是每一页的条数
       },
-      enterpriseList: [] // 企业列表
+      enterpriseList: [], // 企业列表
+      enterpriseTotal: 0
     }
   },
   created() {
     this.getList()
   },
   methods: {
+    // 获取列表
     async getList() {
       const res = await getEnterpriseListAPI(this.params)
       this.enterpriseList = res.data.rows
+      this.enterpriseTotal = res.data.total
+    },
+    // 页码切换
+    currentChangeFn(page) {
+      this.params.page = page
+      this.getList()
     }
   }
 }
