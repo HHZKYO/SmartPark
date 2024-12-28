@@ -110,7 +110,7 @@ export default {
           { validator: this.validatorPersonMobile, trigger: 'blur' }
         ],
         businessLicenseId: [
-          { required: true, message: '请上传营业执照', trigger: 'blur' }
+          { required: true, message: '请上传营业执照', trigger: 'change' }
         ]
       }
     }
@@ -176,6 +176,8 @@ export default {
       // 自己的数据要手动关联到表单数据对象的属性中，才能让表单校验通过
       this.addForm.businessLicenseUrl = res.data.url
       this.addForm.businessLicenseId = res.data.id
+      // 单独再对businessLicenseId校验字段做一次校验
+      this.$refs.ruleForm.validateField('businessLicenseId')
     },
     // 新增企业确定事件
     async confirmAdd() {
