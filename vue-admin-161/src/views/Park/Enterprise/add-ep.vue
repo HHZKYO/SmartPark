@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { getIndustryListAPI, uploadAPI } from '@/apis/park'
+import { createEnterpriseAPI, getIndustryListAPI, uploadAPI } from '@/apis/park'
 import { validChineseName, validMobile } from '@/utils/validate'
 
 export default {
@@ -182,6 +182,8 @@ export default {
     // 新增企业确定事件
     async confirmAdd() {
       await this.$refs.ruleForm.validate()
+      await createEnterpriseAPI(this.addForm)
+      this.$router.back()
     }
   }
 }
