@@ -101,8 +101,17 @@ export default {
       this.imageUrl = res.data.url
     },
     // 营业执照上传前的回调
-    beforeLicenseUpload() {
-
+    beforeLicenseUpload(file) {
+      const list = ['image/jpeg', 'image/png'] // MIME媒体类型（参考mdn）
+      const isJPG = list.includes(file.type)
+      const isLt3M = file.size / 1024 / 1024 < 3
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG/JPEG/PNG 格式!')
+      }
+      if (!isLt3M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt3M
     },
     // 自定义上传过程(要自定义的原因：
     // upload组件内有原生的AJAX请求传递所选择的文件到action指定的后台接口，而我不想用组件上传)
