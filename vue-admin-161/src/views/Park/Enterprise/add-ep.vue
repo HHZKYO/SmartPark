@@ -49,6 +49,7 @@
                 :show-file-list="false"
                 :on-success="handleLicenseSuccess"
                 :before-upload="beforeLicenseUpload"
+                :http-request="uploadFn"
               >
                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon" />
@@ -117,6 +118,13 @@ export default {
   created() {
     this.getIndustryList()
   },
+  mounted() {
+    this.addForm.name = '劳动法撒'
+    this.addForm.legalPerson = '地方'
+    this.addForm.registeredAddress = '反对'
+    this.addForm.contact = '等方式'
+    this.addForm.contactNumber = '13628794489'
+  },
   methods: {
     validatorPersonName(rule, value, callback) {
       if (validChineseName(value)) callback()
@@ -133,7 +141,7 @@ export default {
     },
     // 营业执照上传成功的回调
     handleLicenseSuccess(res) {
-      this.imageUrl = res.data.url
+      // this.imageUrl = res.data.url
     },
     // 营业执照上传前的回调
     beforeLicenseUpload(file) {
@@ -165,6 +173,9 @@ export default {
       const res = await uploadAPI(fd)
       console.log(res)
       this.imageUrl = res.data.url // 图片回显
+      // 自己的数据要手动关联到表单数据对象的属性中，才能让表单校验通过
+      this.addForm.businessLicenseUrl = res.data.url
+      this.addForm.businessLicenseId = res.data.id
     },
     // 新增企业确定事件
     async confirmAdd() {
