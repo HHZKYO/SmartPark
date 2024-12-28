@@ -14,17 +14,17 @@
       <div class="form-container">
         <div class="title">企业信息</div>
         <div class="form">
-          <el-form ref="ruleForm" label-width="100px">
-            <el-form-item label="企业名称">
+          <el-form ref="ruleForm" label-width="100px" :model="addForm" :rules="addRules">
+            <el-form-item label="企业名称" prop="name">
               <el-input v-model="addForm.name" />
             </el-form-item>
-            <el-form-item label="法人">
+            <el-form-item label="法人" prop="legalPerson">
               <el-input v-model="addForm.legalPerson" />
             </el-form-item>
-            <el-form-item label="注册地址">
+            <el-form-item label="注册地址" prop="registeredAddress">
               <el-input v-model="addForm.registeredAddress" />
             </el-form-item>
-            <el-form-item label="所在行业">
+            <el-form-item label="所在行业" prop="industryCode">
               <el-select v-model="addForm.industryCode">
                 <el-option
                   v-for="item in industryList"
@@ -34,13 +34,13 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="企业联系人">
+            <el-form-item label="企业联系人" prop="contact">
               <el-input v-model="addForm.contact" />
             </el-form-item>
-            <el-form-item label="联系电话">
+            <el-form-item label="联系电话" prop="contactNumber">
               <el-input v-model="addForm.contactNumber" />
             </el-form-item>
-            <el-form-item label="营业执照">
+            <el-form-item label="营业执照" prop="businessLicenseId">
               <el-upload
                 class="avatar-uploader"
                 action="https://api-hmzs.itheima.net/v1/upload"
@@ -61,7 +61,7 @@
     <footer class="add-footer">
       <div class="btn-container">
         <el-button>重置</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="confirmAdd">确定</el-button>
       </div>
     </footer>
   </div>
@@ -69,6 +69,7 @@
 
 <script>
 import { getIndustryListAPI, uploadAPI } from '@/apis/park'
+import { validChineseName, validMobile } from '@/utils/validate'
 
 export default {
   data() {
@@ -84,13 +85,47 @@ export default {
         businessLicenseId: '' // 营业执照id
       },
       industryList: [], // 行业列表
-      imageUrl: '' // 营业执照图片地址
+      imageUrl: '', // 营业执照图片地址
+      addRules: {
+        name: [
+          { required: true, message: '企业名称为必填', trigger: 'blur' }
+        ],
+        legalPerson: [
+          { required: true, message: '法人为必填', trigger: 'blur' },
+          { validator: this.validatorPersonName, trigger: 'blur' }
+        ],
+        registeredAddress: [
+          { required: true, message: '注册地址为必填', trigger: 'blur' }
+        ],
+        industryCode: [
+          { required: true, message: '所在行业为必填', trigger: 'change' }
+        ],
+        contact: [
+          { required: true, message: '企业联系人为必填', trigger: 'blur' },
+          { validator: this.validatorPersonName, trigger: 'blur' }
+        ],
+        contactNumber: [
+          { required: true, message: '企业联系人电话为必填', trigger: 'blur' },
+          { validator: this.validatorPersonMobile, trigger: 'blur' }
+        ],
+        businessLicenseId: [
+          { required: true, message: '请上传营业执照', trigger: 'blur' }
+        ]
+      }
     }
   },
   created() {
     this.getIndustryList()
   },
   methods: {
+    validatorPersonName(rule, value, callback) {
+      if (validChineseName(value)) callback()
+      else callback(new Error('请输入正确的中文名2-10位'))
+    },
+    validatorPersonMobile(rule, value, callback) {
+      if (validMobile(value)) callback()
+      else callback(new Error('请输入正确的手机号'))
+    },
     // 获取行业列表
     async getIndustryList() {
       const res = await getIndustryListAPI()
@@ -130,6 +165,10 @@ export default {
       const res = await uploadAPI(fd)
       console.log(res)
       this.imageUrl = res.data.url // 图片回显
+    },
+    // 新增企业确定事件
+    async confirmAdd() {
+      await this.$refs.ruleForm.validate()
     }
   }
 }
