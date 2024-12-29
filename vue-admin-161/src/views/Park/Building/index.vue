@@ -28,7 +28,17 @@
           </template>
         </el-table-column>
       </el-table>
-
+    </div>
+    <div class="page-container">
+      <el-pagination
+        background
+        layout="total, prev, pager, next, sizes"
+        :total="buildingTotal"
+        :page-sizes="[2, 4, 6, 8, 10]"
+        :page-size="params.pageSize"
+        @current-change="currentChangeFn"
+        @size-change="sizeChangeFn"
+      />
     </div>
   </div>
 </template>
@@ -42,10 +52,11 @@ export default {
     return {
       params: {
         name: '',
-        page: '1',
-        pageSize: '4'
+        page: 1,
+        pageSize: 4
       },
-      buildingList: []
+      buildingList: [],
+      buildingTotal: 0
     }
   },
   created() {
@@ -55,8 +66,19 @@ export default {
     // 获取楼宇列表
     async getBuildingList() {
       const res = await getBuildingListAPI(this.params)
-      console.log(res.data.rows)
+      console.log(res)
       this.buildingList = res.data.rows
+      this.buildingTotal = res.data.total
+    },
+    // 页码切换
+    currentChangeFn(nowPage) {
+      this.params.page = nowPage
+      this.getBuildingList()
+    },
+    // 条数切换
+    sizeChangeFn(pageSize) {
+      this.params.pageSize = pageSize
+      this.getBuildingList()
     }
   }
 }
@@ -79,4 +101,8 @@ export default {
     margin-right: 10px;
   }
 }
+.page-container{
+    padding:4px 0px;
+    text-align: right;
+  }
 </style>
