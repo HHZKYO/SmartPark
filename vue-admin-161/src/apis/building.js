@@ -11,3 +11,11 @@ export function getBuildingListAPI(params) {
     params
   })
 }
+
+export function addBuildingAPI(data) {
+  return request({
+    url: '/park/building',
+    method: 'POST',
+    data
+  })
+}

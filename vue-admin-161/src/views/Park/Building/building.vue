@@ -34,13 +34,15 @@
     <footer class="add-footer">
       <div class="btn-container">
         <el-button>重置</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="confirm">确定</el-button>
       </div>
     </footer>
   </div>
 </template>
 
 <script>
+import { addBuildingAPI } from '@/apis/building'
+
 export default {
   data() {
     return {
@@ -64,6 +66,13 @@ export default {
           { required: true, message: '请输入楼宇物业费', trigger: 'blur' }
         ]
       }
+    }
+  },
+  methods: {
+    // 新增楼宇
+    async confirm() {
+      await addBuildingAPI(this.addForm)
+      this.$router.back()
     }
   }
 }
