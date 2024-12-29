@@ -61,7 +61,7 @@
     </main>
     <footer class="add-footer">
       <div class="btn-container">
-        <el-button>重置</el-button>
+        <el-button @click="resetFn">重置</el-button>
         <el-button type="primary" @click="confirmAdd">确定</el-button>
       </div>
     </footer>
@@ -215,6 +215,11 @@ export default {
         this.addForm[key] = res.data[key]
       }
       this.imageUrl = res.data.businessLicenseUrl
+    },
+    // 重置企业信息表单
+    resetFn() {
+      this.$refs.ruleForm.resetFields()
+      this.imageUrl = ''
     }
   }
 }
