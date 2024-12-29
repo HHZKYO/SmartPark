@@ -21,7 +21,7 @@
             <el-button size="mini" type="text">添加合同</el-button>
             <el-button size="mini" type="text">查看</el-button>
             <el-button size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
-            <el-button size="mini" type="text">删除</el-button>
+            <el-button size="mini" type="text" @click="del(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { deleteEnterpriseAPI } from '@/apis/enterprise'
 import { getEnterpriseListAPI } from '@/apis/park'
 
 export default {
@@ -74,6 +75,30 @@ export default {
     // 编辑企业信息
     edit(id) {
       this.$router.push(`/add-ep?id=${id}`)
+    },
+    // 删除企业
+    // del(id) {
+    //   deleteEnterpriseAPI(id)
+    //   this.getList()
+    // }
+    del(id) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        await deleteEnterpriseAPI(id)
+        this.getList()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
