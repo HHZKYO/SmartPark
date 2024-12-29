@@ -8,34 +8,14 @@
     </div>
     <!-- 表格区域 -->
     <div class="table">
-      <el-table
-        style="width: 100%"
-      >
-        <el-table-column
-          prop="index"
-          label="序号"
-        />
-        <el-table-column
-          label="楼宇名称"
-          width="180"
-        />
-        <el-table-column
-          label="层数"
-        />
-        <el-table-column
-          label="在管面积(m²)"
-          width="120"
-        />
-        <el-table-column
-          label="物业费(元/m²)"
-          width="120"
-        />
-        <el-table-column
-          label="状态"
-        />
-        <el-table-column
-          label="操作"
-        >
+      <el-table style="width: 100%" :data="buildingList">
+        <el-table-column type="index" label="序号" />
+        <el-table-column label="楼宇名称" width="180" prop="name" />
+        <el-table-column label="层数" prop="floors" />
+        <el-table-column label="在管面积(m²)" width="120" prop="area" />
+        <el-table-column label="物业费(元/m²)" width="120" prop="propertyFeePrice" />
+        <el-table-column label="状态" prop="status" />
+        <el-table-column label="操作">
           <template>
             <el-button
               size="mini"
@@ -54,8 +34,31 @@
 </template>
 
 <script>
+import { getBuildingListAPI } from '@/apis/building'
+
 export default {
-  name: 'Building'
+  name: 'Building',
+  data() {
+    return {
+      params: {
+        name: '',
+        page: '1',
+        pageSize: '4'
+      },
+      buildingList: []
+    }
+  },
+  created() {
+    this.getBuildingList()
+  },
+  methods: {
+    // 获取楼宇列表
+    async getBuildingList() {
+      const res = await getBuildingListAPI(this.params)
+      console.log(res.data.rows)
+      this.buildingList = res.data.rows
+    }
+  }
 }
 </script>
 
