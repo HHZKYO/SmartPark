@@ -46,11 +46,3 @@ export function createEnterpriseAPI(data) {
     data
   })
 }
-
-export function editCompany(data) {
-  return request({
-    url: '/park/enterprise',
-    method: 'PUT',
-    data
-  })
-}

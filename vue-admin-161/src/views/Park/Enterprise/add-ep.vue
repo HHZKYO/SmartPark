@@ -131,11 +131,11 @@ export default {
     this.getIndustryList()
   },
   mounted() {
-    this.addForm.name = '劳动法撒'
-    this.addForm.legalPerson = '地方'
-    this.addForm.registeredAddress = '反对'
-    this.addForm.contact = '等方式'
-    this.addForm.contactNumber = '13628794489'
+    // this.addForm.name = '劳动法撒'
+    // this.addForm.legalPerson = '地方'
+    // this.addForm.registeredAddress = '反对'
+    // this.addForm.contact = '等方式'
+    // this.addForm.contactNumber = '13628794489'
   },
   methods: {
     validatorPersonName(rule, value, callback) {
