@@ -46,3 +46,14 @@ export function createEnterpriseAPI(data) {
     data
   })
 }
+
+/**
+ * 查看企业
+ * @param {*} id
+ * @returns
+ */
+export function getEnterpriseDetailAPI(id) {
+  return request({
+    url: `/park/enterprise/${id}`
+  })
+}

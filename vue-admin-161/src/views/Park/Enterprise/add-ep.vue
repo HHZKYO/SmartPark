@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { createEnterpriseAPI, getIndustryListAPI, uploadAPI } from '@/apis/park'
+import { createEnterpriseAPI, getEnterpriseDetailAPI, getIndustryListAPI, uploadAPI } from '@/apis/park'
 import { validChineseName, validMobile } from '@/utils/validate'
 
 export default {
@@ -129,6 +129,9 @@ export default {
   },
   created() {
     this.getIndustryList()
+    if (this.id) {
+      this.getEnterpriseDetail()
+    }
   },
   mounted() {
     // this.addForm.name = '劳动法撒'
@@ -196,6 +199,11 @@ export default {
       await this.$refs.ruleForm.validate()
       await createEnterpriseAPI(this.addForm)
       this.$router.back()
+    },
+    // 获取企业信息详情
+    async getEnterpriseDetail() {
+      const res = await getEnterpriseDetailAPI(this.id)
+      console.log(res)
     }
   }
 }
