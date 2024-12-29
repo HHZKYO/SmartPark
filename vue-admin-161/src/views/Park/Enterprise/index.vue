@@ -70,6 +70,7 @@ export default {
     },
     // 企业查询
     searchFn() {
+      this.params.page = 1
       this.getList()
     },
     // 编辑企业信息

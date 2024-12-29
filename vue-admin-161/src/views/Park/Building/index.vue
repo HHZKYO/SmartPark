@@ -90,6 +90,7 @@ export default {
     },
     // 楼宇查询
     searchFn() {
+      this.params.page = 1
       this.getBuildingList()
     }
   }
