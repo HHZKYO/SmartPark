@@ -17,10 +17,10 @@
         <el-table-column label="联系人" prop="contact" />
         <el-table-column label="联系电话" prop="contactNumber" />
         <el-table-column label="操作">
-          <template>
+          <template #default="scope">
             <el-button size="mini" type="text">添加合同</el-button>
             <el-button size="mini" type="text">查看</el-button>
-            <el-button size="mini" type="text">编辑</el-button>
+            <el-button size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
             <el-button size="mini" type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -70,6 +70,10 @@ export default {
     // 企业查询
     searchFn() {
       this.getList()
+    },
+    // 编辑企业信息
+    edit(id) {
+      this.$router.push(`/add-ep?id=${id}`)
     }
   }
 }

@@ -4,7 +4,7 @@
       <div class="left">
         <span class="arrow" @click="$router.back()"><i class="el-icon-arrow-left" />返回</span>
         <span>|</span>
-        <span>添加企业</span>
+        <span>{{ title }}</span>
       </div>
       <div class="right">
         黑马程序员
@@ -112,6 +112,18 @@ export default {
         businessLicenseId: [
           { required: true, message: '请上传营业执照', trigger: 'change' }
         ]
+      }
+    }
+  },
+  computed: {
+    id() {
+      return this.$route.query.id
+    },
+    title() {
+      if (this.id) {
+        return '编辑企业'
+      } else {
+        return '添加企业'
       }
     }
   },
