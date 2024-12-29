@@ -131,6 +131,11 @@ export const routes = [
     component: () => import('@/views/Park/Enterprise/add-ep.vue')
   },
   {
+    // 园区管理-楼宇管理-新增楼宇
+    path: '/add-building',
+    component: () => import('@/views/Park/Building/building.vue')
+  },
+  {
     path: '*',
     component: () => import('@/views/404'),
     hidden: true

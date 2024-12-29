@@ -6,6 +6,8 @@
       <el-input v-model="params.name" placeholder="请输入内容" class="search-main" />
       <el-button type="primary" @click="searchFn">查询</el-button>
     </div>
+    <!-- 添加楼宇弹框 -->
+    <el-button type="primary" @click="$router.push('/add-building')">添加楼宇</el-button>
     <!-- 表格区域 -->
     <div class="table">
       <el-table style="width: 100%" :data="buildingList">
@@ -66,7 +68,6 @@ export default {
     // 获取楼宇列表
     async getBuildingList() {
       const res = await getBuildingListAPI(this.params)
-      console.log(res)
       this.buildingList = res.data.rows
       this.buildingTotal = res.data.total
     },
