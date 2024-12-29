@@ -3,8 +3,8 @@
     <!-- 搜索区域 -->
     <div class="search-container">
       <div class="search-label">楼宇名称：</div>
-      <el-input placeholder="请输入内容" class="search-main" />
-      <el-button type="primary">查询</el-button>
+      <el-input v-model="params.name" placeholder="请输入内容" class="search-main" />
+      <el-button type="primary" @click="searchFn">查询</el-button>
     </div>
     <!-- 表格区域 -->
     <div class="table">
@@ -88,6 +88,10 @@ export default {
       }
       return keyObj[row.status]
     },
+    // 楼宇查询
+    searchFn() {
+      this.getBuildingList()
+    }
   }
 }
 </script>
