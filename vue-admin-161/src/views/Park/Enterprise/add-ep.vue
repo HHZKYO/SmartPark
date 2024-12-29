@@ -186,7 +186,6 @@ export default {
       fd.append('file', theFile)
       fd.append('type', 'businessLicense')
       const res = await uploadAPI(fd)
-      console.log(res)
       this.imageUrl = res.data.url // 图片回显
       // 自己的数据要手动关联到表单数据对象的属性中，才能让表单校验通过
       this.addForm.businessLicenseUrl = res.data.url
@@ -203,7 +202,11 @@ export default {
     // 获取企业信息详情
     async getEnterpriseDetail() {
       const res = await getEnterpriseDetailAPI(this.id)
-      console.log(res)
+      console.log(res.data)
+      for (const key in this.addForm) {
+        this.addForm[key] = res.data[key]
+      }
+      this.imageUrl = res.data.businessLicenseUrl
     }
   }
 }
