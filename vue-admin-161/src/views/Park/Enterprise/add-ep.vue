@@ -69,7 +69,8 @@
 </template>
 
 <script>
-import { createEnterpriseAPI, getEnterpriseDetailAPI, getIndustryListAPI, uploadAPI } from '@/apis/park'
+import { createEnterpriseAPI, getEnterpriseDetailAPI, updateEnterpriseAPI } from '@/apis/enterprise'
+import { getIndustryListAPI, uploadAPI } from '@/apis/park'
 import { validChineseName, validMobile } from '@/utils/validate'
 
 export default {
@@ -196,13 +197,20 @@ export default {
     // 新增企业确定事件
     async confirmAdd() {
       await this.$refs.ruleForm.validate()
-      await createEnterpriseAPI(this.addForm)
+      const obj = {
+        ...this.addForm,
+        id: this.id
+      }
+      if (this.id) {
+        await updateEnterpriseAPI(obj)
+      } else {
+        await createEnterpriseAPI(this.addForm)
+      }
       this.$router.back()
     },
     // 获取企业信息详情
     async getEnterpriseDetail() {
       const res = await getEnterpriseDetailAPI(this.id)
-      console.log(res.data)
       for (const key in this.addForm) {
         this.addForm[key] = res.data[key]
       }
