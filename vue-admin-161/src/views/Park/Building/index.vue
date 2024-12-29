@@ -14,7 +14,7 @@
         <el-table-column label="层数" prop="floors" />
         <el-table-column label="在管面积(m²)" width="120" prop="area" />
         <el-table-column label="物业费(元/m²)" width="120" prop="propertyFeePrice" />
-        <el-table-column label="状态" prop="status" />
+        <el-table-column label="状态" prop="status" :formatter="formatterFn" />
         <el-table-column label="操作">
           <template>
             <el-button
@@ -79,7 +79,15 @@ export default {
     sizeChangeFn(pageSize) {
       this.params.pageSize = pageSize
       this.getBuildingList()
-    }
+    },
+    // 格式化状态列内容
+    formatterFn(row) {
+      const keyObj = {
+        0: '闲置中',
+        1: '租赁中'
+      }
+      return keyObj[row.status]
+    },
   }
 }
 </script>
