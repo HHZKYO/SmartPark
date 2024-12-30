@@ -36,3 +36,27 @@ export function delBuildingAPI(id) {
     method: 'DELETE'
   })
 }
+
+/**
+ * 编辑楼宇
+ * @param {*} data
+ * @returns
+ */
+export function editBuildingAPI(data) {
+  return request({
+    url: '/park/building',
+    method: 'PUT',
+    data
+  })
+}
+
+/**
+ * 获取楼宇详情
+ * @param {*} id
+ * @returns
+ */
+export function getBuildingDetailAPI(id) {
+  return request({
+    url: `/park/building/${id}`
+  })
+}

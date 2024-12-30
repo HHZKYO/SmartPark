@@ -19,7 +19,7 @@
         <el-table-column label="状态" prop="status" :formatter="formatterFn" />
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button size="mini" type="text">编辑</el-button>
+            <el-button size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
             <el-button size="mini" type="text" @click="delBuilding(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -107,6 +107,10 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    // 编辑楼宇
+    edit(id) {
+      this.$router.push(`/add-building?id=${id}`)
     }
   }
 }

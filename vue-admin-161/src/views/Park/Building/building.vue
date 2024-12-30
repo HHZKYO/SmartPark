@@ -4,7 +4,7 @@
       <div class="left">
         <span class="arrow" @click="$router.back()"><i class="el-icon-arrow-left" />返回</span>
         <span>|</span>
-        <span>添加楼宇</span>
+        <span>{{ title }}</span>
       </div>
       <div class="right">
         黑马程序员
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { addBuildingAPI } from '@/apis/building'
+import { addBuildingAPI, editBuildingAPI, getBuildingDetailAPI } from '@/apis/building'
 import { validBuildingArea, validBuildingName, validFloor, validPropertyFeePrice } from '@/utils/validate'
 
 export default {
@@ -73,6 +73,23 @@ export default {
       }
     }
   },
+  computed: {
+    id() {
+      return this.$route.query.id
+    },
+    title() {
+      if (this.id) {
+        return '编辑楼宇'
+      } else {
+        return '添加楼宇'
+      }
+    }
+  },
+  created() {
+    if (this.id) {
+      this.getBuildingDetail(this.id)
+    }
+  },
   methods: {
     // 校验楼层
     validatorFloor(value, callback) {
@@ -94,10 +111,25 @@ export default {
       if (validPropertyFeePrice(value)) callback()
       else callback(new Error('请输入正确的物业费'))
     },
-    // 新增楼宇
+    // 确认提交
     async confirm() {
-      await addBuildingAPI(this.addForm)
+      const obj = {
+        ...this.addForm,
+        id: this.id
+      }
+      if (this.id) {
+        await editBuildingAPI(obj)
+      } else {
+        await addBuildingAPI(this.addForm)
+      }
       this.$router.back()
+    },
+    // 获取楼宇详情并回显
+    async getBuildingDetail(id) {
+      const res = await getBuildingDetailAPI(id)
+      for (const key in this.addForm) {
+        this.addForm[key] = res.data[key]
+      }
     }
   }
 }
