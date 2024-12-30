@@ -14,7 +14,7 @@
       <div class="form-container">
         <div class="title">楼宇信息</div>
         <div class="form">
-          <el-form :model="addForm" :rules="addFormRules" label-width="100px">
+          <el-form ref="buildInfo" :model="addForm" :rules="addFormRules" label-width="100px">
             <el-form-item label="楼宇名称" prop="name">
               <el-input v-model="addForm.name" />
             </el-form-item>
@@ -33,7 +33,7 @@
     </main>
     <footer class="add-footer">
       <div class="btn-container">
-        <el-button>重置</el-button>
+        <el-button @click="reset">重置</el-button>
         <el-button type="primary" @click="confirm">确定</el-button>
       </div>
     </footer>
@@ -92,27 +92,28 @@ export default {
   },
   methods: {
     // 校验楼层
-    validatorFloor(value, callback) {
+    validatorFloor(rule, value, callback) {
       if (validFloor(value)) callback()
       else callback(new Error('请输入正确的楼层1-20'))
     },
     // 校验楼宇名称
-    validatorBuildingName(value, callback) {
+    validatorBuildingName(rule, value, callback) {
       if (validBuildingName(value)) callback()
       else callback(new Error('请输入正确的楼宇名称：办公楼n栋'))
     },
     // 校验楼宇面积
-    validatorBuildingArea(value, callback) {
+    validatorBuildingArea(rule, value, callback) {
       if (validBuildingArea(value)) callback()
       else callback(new Error('请输入正确的楼宇面积'))
     },
     // 校验楼宇物业费
-    validatorPropertyFeePrice(value, callback) {
+    validatorPropertyFeePrice(rule, value, callback) {
       if (validPropertyFeePrice(value)) callback()
       else callback(new Error('请输入正确的物业费'))
     },
     // 确认提交
     async confirm() {
+      await this.$refs.buildInfo.validate()
       const obj = {
         ...this.addForm,
         id: this.id
@@ -130,6 +131,10 @@ export default {
       for (const key in this.addForm) {
         this.addForm[key] = res.data[key]
       }
+    },
+    // 重置表单
+    reset() {
+      this.$refs.buildInfo.resetFields()
     }
   }
 }
