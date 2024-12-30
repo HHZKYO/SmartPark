@@ -19,3 +19,23 @@ export function validCarNum(carNum) {
 export function validChineseName(name) {
   return /^[\u4e00-\u9fa5]{2,10}$/.test(name)
 }
+
+// 校验楼层
+export function validFloor(floor) {
+  return /^([1-9]|1[0-9]|20)$/.test(floor)
+}
+
+// 校验楼宇名称
+export function validBuildingName(name) {
+  return /^办公楼([1-9]\d*)栋$/.test(name)
+}
+
+// 校验楼宇面积
+export function validBuildingArea(area) {
+  return /[1-9]\d*.\d*|0\.\d*[1-9]\d*/.test(area)
+}
+
+// 校验物业费
+export function validPropertyFeePrice(price) {
+  return /[1-9]\d*.\d*|0\.\d*[1-9]\d*/.test(price)
+}

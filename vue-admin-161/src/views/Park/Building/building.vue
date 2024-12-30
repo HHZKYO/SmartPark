@@ -42,6 +42,7 @@
 
 <script>
 import { addBuildingAPI } from '@/apis/building'
+import { validBuildingArea, validBuildingName, validFloor, validPropertyFeePrice } from '@/utils/validate'
 
 export default {
   data() {
@@ -54,21 +55,45 @@ export default {
       },
       addFormRules: {
         name: [
-          { required: true, message: '请输入楼宇名称', trigger: 'blur' }
+          { required: true, message: '请输入楼宇名称', trigger: 'blur' },
+          { validator: this.validatorBuildingName, trigger: 'blur' }
         ],
         floors: [
-          { required: true, message: '请输入楼宇层数', trigger: 'blur' }
+          { required: true, message: '请输入楼宇层数', trigger: 'blur' },
+          { validator: this.validatorFloor, trigger: 'blur' }
         ],
         area: [
-          { required: true, message: '请输入楼宇面积', trigger: 'blur' }
+          { required: true, message: '请输入楼宇面积', trigger: 'blur' },
+          { validator: this.validatorBuildingArea, trigger: 'blur' }
         ],
         propertyFeePrice: [
-          { required: true, message: '请输入楼宇物业费', trigger: 'blur' }
+          { required: true, message: '请输入楼宇物业费', trigger: 'blur' },
+          { validator: this.validatorPropertyFeePrice, trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
+    // 校验楼层
+    validatorFloor(value, callback) {
+      if (validFloor(value)) callback()
+      else callback(new Error('请输入正确的楼层1-20'))
+    },
+    // 校验楼宇名称
+    validatorBuildingName(value, callback) {
+      if (validBuildingName(value)) callback()
+      else callback(new Error('请输入正确的楼宇名称：办公楼n栋'))
+    },
+    // 校验楼宇面积
+    validatorBuildingArea(value, callback) {
+      if (validBuildingArea(value)) callback()
+      else callback(new Error('请输入正确的楼宇面积'))
+    },
+    // 校验楼宇物业费
+    validatorPropertyFeePrice(value, callback) {
+      if (validPropertyFeePrice(value)) callback()
+      else callback(new Error('请输入正确的物业费'))
+    },
     // 新增楼宇
     async confirm() {
       await addBuildingAPI(this.addForm)
