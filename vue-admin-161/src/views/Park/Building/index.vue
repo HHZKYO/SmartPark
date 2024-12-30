@@ -18,15 +18,9 @@
         <el-table-column label="物业费(元/m²)" width="120" prop="propertyFeePrice" />
         <el-table-column label="状态" prop="status" :formatter="formatterFn" />
         <el-table-column label="操作">
-          <template>
-            <el-button
-              size="mini"
-              type="text"
-            >编辑</el-button>
-            <el-button
-              size="mini"
-              type="text"
-            >删除</el-button>
+          <template #default="scope">
+            <el-button size="mini" type="text">编辑</el-button>
+            <el-button size="mini" type="text" @click="delBuilding(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -46,7 +40,7 @@
 </template>
 
 <script>
-import { getBuildingListAPI } from '@/apis/building'
+import { delBuildingAPI, getBuildingListAPI } from '@/apis/building'
 
 export default {
   name: 'Building',
@@ -93,6 +87,26 @@ export default {
     searchFn() {
       this.params.page = 1
       this.getBuildingList()
+    },
+    // 删除楼宇
+    delBuilding(id) {
+      this.$confirm('此操作将永久删除该楼宇, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        await delBuildingAPI(id)
+        this.getBuildingList()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
