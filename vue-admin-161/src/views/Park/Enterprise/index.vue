@@ -18,7 +18,7 @@
         <el-table-column label="联系电话" prop="contactNumber" />
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button size="mini" type="text">添加合同</el-button>
+            <el-button size="mini" type="text" @click="showAddRentDialog(scope.row.id)">添加合同</el-button>
             <el-button size="mini" type="text">查看</el-button>
             <el-button size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
             <el-button size="mini" type="text" @click="del(scope.row.id)">删除</el-button>
@@ -34,6 +34,15 @@
         @current-change="currentChangeFn"
       />
     </div>
+
+    <!-- 新增合同的对话框 -->
+    <el-dialog title="添加合同" :visible.sync="rentDialogVisible" width="580px">
+      <div class="form-container" />
+      <template #footer>
+        <el-button size="mini">取 消</el-button>
+        <el-button size="mini" type="primary">确 定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -50,7 +59,8 @@ export default {
         name: '' // 要查询的企业名字
       },
       enterpriseList: [], // 企业列表
-      enterpriseTotal: 0
+      enterpriseTotal: 0, // 企业总数
+      rentDialogVisible: false // 对话框显示/隐藏
     }
   },
   created() {
@@ -96,6 +106,11 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    // 添加合同
+    showAddRentDialog(id) {
+      console.log(id)
+      this.rentDialogVisible = true
     }
   }
 }
