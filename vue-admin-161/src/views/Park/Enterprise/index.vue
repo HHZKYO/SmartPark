@@ -63,6 +63,8 @@
           <el-form-item label="租赁合同" prop="contractId">
             <el-upload
               action="#"
+              :http-request="uploadHandle"
+              :before-upload="beforeUpload"
             >
               <el-button size="small" type="primary" plain>上传合同文件</el-button>
               <div slot="tip" class="el-upload__tip">支持扩展名：.doc .pdf, 文件大小不超过5M</div>
@@ -120,6 +122,25 @@ export default {
     this.getRentBuildList()
   },
   methods: {
+    // 上传租赁合同文件
+    uploadHandle() {},
+    // 租赁文件合同的校验
+    beforeUpload(file) {
+      const list = ['application/pdf', 'application/msword'] // MIME媒体类型（参考mdn）
+      const isFile = list.includes(file.type)
+      const isLt5M = file.size / 1024 / 1024 < 5
+      if (!isFile) {
+        this.$message.error('上传头像图片只能是 .pdf/.doc 格式!')
+      }
+      if (!isLt5M) {
+        this.$message.error('上传头像图片大小不能超过 5MB!')
+      }
+      if (isFile && isLt5M) {
+        return true
+      } else {
+        return Promise.reject()
+      }
+    },
     // 获取可租赁的楼宇列表
     async getRentBuildList() {
       const res = await getRentBuildListAPI()
