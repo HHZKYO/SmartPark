@@ -37,7 +37,39 @@
 
     <!-- 新增合同的对话框 -->
     <el-dialog title="添加合同" :visible.sync="rentDialogVisible" width="580px">
-      <div class="form-container" />
+      <!-- 表单模版 -->
+      <div class="form-container">
+        <el-form ref="addForm" :model="rentForm" :rules="rentRules" label-position="top">
+          <el-form-item label="租赁楼宇" prop="buildingId">
+            <el-select v-model="rentForm.buildingId" placeholder="请选择">
+              <el-option
+                v-for="item in []"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="租赁起止日期" prop="rentTime">
+            <el-date-picker
+              v-model="rentForm.rentTime"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
+            />
+          </el-form-item>
+          <el-form-item label="租赁合同" prop="contractId">
+            <el-upload
+              action="#"
+            >
+              <el-button size="small" type="primary" plain>上传合同文件</el-button>
+              <div slot="tip" class="el-upload__tip">支持扩展名：.doc .pdf, 文件大小不超过5M</div>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+      </div>
       <template #footer>
         <el-button size="mini">取 消</el-button>
         <el-button size="mini" type="primary">确 定</el-button>
@@ -60,7 +92,26 @@ export default {
       },
       enterpriseList: [], // 企业列表
       enterpriseTotal: 0, // 企业总数
-      rentDialogVisible: false // 对话框显示/隐藏
+      rentDialogVisible: false, // 对话框显示/隐藏
+      rentForm: {
+        buildingId: null, // 楼宇id
+        contractId: null, // 合同id
+        contractUrl: '', // 合同Url
+        enterpriseId: null, // 企业名称
+        type: 0, // 合同类型
+        rentTime: [] // 合同时间
+      },
+      rentRules: {
+          buildingId: [
+            { required: true, message: '请选择楼宇', trigger: 'change' }
+          ],
+          rentTime: [
+            { required: true, message: '请选择租赁日期', trigger: 'change' }
+          ],
+          contractId: [
+            { required: true, message: '请上传合同文件' }
+          ]
+      }
     }
   },
   created() {
