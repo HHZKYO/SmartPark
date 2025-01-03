@@ -44,3 +44,16 @@ export function getRentBuildListAPI() {
     url: '/park/rent/building'
   })
 }
+
+/**
+ * 给当前企业添加合同
+ * @param {*} data
+ * @returns
+ */
+export function createRentAPI(data) {
+  return request({
+    url: '/park/enterprise/rent',
+    method: 'POST',
+    data
+  })
+}

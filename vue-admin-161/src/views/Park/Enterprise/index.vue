@@ -75,7 +75,7 @@
       </div>
       <template #footer>
         <el-button size="mini">取 消</el-button>
-        <el-button size="mini" type="primary">确 定</el-button>
+        <el-button size="mini" type="primary" @click="confirmAdd">确 定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -83,7 +83,7 @@
 
 <script>
 import { deleteEnterpriseAPI } from '@/apis/enterprise'
-import { getEnterpriseListAPI, getRentBuildListAPI } from '@/apis/park'
+import { createRentAPI, getEnterpriseListAPI, getRentBuildListAPI, uploadAPI } from '@/apis/park'
 
 export default {
   data() {
@@ -100,8 +100,8 @@ export default {
         buildingId: null, // 楼宇id
         contractId: null, // 合同id
         contractUrl: '', // 合同Url
-        enterpriseId: null, // 企业名称
-        type: 0, // 合同类型
+        enterpriseId: null, // 企业id
+        type: 0, // 合同类型(0代表添加合同，1代表续签合同)
         rentTime: [] // 合同时间
       },
       rentBuildList: [], // 可租赁的楼宇列表
@@ -123,8 +123,24 @@ export default {
     this.getRentBuildList()
   },
   methods: {
+    // 确认提交租赁合同表单
+    async confirmAdd() {
+      const obj = { ...this.rentForm }
+      obj.startTime = this.rentForm.rentTime[0]
+      obj.endTime = this.rentForm.rentTime[1]
+      delete obj.rentTime
+      const res = await createRentAPI(obj)
+      console.log(res)
+    },
     // 上传租赁合同文件
-    uploadHandle() {},
+    async uploadHandle(file) {
+      const fd = new FormData()
+      fd.append('file', file.file)
+      fd.append('type', 'contract')
+      const res = await uploadAPI(fd)
+      this.rentForm.contractId = res.data.id
+      this.rentForm.contractUrl = res.data.url
+    },
     // 租赁文件合同的校验
     beforeUpload(file) {
       const list = ['application/pdf', 'application/msword'] // MIME媒体类型（参考mdn）
@@ -190,7 +206,7 @@ export default {
     },
     // 添加合同
     showAddRentDialog(id) {
-      console.log(id)
+      this.rentForm.enterpriseId = id
       this.rentDialogVisible = true
     }
   }
