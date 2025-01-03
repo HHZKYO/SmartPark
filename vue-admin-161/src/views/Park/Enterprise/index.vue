@@ -102,15 +102,15 @@ export default {
         rentTime: [] // 合同时间
       },
       rentRules: {
-          buildingId: [
-            { required: true, message: '请选择楼宇', trigger: 'change' }
-          ],
-          rentTime: [
-            { required: true, message: '请选择租赁日期', trigger: 'change' }
-          ],
-          contractId: [
-            { required: true, message: '请上传合同文件' }
-          ]
+        buildingId: [
+          { required: true, message: '请选择楼宇', trigger: 'change' }
+        ],
+        rentTime: [
+          { required: true, message: '请选择租赁日期', trigger: 'change' }
+        ],
+        contractId: [
+          { required: true, message: '请上传合同文件' }
+        ]
       }
     }
   },
