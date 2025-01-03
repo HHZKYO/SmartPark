@@ -65,6 +65,7 @@
               action="#"
               :http-request="uploadHandle"
               :before-upload="beforeUpload"
+              :limit="1"
             >
               <el-button size="small" type="primary" plain>上传合同文件</el-button>
               <div slot="tip" class="el-upload__tip">支持扩展名：.doc .pdf, 文件大小不超过5M</div>
