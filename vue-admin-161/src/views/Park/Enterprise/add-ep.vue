@@ -168,9 +168,13 @@ export default {
         this.$message.error('上传头像图片只能是 JPG/JPEG/PNG 格式!')
       }
       if (!isLt3M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$message.error('上传头像图片大小不能超过 3MB!')
       }
-      return isJPG && isLt3M
+      if (isJPG && isLt3M) {
+        return true
+      } else {
+        return Promise.reject()
+      }
     },
     // 自定义上传过程(要自定义的原因：
     // upload组件内有原生的AJAX请求传递所选择的文件到action指定的后台接口，而我不想用组件上传)
