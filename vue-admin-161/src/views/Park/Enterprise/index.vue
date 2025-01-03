@@ -43,7 +43,7 @@
           <el-form-item label="租赁楼宇" prop="buildingId">
             <el-select v-model="rentForm.buildingId" placeholder="请选择">
               <el-option
-                v-for="item in []"
+                v-for="item in rentBuildList"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id"
@@ -80,7 +80,7 @@
 
 <script>
 import { deleteEnterpriseAPI } from '@/apis/enterprise'
-import { getEnterpriseListAPI } from '@/apis/park'
+import { getEnterpriseListAPI, getRentBuildListAPI } from '@/apis/park'
 
 export default {
   data() {
@@ -101,6 +101,7 @@ export default {
         type: 0, // 合同类型
         rentTime: [] // 合同时间
       },
+      rentBuildList: [], // 可租赁的楼宇列表
       rentRules: {
         buildingId: [
           { required: true, message: '请选择楼宇', trigger: 'change' }
@@ -116,8 +117,15 @@ export default {
   },
   created() {
     this.getList()
+    this.getRentBuildList()
   },
   methods: {
+    // 获取可租赁的楼宇列表
+    async getRentBuildList() {
+      const res = await getRentBuildListAPI()
+      console.log(res)
+      this.rentBuildList = res.data
+    },
     // 获取列表
     async getList() {
       const res = await getEnterpriseListAPI(this.params)

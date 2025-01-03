@@ -33,3 +33,14 @@ export function uploadAPI(data) {
     data
   })
 }
+
+/**
+ * 获取空置中楼宇列表（未租赁）
+ * @param {*}
+ * @returns
+ */
+export function getRentBuildListAPI() {
+  return request({
+    url: '/park/rent/building'
+  })
+}
