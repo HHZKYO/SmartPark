@@ -57,3 +57,14 @@ export function createRentAPI(data) {
     data
   })
 }
+
+/**
+ * 获取企业下合同列表
+ * @param {*} id
+ * @returns
+ */
+export function getRentListAPI(id) {
+  return request({
+    url: `/park/enterprise/rent/${id}`
+  })
+}

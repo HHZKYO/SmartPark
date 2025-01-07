@@ -11,11 +11,11 @@
     </div>
     <!-- 表格区域 -->
     <div class="table">
-      <el-table style="width: 100%" :data="enterpriseList">
+      <el-table style="width: 100%" :data="enterpriseList" @expand-change="expendChangeFn">
         <!-- 新增：展开部分 -->
         <el-table-column type="expand">
-          <template #default>
-            <el-table>
+          <template #default="scope">
+            <el-table :data="scope.row.list">
               <el-table-column label="租赁楼宇" width="320" prop="buildingName" />
               <el-table-column label="租赁起始时间" prop="startTime" />
               <el-table-column label="合同状态" prop="status" />
@@ -100,7 +100,7 @@
 
 <script>
 import { deleteEnterpriseAPI } from '@/apis/enterprise'
-import { createRentAPI, getEnterpriseListAPI, getRentBuildListAPI, uploadAPI } from '@/apis/park'
+import { createRentAPI, getEnterpriseListAPI, getRentBuildListAPI, getRentListAPI, uploadAPI } from '@/apis/park'
 
 export default {
   data() {
@@ -140,6 +140,15 @@ export default {
     this.getRentBuildList()
   },
   methods: {
+    // 监听展开行的打开/关闭事件
+    async expendChangeFn(row, rows) {
+      // row是当前展开/关闭行的数据对象，rows是所有展开行的数据对象
+      if (rows.includes(row)) {
+        const res = await getRentListAPI(row.id)
+        // eslint-disable-next-line
+        row.list = res.data
+      }
+    },
     // 确认提交租赁合同表单
     async confirmAdd() {
       const obj = { ...this.rentForm }
@@ -178,13 +187,18 @@ export default {
     // 获取可租赁的楼宇列表
     async getRentBuildList() {
       const res = await getRentBuildListAPI()
-      console.log(res)
       this.rentBuildList = res.data
     },
     // 获取列表
     async getList() {
       const res = await getEnterpriseListAPI(this.params)
-      this.enterpriseList = res.data.rows
+      const list = res.data.rows.map(obj => {
+        return {
+          ...obj,
+          list: []
+        }
+      })
+      this.enterpriseList = list
       this.enterpriseTotal = res.data.total
     },
     // 页码切换
