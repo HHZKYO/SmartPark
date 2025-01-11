@@ -26,10 +26,28 @@
                 </template>
               </el-table-column>
               <el-table-column label="操作" width="180">
-                <template>
-                  <el-button size="mini" type="text">续租</el-button>
-                  <el-button size="mini" type="text">退租</el-button>
-                  <el-button size="mini" type="text">删除</el-button>
+                <template #default="{row}">
+                  <el-button
+                    size="mini"
+                    type="text"
+                    :disabled="!(row.status === 1 || row.status === 2)"
+                  >
+                    续租
+                  </el-button>
+                  <el-button
+                    size="mini"
+                    type="text"
+                    :disable="row.status === 3"
+                  >
+                    退租
+                  </el-button>
+                  <el-button
+                    size="mini"
+                    type="text"
+                    :disabled="row.status === 1 || row.status === 2"
+                  >
+                    删除
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>
