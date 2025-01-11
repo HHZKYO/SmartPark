@@ -136,6 +136,11 @@ export const routes = [
     component: () => import('@/views/Park/Building/building.vue')
   },
   {
+    // 园区管理-企业管理-查看企业详情
+    path: '/ep-detail',
+    component: () => import('@/views/Park/Enterprise/detail.vue')
+  },
+  {
     path: '*',
     component: () => import('@/views/404'),
     hidden: true
