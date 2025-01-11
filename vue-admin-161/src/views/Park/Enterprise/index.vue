@@ -30,21 +30,22 @@
                   <el-button
                     size="mini"
                     type="text"
-                    :disabled="!(row.status === 1 || row.status === 2)"
+                    :disabled="row.status === 0 || row.status === 3"
                   >
                     续租
                   </el-button>
                   <el-button
                     size="mini"
                     type="text"
-                    :disable="row.status === 3"
+                    :disabled="row.status === 3"
+                    @click="backRentFn(row.id)"
                   >
                     退租
                   </el-button>
                   <el-button
                     size="mini"
                     type="text"
-                    :disabled="row.status === 1 || row.status === 2"
+                    :disabled="row.status !== 3"
                   >
                     删除
                   </el-button>
@@ -124,7 +125,7 @@
 
 <script>
 import { deleteEnterpriseAPI } from '@/apis/enterprise'
-import { createRentAPI, getEnterpriseListAPI, getRentBuildListAPI, getRentListAPI, uploadAPI } from '@/apis/park'
+import { createRentAPI, getEnterpriseListAPI, getRentBuildListAPI, getRentListAPI, outRentAPI, uploadAPI } from '@/apis/park'
 
 export default {
   data() {
@@ -170,6 +171,11 @@ export default {
     this.getRentBuildList()
   },
   methods: {
+    // 退租
+    async backRentFn(rentId) {
+      await outRentAPI(rentId)
+      this.getList()
+    },
     // 格式化合同状态的样式
     formatterStatus(status) {
       const statusObj = {
