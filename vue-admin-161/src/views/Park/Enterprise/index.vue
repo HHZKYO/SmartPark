@@ -18,7 +18,13 @@
             <el-table :data="scope.row.list">
               <el-table-column label="租赁楼宇" width="320" prop="buildingName" />
               <el-table-column label="租赁起始时间" prop="startTime" />
-              <el-table-column label="合同状态" prop="status" />
+              <el-table-column label="合同状态" prop="status">
+                <template #default="props">
+                  <el-tag :type="formatterStatus(props.row.status)">
+                    {{ TYPEMAP[props.row.status] }}
+                  </el-tag>
+                </template>
+              </el-table-column>
               <el-table-column label="操作" width="180">
                 <template>
                   <el-button size="mini" type="text">续租</el-button>
@@ -105,6 +111,12 @@ import { createRentAPI, getEnterpriseListAPI, getRentBuildListAPI, getRentListAP
 export default {
   data() {
     return {
+      TYPEMAP: {
+        0: '待生效',
+        1: '生效中',
+        2: '已到期',
+        3: '已退租'
+      },
       params: { // 查询参数
         page: 1, // 这是指第几页
         pageSize: 2, // 这是每一页的条数
@@ -140,6 +152,16 @@ export default {
     this.getRentBuildList()
   },
   methods: {
+    // 格式化合同状态的样式
+    formatterStatus(status) {
+      const statusObj = {
+        0: 'warning',
+        1: 'success',
+        2: 'info',
+        3: 'danger'
+      }
+      return statusObj[status]
+    },
     // 监听展开行的打开/关闭事件
     async expendChangeFn(row, rows) {
       // row是当前展开/关闭行的数据对象，rows是所有展开行的数据对象
