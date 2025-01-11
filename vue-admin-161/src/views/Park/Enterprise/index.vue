@@ -172,9 +172,26 @@ export default {
   },
   methods: {
     // 退租
-    async backRentFn(rentId) {
-      await outRentAPI(rentId)
-      this.getList()
+    backRentFn(rentId) {
+      this.$confirm('确认退租吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        // 1. 调用接口
+        await outRentAPI(rentId)
+        // 2. 重新拉取列表
+        this.getList()
+        this.$message({
+          type: 'success',
+          message: '退租成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消退租'
+        })
+      })
     },
     // 格式化合同状态的样式
     formatterStatus(status) {
