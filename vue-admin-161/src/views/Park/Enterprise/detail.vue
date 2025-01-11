@@ -8,7 +8,7 @@
         <div class="title">租赁记录</div>
         <div class="table-container">
           <el-table
-            :data="[]"
+            :data="rentList"
             style="width: 100%"
             border
           >
@@ -18,7 +18,7 @@
               width="50"
             />
             <el-table-column
-              prop="buildingName"
+              prop="name"
               label="租赁楼宇"
               width="180"
             />
@@ -61,9 +61,22 @@
 </template>
 
 <script>
+import { getEnterpriseDetailAPI } from '@/apis/park'
+
 export default {
   data() {
-    return {}
+    return {
+      rentList: [] // 合同列表
+    }
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    async getList() {
+      const res = await getEnterpriseDetailAPI(this.$route.query.id)
+      this.rentList = res.data.rent
+    }
   }
 }
 </script>

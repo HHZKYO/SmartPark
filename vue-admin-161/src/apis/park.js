@@ -81,3 +81,14 @@ export function outRentAPI(rentId) {
     method: 'PUT'
   })
 }
+
+/**
+ * 获取企业详情
+ * @param {*} id
+ * @returns
+ */
+export function getEnterpriseDetailAPI(id) {
+  return request({
+    url: `/park/enterprise/${id}`
+  })
+}
