@@ -92,3 +92,13 @@ export function getEnterpriseDetailAPI(id) {
     url: `/park/enterprise/${id}`
   })
 }
+
+/**
+ * 下载合同文件
+ * id: 文件上传接口返回得文件id
+ */
+export function downloadContract(id) {
+  return request({
+    url: `/download/${id}`
+  })
+}

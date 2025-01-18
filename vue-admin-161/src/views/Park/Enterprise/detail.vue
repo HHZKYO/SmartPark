@@ -47,8 +47,8 @@
               prop="address"
               label="操作"
             >
-              <template>
-                <el-button type="text">合同下载</el-button>
+              <template v-slot="{ row }">
+                <el-button type="text" @click="downLoadFn(row)">合同下载</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { getEnterpriseDetailAPI } from '@/apis/park'
+import { downloadContract, getEnterpriseDetailAPI } from '@/apis/park'
 
 export default {
   data() {
@@ -73,6 +73,17 @@ export default {
     this.getList()
   },
   methods: {
+    // 合同下载点击事件
+    async downLoadFn(obj) {
+      const res = await downloadContract(obj.contractId)
+      const blob = new Blob([res])
+      const url = URL.createObjectURL(blob)
+      const theA = document.createElement('a')
+      theA.href = url
+      theA.download = obj.contractName
+      theA.click()
+    },
+    // 企业详情+合同列表
     async getList() {
       const res = await getEnterpriseDetailAPI(this.$route.query.id)
       this.rentList = res.data.rent
