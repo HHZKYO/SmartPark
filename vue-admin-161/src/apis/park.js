@@ -99,6 +99,7 @@ export function getEnterpriseDetailAPI(id) {
  */
 export function downloadContract(id) {
   return request({
-    url: `/download/${id}`
+    url: `/download/${id}`,
+    responseType: 'blob'
   })
 }

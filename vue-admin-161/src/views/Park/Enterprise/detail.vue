@@ -75,8 +75,7 @@ export default {
   methods: {
     // 合同下载点击事件
     async downLoadFn(obj) {
-      const res = await downloadContract(obj.contractId)
-      const blob = new Blob([res])
+      const blob = await downloadContract(obj.contractId)
       const url = URL.createObjectURL(blob)
       const theA = document.createElement('a')
       theA.href = url
