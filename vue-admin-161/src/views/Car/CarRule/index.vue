@@ -55,18 +55,26 @@ export default {
       // 1. 创建一个新的工作簿
       const workbook = utils.book_new()
       // 2. 创建一个工作表 要求一个对象数组格式（可以根据需要创建多个）
-      const worksheet = utils.json_to_sheet(
-        [
-          { name: '张三', age: 18 },
-          { name: '李四', age: 28 }
-        ]
-      )
+      const worksheet = utils.json_to_sheet(this.ruleList)
       // 3. 把工作表添加到工作簿  Data为工作表名称
-      utils.book_append_sheet(workbook, worksheet, 'Data')
+      utils.book_append_sheet(workbook, worksheet, '停车计费规则')
       // 改写表头
-      utils.sheet_add_aoa(worksheet, [['姓名', '年龄']], { origin: 'A1' })
+      const keys = Object.keys(this.ruleList[0])
+      // 准备字典
+      const keyObj = {
+        'id': '序号',
+        'ruleNumber': '计费规则编号',
+        'ruleName': '计费规则名称',
+        'freeDuration': '免费时长(分钟)',
+        'chargeCeiling': '收费上线(元)',
+        'chargeType': '计费方式',
+        'ruleNameView': '计费规则'
+      }
+      // 对象字段属性数组->中文字符串数组
+      const headerList = keys.map(item => keyObj[item])
+      utils.sheet_add_aoa(worksheet, [headerList], { origin: 'A1' })
       // 4. 导出方法进行导出
-      writeFileXLSX(workbook, 'SheetJSVue.xlsx')
+      writeFileXLSX(workbook, '行车管理-计费规则管理.xlsx')
     },
     // 请求列表
     async getList() {
