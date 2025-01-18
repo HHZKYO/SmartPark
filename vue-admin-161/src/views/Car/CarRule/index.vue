@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import { getRuleListAPI } from '@/apis/car'
+
 export default {
   name: 'Building',
   data() {
@@ -41,6 +43,17 @@ export default {
       },
       total: 0,
       dialogVisible: false
+    }
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    async getList() {
+      const res = await getRuleListAPI(this.params)
+      console.log(res)
+      this.ruleList = res.data.rows
+      this.total = res.data.total
     }
   }
 }
