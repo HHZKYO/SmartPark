@@ -21,7 +21,7 @@
     <!-- 右侧权限和成员 -->
     <div class="right-wrapper">
       <div class="tree-wrapper">
-        <div v-for="item in treeList" :key="item.id" class="tree-item">
+        <div v-for="item, index in treeList" :key="item.id" class="tree-item">
           <div class="tree-title"> {{ item.title }} </div>
           <el-tree
             :data="item.children"
@@ -31,6 +31,8 @@
             check-strictly
             check-on-click-node
             :expand-on-click-node="false"
+            node-key="id"
+            :default-checked-keys="roleDetailList[index]"
           />
         </div>
       </div>
@@ -39,7 +41,7 @@
 </template>
 
 <script>
-import { getRoleListAPI, getTreeListAPI } from '@/apis/system'
+import { getRoleDetailAPI, getRoleListAPI, getTreeListAPI } from '@/apis/system'
 
 export default {
   name: 'Role',
@@ -47,7 +49,8 @@ export default {
     return {
       roleList: [], // 现有角色列表
       activeIndex: 0, // 记录哪项该高亮的下标
-      treeList: [] // 所有权限点列表
+      treeList: [], // 所有权限点列表
+      roleDetailList: [] // 权限点Id集合（二维数组）
     }
   },
   created() {
@@ -81,6 +84,9 @@ export default {
     async getRoleList() {
       const res = await getRoleListAPI()
       this.roleList = res.data
+      // 默认获取第一个角色权限点列表
+      const roleRes = await getRoleDetailAPI(this.roleList[0].roleId)
+      this.roleDetailList = roleRes.data.perms
     }
   }
 }
