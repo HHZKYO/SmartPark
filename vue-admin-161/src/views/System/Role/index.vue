@@ -39,14 +39,34 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane :label="`成员${0}`" name="member" />
+        <el-tab-pane :label="`成员${roleUserTotal}`" name="member">
+          <div class="user-wrapper">
+            <el-table
+              :data="roleUserList"
+            >
+              <el-table-column
+                type="index"
+                width="250"
+                label="序号"
+              />
+              <el-table-column
+                prop="name"
+                label="员工姓名"
+              />
+              <el-table-column
+                prop="userName"
+                label="登录账号"
+              />
+            </el-table>
+          </div>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
 </template>
 
 <script>
-import { getRoleDetailAPI, getRoleListAPI, getTreeListAPI } from '@/apis/system'
+import { getRoleDetailAPI, getRoleListAPI, getRoleUserAPI, getTreeListAPI } from '@/apis/system'
 
 export default {
   name: 'Role',
@@ -56,13 +76,16 @@ export default {
       activeIndex: 0, // 记录哪项该高亮的下标
       treeList: [], // 所有权限点列表
       roleDetailList: [], // 权限点Id集合（二维数组）
-      activeName: 'tree' // 标签页选中的name名字
+      activeName: 'tree', // 标签页选中的name名字
+      roleUserList: [], // 当前角色下的成员列表
+      roleUserTotal: 0 // 当前角色下的成员总数
     }
   },
   async created() {
     await this.getRoleList()
     await this.getTreeList()
     this.getRoleDetailListFn(this.roleList[0].roleId) // 获取第一个角色下属的权限详情列表
+    this.getMemberListFn(this.roleList[0].roleId) // 获取第一个角色下属的成员列表
   },
   methods: {
     // 获取所有功能权限列表
@@ -87,11 +110,19 @@ export default {
     roleClickFn(index, roleId) {
       this.activeIndex = index
       this.getRoleDetailListFn(roleId)
+      this.getMemberListFn(roleId)
     },
     // 获取角色列表
     async getRoleList() {
       const res = await getRoleListAPI()
       this.roleList = res.data
+    },
+    // 请求指定角色下属的成员列表集合
+    async getMemberListFn(roleId) {
+      const res = await getRoleUserAPI(roleId)
+      console.log(res)
+      this.roleUserList = res.data.rows
+      this.roleUserTotal = res.data.total
     },
     // 请求指定角色下属的功能权限列表集合
     async getRoleDetailListFn(roleId) {
