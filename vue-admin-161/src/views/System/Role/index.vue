@@ -1,10 +1,10 @@
 <template>
   <div class="role-container">
     <div class="left-wrapper">
-      <div v-for="item in []" :key="item.roleId" class="role-item">
+      <div v-for="item in roleList" :key="item.roleId" class="role-item">
         <div class="role-info">
           <svg-icon icon-class="user" class="icon" />
-          管理员
+          {{ item.roleName }}
         </div>
         <div class="more">
           <svg-icon icon-class="more" />
@@ -16,8 +16,26 @@
 </template>
 
 <script>
+import { getRoleListAPI } from '@/apis/system'
 
 export default {
+  name: 'Role',
+  data() {
+    return {
+      roleList: [] // 现有角色列表
+    }
+  },
+  created() {
+    this.getRoleList()
+  },
+  methods: {
+    // 获取角色列表
+    async getRoleList() {
+      const res = await getRoleListAPI()
+      console.log(res)
+      this.roleList = res.data
+    }
+  }
 }
 </script>
 
