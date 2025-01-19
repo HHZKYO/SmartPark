@@ -21,9 +21,10 @@
     <!-- 右侧权限和成员 -->
     <div class="right-wrapper">
       <div class="tree-wrapper">
-        <div v-for="item, index in treeList" :key="item.id" class="tree-item">
+        <div v-for="item in treeList" :key="item.id" class="tree-item">
           <div class="tree-title"> {{ item.title }} </div>
           <el-tree
+            ref="myTree"
             :data="item.children"
             :props="{label: 'title', children: 'children', disabled: 'flag'}"
             show-checkbox
@@ -32,7 +33,6 @@
             check-on-click-node
             :expand-on-click-node="false"
             node-key="id"
-            :default-checked-keys="roleDetailList[index]"
           />
         </div>
       </div>
@@ -91,6 +91,9 @@ export default {
     async getRoleDetailListFn(roleId) {
       const roleRes = await getRoleDetailAPI(roleId)
       this.roleDetailList = roleRes.data.perms
+      this.$refs.myTree.forEach((treeComponent, index) => {
+        treeComponent.setCheckedKeys(this.roleDetailList[index])
+      })
     }
   }
 }
