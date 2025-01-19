@@ -25,7 +25,7 @@
           <div class="tree-title"> {{ item.title }} </div>
           <el-tree
             :data="item.children"
-            :props="{label: 'title', children: 'children'}"
+            :props="{label: 'title', children: 'children', disabled: 'flag'}"
             show-checkbox
             default-expand-all
             check-strictly
@@ -58,7 +58,20 @@ export default {
     // 获取所有功能权限列表
     async getTreeList() {
       const res = await getTreeListAPI()
+      // 给所有对象都添加一个flag标记默认值false
+      res.data.forEach(obj => {
+        this.setFlagFn(obj)
+      })
       this.treeList = res.data
+    },
+    // 准备一个函数用来实现递归
+    setFlagFn(obj) {
+      obj.flag = true
+      if (obj.children) {
+        obj.children.forEach(samllObj => {
+          this.setFlagFn(samllObj)
+        })
+      }
     },
     // 点击某行角色
     roleClickFn(index) {
