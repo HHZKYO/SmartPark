@@ -18,24 +18,44 @@
       </div>
       <el-button class="addBtn" size="mini">添加角色</el-button>
     </div>
+    <!-- 右侧权限和成员 -->
+    <div class="right-wrapper">
+      <div class="tree-wrapper">
+        <div v-for="item in treeList" :key="item.id" class="tree-item">
+          <div class="tree-title"> {{ item.title }} </div>
+          <el-tree
+            :data="item.children"
+            :props="{label: 'title', children: 'children'}"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { getRoleListAPI } from '@/apis/system'
+import { getRoleListAPI, getTreeListAPI } from '@/apis/system'
 
 export default {
   name: 'Role',
   data() {
     return {
       roleList: [], // 现有角色列表
-      activeIndex: 0 // 记录哪项该高亮的下标
+      activeIndex: 0, // 记录哪项该高亮的下标
+      treeList: [] // 所有权限点列表
     }
   },
   created() {
     this.getRoleList()
+    this.getTreeList()
   },
   methods: {
+    // 获取所有功能权限列表
+    async getTreeList() {
+      const res = await getTreeListAPI()
+      console.log(res)
+      this.treeList = res.data
+    },
     // 点击某行角色
     roleClickFn(index) {
       this.activeIndex = index
@@ -43,7 +63,6 @@ export default {
     // 获取角色列表
     async getRoleList() {
       const res = await getRoleListAPI()
-      console.log(res)
       this.roleList = res.data
     }
   }
