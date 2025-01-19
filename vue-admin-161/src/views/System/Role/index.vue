@@ -20,22 +20,27 @@
     </div>
     <!-- 右侧权限和成员 -->
     <div class="right-wrapper">
-      <div class="tree-wrapper">
-        <div v-for="item in treeList" :key="item.id" class="tree-item">
-          <div class="tree-title"> {{ item.title }} </div>
-          <el-tree
-            ref="myTree"
-            :data="item.children"
-            :props="{label: 'title', children: 'children', disabled: 'flag'}"
-            show-checkbox
-            default-expand-all
-            check-strictly
-            check-on-click-node
-            :expand-on-click-node="false"
-            node-key="id"
-          />
-        </div>
-      </div>
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="功能权限" name="tree">
+          <div class="tree-wrapper">
+            <div v-for="item in treeList" :key="item.id" class="tree-item">
+              <div class="tree-title"> {{ item.title }} </div>
+              <el-tree
+                ref="myTree"
+                :data="item.children"
+                :props="{label: 'title', children: 'children', disabled: 'flag'}"
+                show-checkbox
+                default-expand-all
+                check-strictly
+                check-on-click-node
+                :expand-on-click-node="false"
+                node-key="id"
+              />
+            </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane :label="`成员${0}`" name="member" />
+      </el-tabs>
     </div>
   </div>
 </template>
@@ -50,7 +55,8 @@ export default {
       roleList: [], // 现有角色列表
       activeIndex: 0, // 记录哪项该高亮的下标
       treeList: [], // 所有权限点列表
-      roleDetailList: [] // 权限点Id集合（二维数组）
+      roleDetailList: [], // 权限点Id集合（二维数组）
+      activeName: 'tree' // 标签页选中的name名字
     }
   },
   async created() {
