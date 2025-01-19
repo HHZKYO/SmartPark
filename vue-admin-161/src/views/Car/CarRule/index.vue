@@ -67,7 +67,7 @@ export default {
           } else if (keyStr === 'id') {
             newObj[keyStr] = index + 1
           } else {
-            newObj[keyStr] = obj[keyStr]  
+            newObj[keyStr] = obj[keyStr]
           }
         })
         return newObj
