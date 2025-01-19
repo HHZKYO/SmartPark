@@ -26,6 +26,11 @@
           <el-tree
             :data="item.children"
             :props="{label: 'title', children: 'children'}"
+            show-checkbox
+            default-expand-all
+            check-strictly
+            check-on-click-node
+            :expand-on-click-node="false"
           />
         </div>
       </div>
@@ -53,7 +58,6 @@ export default {
     // 获取所有功能权限列表
     async getTreeList() {
       const res = await getTreeListAPI()
-      console.log(res)
       this.treeList = res.data
     },
     // 点击某行角色
