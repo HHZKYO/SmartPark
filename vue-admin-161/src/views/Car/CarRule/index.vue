@@ -14,7 +14,7 @@
         <el-table-column label="收费上限(元)" prop="chargeCeiling" />
         <el-table-column label="计费方式">
           <template #default="scope">
-            {{ scope.row.chargeType }}
+            {{ chargeTypeObj[scope.row.chargeType] }}
           </template>
         </el-table-column>
         <el-table-column label="计费规则" prop="ruleNameView" />
@@ -43,7 +43,12 @@ export default {
         pageSize: 10
       },
       total: 0,
-      dialogVisible: false
+      dialogVisible: false,
+      chargeTypeObj: {
+        'duration': '时长收费',
+        'turn': '按次收费',
+        'partition': '分段收费'
+      }
     }
   },
   created() {
@@ -54,10 +59,16 @@ export default {
     // 处理数据
     exportToExcel() {
       const keys = ['id', 'ruleNumber', 'ruleName', 'freeDuration', 'chargeCeiling', 'chargeType', 'ruleNameView']
-      const newDataList = this.ruleList.map(obj => {
+      const newDataList = this.ruleList.map((obj, index) => {
         const newObj = {}
         keys.forEach(keyStr => {
-          newObj[keyStr] = obj[keyStr]
+          if (keyStr === 'chargeType') {
+            newObj[keyStr] = this.chargeTypeObj[obj[keyStr]]
+          } else if (keyStr === 'id') {
+            newObj[keyStr] = index + 1
+          } else {
+            newObj[keyStr] = obj[keyStr]  
+          }
         })
         return newObj
       })
