@@ -141,6 +141,11 @@ export const routes = [
     component: () => import('@/views/Park/Enterprise/detail.vue')
   },
   {
+    // 系统管理-角色管理-新增角色
+    path: '/add-role',
+    component: () => import('@/views/System/Role/add-role.vue')
+  },
+  {
     path: '*',
     component: () => import('@/views/404'),
     hidden: true

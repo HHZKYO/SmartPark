@@ -16,7 +16,7 @@
           <svg-icon icon-class="more" />
         </div>
       </div>
-      <el-button class="addBtn" size="mini">添加角色</el-button>
+      <el-button class="addBtn" size="mini" @click="$router.push('/add-role')">添加角色</el-button>
     </div>
     <!-- 右侧权限和成员 -->
     <div class="right-wrapper">
