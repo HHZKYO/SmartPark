@@ -51,15 +51,24 @@ export default {
   },
   methods: {
     // 导出计费规则
+    // 处理数据
     exportToExcel() {
+      const keys = ['id', 'ruleNumber', 'ruleName', 'freeDuration', 'chargeCeiling', 'chargeType', 'ruleNameView']
+      const newDataList = this.ruleList.map(obj => {
+        const newObj = {}
+        keys.forEach(keyStr => {
+          newObj[keyStr] = obj[keyStr]
+        })
+        return newObj
+      })
       // 1. 创建一个新的工作簿
       const workbook = utils.book_new()
       // 2. 创建一个工作表 要求一个对象数组格式（可以根据需要创建多个）
-      const worksheet = utils.json_to_sheet(this.ruleList)
+      const worksheet = utils.json_to_sheet(newDataList)
       // 3. 把工作表添加到工作簿  Data为工作表名称
       utils.book_append_sheet(workbook, worksheet, '停车计费规则')
       // 改写表头
-      const keys = Object.keys(this.ruleList[0])
+      // const keys = Object.keys(this.ruleList[0])
       // 准备字典
       const keyObj = {
         'id': '序号',
