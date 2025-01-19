@@ -1,7 +1,13 @@
 <template>
   <div class="role-container">
     <div class="left-wrapper">
-      <div v-for="item in roleList" :key="item.roleId" class="role-item">
+      <div
+        v-for="item, index in roleList"
+        :key="item.roleId"
+        class="role-item"
+        :class="{active: activeIndex === index}"
+        @click="roleClickFn(index)"
+      >
         <div class="role-info">
           <svg-icon icon-class="user" class="icon" />
           {{ item.roleName }}
@@ -22,13 +28,18 @@ export default {
   name: 'Role',
   data() {
     return {
-      roleList: [] // 现有角色列表
+      roleList: [], // 现有角色列表
+      activeIndex: 0 // 记录哪项该高亮的下标
     }
   },
   created() {
     this.getRoleList()
   },
   methods: {
+    // 点击某行角色
+    roleClickFn(index) {
+      this.activeIndex = index
+    },
     // 获取角色列表
     async getRoleList() {
       const res = await getRoleListAPI()
