@@ -6,7 +6,7 @@
         :key="item.roleId"
         class="role-item"
         :class="{active: activeIndex === index}"
-        @click="roleClickFn(index)"
+        @click="roleClickFn(index, item.roleId)"
       >
         <div class="role-info">
           <svg-icon icon-class="user" class="icon" />
@@ -53,9 +53,10 @@ export default {
       roleDetailList: [] // 权限点Id集合（二维数组）
     }
   },
-  created() {
-    this.getRoleList()
-    this.getTreeList()
+  async created() {
+    await this.getRoleList()
+    await this.getTreeList()
+    this.getRoleDetailListFn(this.roleList[0].roleId) // 获取第一个角色下属的权限详情列表
   },
   methods: {
     // 获取所有功能权限列表
@@ -77,15 +78,18 @@ export default {
       }
     },
     // 点击某行角色
-    roleClickFn(index) {
+    roleClickFn(index, roleId) {
       this.activeIndex = index
+      this.getRoleDetailListFn(roleId)
     },
     // 获取角色列表
     async getRoleList() {
       const res = await getRoleListAPI()
       this.roleList = res.data
-      // 默认获取第一个角色权限点列表
-      const roleRes = await getRoleDetailAPI(this.roleList[0].roleId)
+    },
+    // 请求指定角色下属的功能权限列表集合
+    async getRoleDetailListFn(roleId) {
+      const roleRes = await getRoleDetailAPI(roleId)
       this.roleDetailList = roleRes.data.perms
     }
   }
