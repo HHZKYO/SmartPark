@@ -12,25 +12,25 @@
     </header>
     <main class="add-main">
       <div class="step-container">
-        <el-steps direction="vertical" :active="1">
+        <el-steps direction="vertical" :active="nowActive">
           <el-step title="角色信息" />
           <el-step title="权限信息" />
           <el-step title="检查并完成" />
         </el-steps>
       </div>
-      <div class="form-container">
+      <div v-show="nowActive === 0" class="form-container">
         <div class="title">角色信息</div>
         <div class="form">
           角色信息内容
         </div>
       </div>
-      <div class="form-container">
+      <div v-show="nowActive === 1" class="form-container">
         <div class="title">权限配置</div>
         <div class="form">
           权限配置内容
         </div>
       </div>
-      <div class="form-container">
+      <div v-show="nowActive === 2" class="form-container">
         <div class="title">检查并完成</div>
         <div class="form">
           检查并完成内容
@@ -48,7 +48,11 @@
 
 <script>
 export default {
-
+  data() {
+    return {
+      nowActive: 0 // 当前步骤
+    }
+  }
 }
 </script>
 
