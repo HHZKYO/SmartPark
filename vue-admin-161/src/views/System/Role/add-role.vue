@@ -12,7 +12,7 @@
     </header>
     <main class="add-main">
       <div class="step-container">
-        <el-steps direction="vertical" :active="nowActive">
+        <el-steps direction="vertical" :active="nowActive" finish-status="success">
           <el-step title="角色信息" />
           <el-step title="权限信息" />
           <el-step title="检查并完成" />
@@ -39,8 +39,10 @@
     </main>
     <footer class="add-footer">
       <div class="btn-container">
-        <el-button>上一步</el-button>
-        <el-button type="primary">下一步</el-button>
+        <el-button @click="last">上一步</el-button>
+        <el-button type="primary" @click="next">
+          {{ nowActive === 2 ? '完成' : '下一步' }}
+        </el-button>
       </div>
     </footer>
   </div>
@@ -51,6 +53,16 @@ export default {
   data() {
     return {
       nowActive: 0 // 当前步骤
+    }
+  },
+  methods: {
+    // 点击进入下一步
+    next() {
+      this.nowActive < 2 && this.nowActive++
+    },
+    // 点击进入上一步
+    last() {
+      this.nowActive > 0 && this.nowActive--
     }
   }
 }
