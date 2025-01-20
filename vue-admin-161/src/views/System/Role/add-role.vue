@@ -34,7 +34,21 @@
       <div v-show="nowActive === 1" class="form-container">
         <div class="title">权限配置</div>
         <div class="form">
-          权限配置内容
+          <div class="tree-wrapper">
+            <div v-for="item in treeList" :key="item.id" class="tree-item">
+              <div class="tree-title">{{ item.title }}</div>
+              <el-tree
+                ref="tree"
+                :data="item.children"
+                show-checkbox
+                default-expand-all
+                check-strictly
+                node-key="id"
+                highlight-current
+                :props="{ label: 'title' }"
+              />
+            </div>
+          </div>
         </div>
       </div>
       <div v-show="nowActive === 2" class="form-container">
@@ -56,10 +70,12 @@
 </template>
 
 <script>
+import { getTreeListAPI } from '@/apis/system'
+
 export default {
   data() {
     return {
-      nowActive: 0, // 当前步骤
+      nowActive: 1, // 当前步骤
       roleForm: {
         roleName: '',
         remark: ''
@@ -68,10 +84,19 @@ export default {
         roleName: [
           { required: true, message: '请输入角色名称', trigger: 'blur' }
         ]
-      }
+      },
+      treeList: [] // 权限树形列表
     }
   },
+  created() {
+    this.getTreeList()
+  },
   methods: {
+    // 获取权限点列表
+    async getTreeList() {
+      const res = await getTreeListAPI()
+      this.treeList = res.data
+    },
     // 点击进入下一步
     async next() {
       // if (this.nowActive === 2) return
