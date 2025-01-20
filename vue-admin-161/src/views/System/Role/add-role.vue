@@ -21,7 +21,14 @@
       <div v-show="nowActive === 0" class="form-container">
         <div class="title">角色信息</div>
         <div class="form">
-          角色信息内容
+          <el-form ref="roleForm" class="form-box" :model="roleForm" :rules="roleRules">
+            <el-form-item label="角色名称" prop="roleName">
+              <el-input v-model="roleForm.roleName" />
+            </el-form-item>
+            <el-form-item label="角色描述">
+              <el-input v-model="roleForm.remark" />
+            </el-form-item>
+          </el-form>
         </div>
       </div>
       <div v-show="nowActive === 1" class="form-container">
@@ -52,12 +59,25 @@
 export default {
   data() {
     return {
-      nowActive: 0 // 当前步骤
+      nowActive: 0, // 当前步骤
+      roleForm: {
+        roleName: '',
+        remark: ''
+      },
+      roleRules: {
+        roleName: [
+          { required: true, message: '请输入角色名称', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {
     // 点击进入下一步
-    next() {
+    async next() {
+      // if (this.nowActive === 2) return
+      if (this.nowActive === 0) {
+        await this.$refs.roleForm.validate()
+      }
       this.nowActive < 2 && this.nowActive++
     },
     // 点击进入上一步
