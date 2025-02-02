@@ -103,6 +103,7 @@ export default {
       if (this.nowActive === 0) {
         // 输入角色信息
         await this.$refs.roleForm.validate()
+        this.nowActive < 2 && this.nowActive++
       } else if (this.nowActive === 1) {
         // 分配权限点
         const bigArr = []
