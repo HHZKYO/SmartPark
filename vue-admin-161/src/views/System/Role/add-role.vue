@@ -125,6 +125,7 @@ export default {
         await this.$refs.roleForm.validate()
         this.nowActive < 2 && this.nowActive++
       } else if (this.nowActive === 1) {
+        this.perms = []
         // 分配权限点
         this.$refs.tree.forEach(treeCom => {
           const keys = treeCom.getCheckedKeys()
