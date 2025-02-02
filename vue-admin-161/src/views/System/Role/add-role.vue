@@ -69,7 +69,7 @@
                   check-strictly
                   node-key="id"
                   :highlight-current="false"
-                  :props="{ label: 'title'}"
+                  :props="{ label: 'title', disabled: () => true}"
                 />
               </div>
             </div>
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { getTreeListAPI } from '@/apis/system'
+import { createRoleUserAPI, getTreeListAPI } from '@/apis/system'
 
 export default {
   data() {
@@ -104,7 +104,8 @@ export default {
           { required: true, message: '请输入角色名称', trigger: 'blur' }
         ]
       },
-      treeList: [] // 权限树形列表
+      treeList: [], // 权限树形列表
+      perms: [] // 选择的所有权限点的二维数组
     }
   },
   created() {
@@ -125,21 +126,27 @@ export default {
         this.nowActive < 2 && this.nowActive++
       } else if (this.nowActive === 1) {
         // 分配权限点
-        const bigArr = []
         this.$refs.tree.forEach(treeCom => {
           const keys = treeCom.getCheckedKeys()
-          bigArr.push(keys)
+          this.perms.push(keys)
         })
-        const resultArr = bigArr.flat()
+        const resultArr = this.perms.flat()
         if (resultArr.length > 0) {
           this.nowActive < 2 && this.nowActive++
           this.$nextTick(() => {
             console.log(this.$refs.disabledTree)
             this.$refs.disabledTree.forEach((treeCom, index) => {
-              treeCom.setCheckedKeys(bigArr[index])
+              treeCom.setCheckedKeys(this.perms[index])
             })
           })
         }
+      } else {
+        // 本次状态完成 => 提交数据
+        await createRoleUserAPI({
+          ...this.roleForm,
+          perms: this.perms
+        })
+        this.$router.back()
       }
     },
     // 点击进入上一步
