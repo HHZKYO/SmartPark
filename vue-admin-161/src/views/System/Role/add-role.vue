@@ -54,7 +54,26 @@
       <div v-show="nowActive === 2" class="form-container">
         <div class="title">检查并完成</div>
         <div class="form">
-          检查并完成内容
+          <div class="info">
+            <div class="form-item">角色名称：{{ roleForm.roleName }}</div>
+            <div class="form-item">角色描述：{{ roleForm.remark }}</div>
+            <div class="form-item">角色权限：</div>
+            <div class="tree-wrapper">
+              <div v-for="item in treeList" :key="item.id" class="tree-item">
+                <div class="tree-title">{{ item.title }}</div>
+                <el-tree
+                  ref="disabledTree"
+                  :data="item.children"
+                  show-checkbox
+                  default-expand-all
+                  check-strictly
+                  node-key="id"
+                  :highlight-current="false"
+                  :props="{ label: 'title'}"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </main>
@@ -75,7 +94,7 @@ import { getTreeListAPI } from '@/apis/system'
 export default {
   data() {
     return {
-      nowActive: 1, // 当前步骤
+      nowActive: 0, // 当前步骤
       roleForm: {
         roleName: '',
         remark: ''
@@ -114,9 +133,13 @@ export default {
         const resultArr = bigArr.flat()
         if (resultArr.length > 0) {
           this.nowActive < 2 && this.nowActive++
+          this.$nextTick(() => {
+            console.log(this.$refs.disabledTree)
+            this.$refs.disabledTree.forEach((treeCom, index) => {
+              treeCom.setCheckedKeys(bigArr[index])
+            })
+          })
         }
-      } else {
-        this.nowActive < 2 && this.nowActive++
       }
     },
     // 点击进入上一步
