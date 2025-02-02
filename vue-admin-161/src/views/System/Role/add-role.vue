@@ -101,9 +101,22 @@ export default {
     async next() {
       // if (this.nowActive === 2) return
       if (this.nowActive === 0) {
+        // 输入角色信息
         await this.$refs.roleForm.validate()
+      } else if (this.nowActive === 1) {
+        // 分配权限点
+        const bigArr = []
+        this.$refs.tree.forEach(treeCom => {
+          const keys = treeCom.getCheckedKeys()
+          bigArr.push(keys)
+        })
+        const resultArr = bigArr.flat()
+        if (resultArr.length > 0) {
+          this.nowActive < 2 && this.nowActive++
+        }
+      } else {
+        this.nowActive < 2 && this.nowActive++
       }
-      this.nowActive < 2 && this.nowActive++
     },
     // 点击进入上一步
     last() {
