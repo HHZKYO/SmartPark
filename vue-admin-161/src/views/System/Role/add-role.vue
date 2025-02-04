@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { createRoleUserAPI, getRoleDetailAPI, getTreeListAPI } from '@/apis/system'
+import { createRoleUserAPI, getRoleDetailAPI, getTreeListAPI, updateRoleAPI } from '@/apis/system'
 
 export default {
   data() {
@@ -160,11 +160,21 @@ export default {
           })
         }
       } else {
-        // 本次状态完成 => 提交数据
-        await createRoleUserAPI({
-          ...this.roleForm,
-          perms: this.perms
-        })
+        if (this.id) {
+          // 编辑
+          await updateRoleAPI({
+            ...this.roleForm,
+            perms: this.perms,
+            roleId: this.id
+          })
+        } else {
+          // 添加
+          // 本次状态完成 => 提交数据
+          await createRoleUserAPI({
+            ...this.roleForm,
+            perms: this.perms
+          })
+        }
         this.$router.back()
       }
     },
