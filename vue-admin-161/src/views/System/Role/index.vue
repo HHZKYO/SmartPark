@@ -20,7 +20,7 @@
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item @click.native="$router.push(`/add-role?roleId=${item.roleId}`)">编辑角色</el-dropdown-item>
-              <el-dropdown-item>删除</el-dropdown-item>
+              <el-dropdown-item @click.native="delRole(item.roleId)">删除</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { getRoleDetailAPI, getRoleListAPI, getRoleUserAPI, getTreeListAPI } from '@/apis/system'
+import { delRoleUserAPI, getRoleDetailAPI, getRoleListAPI, getRoleUserAPI, getTreeListAPI } from '@/apis/system'
 
 export default {
   name: 'Role',
@@ -97,6 +97,11 @@ export default {
     this.getMemberListFn(this.roleList[0].roleId) // 获取第一个角色下属的成员列表
   },
   methods: {
+    // 删除角色
+    async delRole(roleId) {
+      await delRoleUserAPI(roleId)
+      this.getRoleList()
+    },
     // 获取所有功能权限列表
     async getTreeList() {
       const res = await getTreeListAPI()
