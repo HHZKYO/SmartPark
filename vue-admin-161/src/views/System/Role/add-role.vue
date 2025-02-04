@@ -4,7 +4,7 @@
       <div class="left">
         <span class="arrow" @click="$router.back()"><i class="el-icon-arrow-left" />返回</span>
         <span>|</span>
-        <span>添加角色</span>
+        <span>{{ id ? '编辑角色':'添加角色' }}</span>
       </div>
       <div class="right">
         黑马程序员
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { createRoleUserAPI, getTreeListAPI } from '@/apis/system'
+import { createRoleUserAPI, getRoleDetailAPI, getTreeListAPI } from '@/apis/system'
 
 export default {
   data() {
@@ -108,10 +108,28 @@ export default {
       perms: [] // 选择的所有权限点的二维数组
     }
   },
+  computed: {
+    id() {
+      return this.$route.query.roleId
+    }
+  },
   created() {
     this.getTreeList()
+    if (this.id) {
+      this.getRoleDetailFn()
+    }
   },
   methods: {
+    // 获取某个角色下的详情（用于数据回显）
+    async getRoleDetailFn() {
+      const res = await getRoleDetailAPI(this.id)
+      this.roleForm.roleName = res.data.roleName
+      this.roleForm.remark = res.data.remark
+      // 权限点回显
+      this.$refs.tree.forEach((treeCom, index) => {
+        treeCom.setCheckedKeys(res.data.perms[index])
+      })
+    },
     // 获取权限点列表
     async getTreeList() {
       const res = await getTreeListAPI()
