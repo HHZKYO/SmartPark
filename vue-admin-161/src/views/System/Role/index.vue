@@ -129,7 +129,7 @@ export default {
     // 请求指定角色下属的成员列表集合
     async getMemberListFn(roleId) {
       const res = await getRoleUserAPI(roleId)
-      console.log(res)
+      // console.log(res)
       this.roleUserList = res.data.rows
       this.roleUserTotal = res.data.total
     },

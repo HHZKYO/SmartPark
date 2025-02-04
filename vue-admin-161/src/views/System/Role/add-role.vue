@@ -113,8 +113,8 @@ export default {
       return this.$route.query.roleId
     }
   },
-  created() {
-    this.getTreeList()
+  async created() {
+    await this.getTreeList()
     if (this.id) {
       this.getRoleDetailFn()
     }
@@ -153,7 +153,7 @@ export default {
         if (resultArr.length > 0) {
           this.nowActive < 2 && this.nowActive++
           this.$nextTick(() => {
-            console.log(this.$refs.disabledTree)
+            // console.log(this.$refs.disabledTree)
             this.$refs.disabledTree.forEach((treeCom, index) => {
               treeCom.setCheckedKeys(this.perms[index])
             })
