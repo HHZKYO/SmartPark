@@ -35,7 +35,9 @@
             >
               <template #default="{row}">
                 <el-button type="text">
-                  {{ row.contractName }}
+                  <a :href="row.contractUrl" target="_blank">
+                    {{ row.contractName }}
+                  </a>
                 </el-button>
               </template>
             </el-table-column>
@@ -53,10 +55,8 @@
             </el-table-column>
           </el-table>
         </div>
-
       </div>
     </main>
-
   </div>
 </template>
 
@@ -66,7 +66,8 @@ import { downloadContract, getEnterpriseDetailAPI } from '@/apis/park'
 export default {
   data() {
     return {
-      rentList: [] // 合同列表
+      rentList: [], // 合同列表
+      previewURL: 'https://view.officeapps.live.com/op/view.aspx?src=' // 预览地址
     }
   },
   created() {
@@ -85,6 +86,16 @@ export default {
     // 企业详情+合同列表
     async getList() {
       const res = await getEnterpriseDetailAPI(this.$route.query.id)
+      // 预处理预览地址
+      // PDF：直接浏览器打开
+      // 在线预览工具只能浏览 doc 文件，需要拼接前缀预览地址
+      res.data.rent.forEach(obj => {
+        const url = obj.contractUrl
+        const extName = url.slice(url.lastIndexOf('.'))
+        if (extName === '.doc') {
+          obj.contractUrl = this.previewURL + obj.contractUrl
+        }
+      })
       this.rentList = res.data.rent
     }
   }
