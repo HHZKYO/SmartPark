@@ -5,6 +5,29 @@
     </header>
     <main class="add-main">
       <div class="form-container">
+        <div class="title">企业信息</div>
+        <div class="table-container">
+          <el-descriptions :column="2">
+            <el-descriptions-item label="企业名称">{{ msg.name }}</el-descriptions-item>
+            <el-descriptions-item label="法人">{{ msg.legalPerson }}</el-descriptions-item>
+            <el-descriptions-item label="注册地址">{{ msg.registeredAddress }}</el-descriptions-item>
+            <el-descriptions-item label="所在行业">{{ msg.industryName }}</el-descriptions-item>
+            <el-descriptions-item label="营业执照">
+              <img :src="msg.businessLicenseUrl" class="avatar">
+            </el-descriptions-item>
+          </el-descriptions>
+        </div>
+      </div>
+      <div class="form-container">
+        <div class="title">联系人信息</div>
+        <div class="table-container">
+          <el-descriptions :column="2">
+            <el-descriptions-item label="企业联系人">{{ msg.contact }}</el-descriptions-item>
+            <el-descriptions-item label="联系电话">{{ msg.contactNumber }}</el-descriptions-item>
+          </el-descriptions>
+        </div>
+      </div>
+      <div class="form-container">
         <div class="title">租赁记录</div>
         <div class="table-container">
           <el-table
@@ -67,7 +90,8 @@ export default {
   data() {
     return {
       rentList: [], // 合同列表
-      previewURL: 'https://view.officeapps.live.com/op/view.aspx?src=' // 预览地址
+      previewURL: 'https://view.officeapps.live.com/op/view.aspx?src=', // 预览地址
+      msg: {}
     }
   },
   created() {
@@ -97,6 +121,8 @@ export default {
         }
       })
       this.rentList = res.data.rent
+      this.msg = res.data
+      console.log(this.msg)
     }
   }
 }
@@ -150,5 +176,10 @@ export default {
       }
     }
   }
+}
+::v-deep .avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }
 </style>
