@@ -149,8 +149,8 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        delCardAPI(id)
+      }).then(async() => {
+        await delCardAPI(id)
         this.getList()
         this.$message({
           type: 'success',
@@ -169,10 +169,25 @@ export default {
       this.selectedCarList = val
     },
     // 批量删除
-    async dels() {
+    dels() {
       const ids = this.selectedCarList.map(obj => obj.id)
-      await delCardAPI(ids.join(','))
-      this.getList()
+      this.$confirm('此操作将永久删除所选中的文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        await delCardAPI(ids.join(','))
+        this.getList()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
