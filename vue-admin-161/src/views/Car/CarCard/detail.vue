@@ -15,6 +15,45 @@
           </el-descriptions>
         </div>
       </div>
+      <!-- <div class="form-container">
+        <div class="title">月卡缴费记录</div>
+        <div class="table-container">
+          <div class="table-container">
+            <el-table
+              :data="rentList"
+              style="width: 100%"
+              border
+            >
+              <el-table-column
+                type="index"
+                label="序号"
+                width="80"
+              />
+              <el-table-column
+                prop="name"
+                label="有效时间"
+              />
+              <el-table-column
+                label="支付金额"
+                width="120"
+              />
+              <el-table-column
+                label="支付方式"
+                width="120"
+              />
+              <el-table-column
+                prop="createTime"
+                label="办理时间"
+              />
+              <el-table-column
+                prop="address"
+                label="办理人"
+                width="150"
+              />
+            </el-table>
+          </div>
+        </div>
+      </div> -->
     </main>
   </div>
 </template>
