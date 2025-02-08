@@ -18,7 +18,7 @@
         <div class="form">
           <el-form ref="cardChargeInfo" :model="cardChargeInfo" :rules="cardChargeInfoRules" label-width="100px">
             <el-form-item label="有效日期" prop="cardEndDate">
-              <!-- <el-date-picker
+              <el-date-picker
                 v-model="cardChargeInfo.cardStartDate"
                 value-format="yyyy-MM-dd"
                 type="date"
@@ -26,13 +26,6 @@
                 :disabled-date="disabledStartDate"
                 format="yyyy-MM-dd"
                 readonly
-              /> -->
-              <el-date-picker
-                v-model="cardChargeInfo.cardStartDate"
-                type="date"
-                placeholder="开始日期"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd"
               />
               <span>至</span>
               <el-date-picker
@@ -142,17 +135,16 @@ export default {
     // 获取月卡详情
     async getCardDetail() {
       const res = await getCardDetailAPI(this.id)
-      console.log(res)
       // 设置车辆信息
       for (const key in this.carInfo) {
         this.carInfo[key] = res.data[key]
       }
       // 设置月卡缴费信息
-      // const endDate = new Date(res.data.cardEndDate)
-      // // 计算后一天
-      // endDate.setDate(endDate.getDate() + 1)
-      // // 设置开始时间为cardEndDate，且不可更改
-      // this.cardChargeInfo.cardStartDate = endDate.toISOString().split('T')[0]
+      const endDate = new Date(res.data.cardEndDate)
+      // 计算后一天
+      endDate.setDate(endDate.getDate() + 1)
+      // 设置开始时间为cardEndDate，且不可更改
+      this.cardChargeInfo.cardStartDate = endDate.toISOString().split('T')[0]
       // 注意：这里不设置cardEndDate，因为它将由用户选择
       this.cardChargeInfo.carInfoId = res.data.carInfoId
     },
@@ -166,7 +158,6 @@ export default {
     },
     // 表单提交确认
     async confirmAdd() {
-      console.log(this.cardChargeInfo)
       await this.$refs.cardChargeInfo.validate()
       await renewChargeAPI(this.cardChargeInfo)
       this.$router.back()
