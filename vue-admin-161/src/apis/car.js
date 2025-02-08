@@ -40,13 +40,24 @@ export function renewChargeAPI(data) {
 }
 
 /**
- * 获取月卡详情
+ * 获取编辑页月卡详情
  * @data
  * @returns
  */
 export function getCardDetailAPI(id) {
   return request({
     url: `/parking/card/detail/${id}`
+  })
+}
+
+/**
+ * 查看月卡详情
+ * @param {*} id
+ * @returns
+ */
+export function getCardChargeDetailAPI(id) {
+  return request({
+    url: `/parking/card/${id}`
   })
 }
 
