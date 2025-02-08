@@ -53,7 +53,6 @@
           </el-form>
         </div>
       </div>
-
     </main>
     <footer class="add-footer">
       <div class="btn-container">
@@ -198,6 +197,7 @@ export default {
       if (validCarNum(value)) callback()
       else callback(new Error('请输入正确的车牌号'))
     },
+    // 确定表单并提交
     async confirmAdd() {
       await this.$refs.carInfo.validate()
       await this.$refs.feeForm.validate()
@@ -280,6 +280,7 @@ export default {
         height: 60px;
         line-height: 60px;
         padding-left: 20px;
+        border-bottom: 1px solid #eee;
       }
 
       .form {

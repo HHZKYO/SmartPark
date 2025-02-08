@@ -146,6 +146,11 @@ export const routes = [
     component: () => import('@/views/Car/CarCard/detail.vue')
   },
   {
+    // 行车管理-月卡管理-月卡续费
+    path: '/card-renew',
+    component: () => import('@/views/Car/CarCard/renewCharge.vue')
+  },
+  {
     // 系统管理-角色管理-新增角色
     path: '/add-role',
     component: () => import('@/views/System/Role/add-role.vue')

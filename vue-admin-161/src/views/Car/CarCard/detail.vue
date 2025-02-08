@@ -118,6 +118,7 @@ export default {
         height: 60px;
         line-height: 60px;
         padding-left: 20px;
+        border-bottom: 1px solid #eee;
       }
     }
     .table-container{

@@ -52,7 +52,7 @@
         <el-table-column label="状态" prop="cardStatus" :formatter="formatterFn" />
         <el-table-column label="操作" fixed="right" width="180">
           <template #default="scope">
-            <el-button size="mini" type="text">续费</el-button>
+            <el-button size="mini" type="text" @click="$router.push(`/card-renew?id=${scope.row.id}`)">续费</el-button>
             <el-button size="mini" type="text" @click="$router.push(`/card-detail?id=${scope.row.id}`)">查看</el-button>
             <el-button size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
             <el-button size="mini" type="text" @click="del(scope.row.id)">删除</el-button>

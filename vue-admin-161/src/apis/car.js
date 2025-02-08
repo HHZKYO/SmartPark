@@ -14,13 +14,26 @@ export function getCardListAPI(params) {
 }
 
 /**
- *
+ * 添加月卡
  * @param {*} data
  * @returns
  */
 export function createCardAPI(data) {
   return request({
     url: '/parking/card',
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * 月卡续费提交
+ * @param {*} data
+ * @returns
+ */
+export function renewChargeAPI(data) {
+  return request({
+    url: '/parking/card/recharge',
     method: 'POST',
     data
   })
