@@ -83,6 +83,18 @@ export function outRentAPI(rentId) {
 }
 
 /**
+ * 合同删除
+ * @param {*} rentId
+ * @returns
+ */
+export function deleteRentAPI(rentId) {
+  return request({
+    url: `/park/enterprise/rent/${rentId}`,
+    method: 'DELETE'
+  })
+}
+
+/**
  * 获取企业详情
  * @param {*} id
  * @returns

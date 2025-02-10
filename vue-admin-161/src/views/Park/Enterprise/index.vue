@@ -46,6 +46,7 @@
                     size="mini"
                     type="text"
                     :disabled="row.status !== 3"
+                    @click="deleteRent(row.id)"
                   >
                     删除
                   </el-button>
@@ -125,7 +126,7 @@
 
 <script>
 import { deleteEnterpriseAPI } from '@/apis/enterprise'
-import { createRentAPI, getEnterpriseListAPI, getRentBuildListAPI, getRentListAPI, outRentAPI, uploadAPI } from '@/apis/park'
+import { createRentAPI, deleteRentAPI, getEnterpriseListAPI, getRentBuildListAPI, getRentListAPI, outRentAPI, uploadAPI } from '@/apis/park'
 
 export default {
   data() {
@@ -302,6 +303,26 @@ export default {
     showAddRentDialog(id) {
       this.rentForm.enterpriseId = id
       this.rentDialogVisible = true
+    },
+    // 删除合同
+    deleteRent(id) {
+      this.$confirm('此操作将删除该合同，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        await deleteRentAPI(id)
+        this.getList()
+        this.$message({
+          type: 'success',
+          message: '删除成功'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
