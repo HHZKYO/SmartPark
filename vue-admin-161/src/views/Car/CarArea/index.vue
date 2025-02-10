@@ -121,7 +121,6 @@ export default {
     // 获取区域列表
     async getAreaList() {
       const res = await getAreaListAPI(this.params)
-      console.log(res)
       this.areaList = res.data.rows
       this.areaAmount = res.data.total
     },

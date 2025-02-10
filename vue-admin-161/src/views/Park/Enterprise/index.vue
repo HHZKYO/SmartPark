@@ -117,7 +117,7 @@
         </el-form>
       </div>
       <template #footer>
-        <el-button size="mini">取 消</el-button>
+        <el-button size="mini" @click="cancel">取 消</el-button>
         <el-button size="mini" type="primary" @click="confirmAdd">确 定</el-button>
       </template>
     </el-dialog>
@@ -220,6 +220,12 @@ export default {
       obj.endTime = this.rentForm.rentTime[1]
       delete obj.rentTime
       await createRentAPI(obj)
+      this.$refs.addForm.resetFields()
+      this.rentDialogVisible = false
+    },
+    // 取消提交
+    cancel() {
+      this.$refs.addForm.resetFields()
       this.rentDialogVisible = false
     },
     // 上传租赁合同文件
