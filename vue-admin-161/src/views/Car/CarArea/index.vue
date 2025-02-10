@@ -1,6 +1,6 @@
 <template>
   <div class="area-container">
-    <el-button type="primary">添加区域</el-button>
+    <el-button type="primary" @click="showAddAreaDialog">添加区域</el-button>
     <!-- 表格区域 -->
     <div class="table">
       <el-table style="width: 100%" :data="areaList">
@@ -18,6 +18,7 @@
         </el-table-column>
       </el-table>
     </div>
+    <!-- 底部分页显示区域 -->
     <div class="page-container">
       <el-pagination
         background
@@ -29,11 +30,45 @@
         @size-change="sizeChangeFn"
       />
     </div>
+    <!-- 新增区域对话框 -->
+    <el-dialog title="添加区域" :visible.sync="areaDialogVisible" width="580px">
+      <div class="form-container">
+        <el-form ref="areaForm" label-position="top" :model="areaForm" :rules="areaFormRules">
+          <el-form-item label="区域名称" prop="areaName">
+            <el-input v-model="areaForm.areaName" placeholder="请输入区域名称" />
+          </el-form-item>
+          <el-form-item label="车位数（个）" prop="spaceNumber">
+            <el-input v-model="areaForm.spaceNumber" placeholder="请输入车位个数" />
+          </el-form-item>
+          <el-form-item label="面积（㎡）" prop="areaProportion">
+            <el-input v-model="areaForm.areaProportion" placeholder="请输入面积" />
+          </el-form-item>
+          <el-form-item label="关联计费规则" prop="ruleId">
+            <el-select v-model="areaForm.ruleId" placeholder="请选择">
+              <el-option
+                v-for="item in ruleIdList"
+                :key="item.id"
+                :value="item.id"
+                :label="item.name"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="备注" prop="remark">
+            <el-input v-model="areaForm.remark" type="textarea" />
+          </el-form-item>
+        </el-form>
+      </div>
+      <template #footer>
+        <el-button size="mini" @click="cancel">取 消</el-button>
+        <el-button size="mini" type="primary" @click="confirmAdd">确 定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getAreaListAPI } from '@/apis/area'
+import { addAreaAPI, getAreaListAPI } from '@/apis/area'
+import { validAreaOfRegion } from '@/utils/validate'
 
 export default {
   data() {
@@ -43,7 +78,40 @@ export default {
         pageSize: 6 // 这是每一页的条数
       },
       areaList: [], // 区域列表
-      areaAmount: 0 // 区域数量
+      areaAmount: 0, // 区域数量
+      areaDialogVisible: false, // 新增区域对话框显示/隐藏
+      // 添加区域信息表单
+      areaForm: {
+        areaName: '', // 区域名称
+        spaceNumber: null, // 车位个数
+        areaProportion: null, // 面积
+        ruleId: null, // 计费规则
+        remark: '' // 备注
+      },
+      // 表单信息校验对象
+      areaFormRules: {
+        areaName: [
+          { required: true, message: '请输入区域名称', trigger: 'blur' }
+        ],
+        spaceNumber: [
+          { required: true, message: '请输入车位个数', trigger: 'blur' },
+          { validator: this.validatorAreaOfRegion, trigger: 'blur' }
+        ],
+        areaProportion: [
+          { required: true, message: '请输入面积', trigger: 'blur' },
+          { validator: this.validatorAreaOfRegion, trigger: 'blur' }
+        ],
+        ruleId: [
+          { required: true, message: '请选择计费规则', trigger: 'change' }
+        ]
+      },
+      // 管理计费规则列表
+      ruleIdList: [
+        { id: 1, name: '按分钟计费' },
+        { id: 2, name: '按小时计费' },
+        { id: 3, name: '按次收费' },
+        { id: 4, name: '分段计费' }
+      ]
     }
   },
   created() {
@@ -66,6 +134,27 @@ export default {
     sizeChangeFn(pageSize) {
       this.params.pageSize = pageSize
       this.getAreaList()
+    },
+    // 添加区域
+    showAddAreaDialog() {
+      this.areaDialogVisible = true
+    },
+    // 区域面积校验
+    validatorAreaOfRegion(rule, value, callback) {
+      if ((validAreaOfRegion(value))) callback()
+      else callback(new Error('仅支持正整数'))
+    },
+    // 确认提交新增区域表单
+    async confirmAdd() {
+      await this.$refs.areaForm.validate()
+      await addAreaAPI(this.areaForm)
+      this.$refs.areaForm.resetFields()
+      this.areaDialogVisible = false
+      this.getAreaList()
+    },
+    cancel() {
+      this.$refs.areaForm.resetFields()
+      this.areaDialogVisible = false
     }
   }
 }
@@ -77,7 +166,11 @@ export default {
 }
 
 .page-container{
-    padding:4px 0px;
-    text-align: right;
-  }
+  padding:4px 0px;
+  text-align: right;
+}
+
+.form-container{
+  padding: 0px 80px;
+}
 </style>

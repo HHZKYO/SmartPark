@@ -39,3 +39,8 @@ export function validBuildingArea(area) {
 export function validPropertyFeePrice(price) {
   return /[1-9]\d*.\d*|0\.\d*[1-9]\d*/.test(price)
 }
+
+// 校验区域面积（正整数）
+export function validAreaOfRegion(area) {
+  return /^[1-9]\d*$/.test(area)
+}

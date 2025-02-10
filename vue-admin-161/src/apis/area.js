@@ -11,3 +11,16 @@ export function getAreaListAPI(params) {
     params
   })
 }
+
+/**
+ * 添加区域
+ * @param {*} data
+ * @returns
+ */
+export function addAreaAPI(data) {
+  return request({
+    url: '/parking/area',
+    method: 'POST',
+    data
+  })
+}
