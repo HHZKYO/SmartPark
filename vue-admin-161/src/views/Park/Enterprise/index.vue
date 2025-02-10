@@ -218,8 +218,8 @@ export default {
       obj.startTime = this.rentForm.rentTime[0]
       obj.endTime = this.rentForm.rentTime[1]
       delete obj.rentTime
-      const res = await createRentAPI(obj)
-      console.log(res)
+      await createRentAPI(obj)
+      this.rentDialogVisible = false
     },
     // 上传租赁合同文件
     async uploadHandle(file) {
