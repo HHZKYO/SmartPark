@@ -37,3 +37,15 @@ export function editAreaAPI(data) {
     data
   })
 }
+
+/**
+ * 删除区域
+ * @param {*} id
+ * @returns
+ */
+export function deleteAreaAPI(id) {
+  return request({
+    url: `/parking/area/${id}`,
+    method: 'DELETE'
+  })
+}

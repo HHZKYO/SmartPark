@@ -13,7 +13,7 @@
         <el-table-column label="操作" width="166">
           <template #default="scope">
             <el-button size="mini" type="text" @click="edit(scope.row)">编辑</el-button>
-            <el-button size="mini" type="text">删除</el-button>
+            <el-button size="mini" type="text" @click="deleteArea(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { addAreaAPI, editAreaAPI, getAreaListAPI } from '@/apis/area'
+import { addAreaAPI, deleteAreaAPI, editAreaAPI, getAreaListAPI } from '@/apis/area'
 import { validAreaOfRegion } from '@/utils/validate'
 
 export default {
@@ -141,6 +141,26 @@ export default {
     showAddAreaDialog() {
       this.areaDialogVisible = true
       this.formTitle = '添加区域'
+    },
+    // 删除区域
+    deleteArea(id) {
+      this.$confirm('此操作将永久删除该区域，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        await deleteAreaAPI(id)
+        this.getAreaList()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     // 区域面积校验
     validatorAreaOfRegion(rule, value, callback) {
