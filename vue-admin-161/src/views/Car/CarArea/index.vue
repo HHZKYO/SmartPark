@@ -11,8 +11,8 @@
         <el-table-column label="计费规则" width="166" prop="ruleName" />
         <el-table-column label="备注" prop="remark" />
         <el-table-column label="操作" width="166">
-          <template>
-            <el-button size="mini" type="text">编辑</el-button>
+          <template #default="scope">
+            <el-button size="mini" type="text" @click="edit(scope.row)">编辑</el-button>
             <el-button size="mini" type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -31,7 +31,8 @@
       />
     </div>
     <!-- 新增区域对话框 -->
-    <el-dialog title="添加区域" :visible.sync="areaDialogVisible" width="580px">
+    <el-dialog :visible.sync="areaDialogVisible" width="580px">
+      <div class="title">{{ formTitle }}</div>
       <div class="form-container">
         <el-form ref="areaForm" label-position="top" :model="areaForm" :rules="areaFormRules">
           <el-form-item label="区域名称" prop="areaName">
@@ -67,7 +68,7 @@
 </template>
 
 <script>
-import { addAreaAPI, getAreaListAPI } from '@/apis/area'
+import { addAreaAPI, editAreaAPI, getAreaListAPI } from '@/apis/area'
 import { validAreaOfRegion } from '@/utils/validate'
 
 export default {
@@ -88,6 +89,8 @@ export default {
         ruleId: null, // 计费规则
         remark: '' // 备注
       },
+      id: null, // 区域id
+      formTitle: '', // 编辑/添加区域的名称
       // 表单信息校验对象
       areaFormRules: {
         areaName: [
@@ -137,6 +140,7 @@ export default {
     // 添加区域
     showAddAreaDialog() {
       this.areaDialogVisible = true
+      this.formTitle = '添加区域'
     },
     // 区域面积校验
     validatorAreaOfRegion(rule, value, callback) {
@@ -146,14 +150,32 @@ export default {
     // 确认提交新增区域表单
     async confirmAdd() {
       await this.$refs.areaForm.validate()
-      await addAreaAPI(this.areaForm)
+      const data = {
+        id: this.id,
+        ...this.areaForm
+      }
+      if (this.id) {
+        await editAreaAPI(data)
+      } else {
+        await addAreaAPI(this.areaForm)
+      }
       this.$refs.areaForm.resetFields()
       this.areaDialogVisible = false
       this.getAreaList()
     },
+    // 取消新增区域
     cancel() {
       this.$refs.areaForm.resetFields()
       this.areaDialogVisible = false
+    },
+    // 编辑区域
+    edit(row) {
+      this.areaDialogVisible = true
+      this.formTitle = '编辑区域'
+      this.id = row.id
+      for (const key in this.areaForm) {
+        this.areaForm[key] = row[key]
+      }
     }
   }
 }
@@ -171,5 +193,13 @@ export default {
 
 .form-container{
   padding: 0px 80px;
+}
+
+.title{
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  font-size: 16px;
 }
 </style>

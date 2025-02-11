@@ -24,3 +24,16 @@ export function addAreaAPI(data) {
     data
   })
 }
+
+/**
+ * 编辑区域
+ * @param {*} data
+ * @returns
+ */
+export function editAreaAPI(data) {
+  return request({
+    url: '/parking/area',
+    method: 'PUT',
+    data
+  })
+}
