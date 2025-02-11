@@ -31,6 +31,7 @@
                     size="mini"
                     type="text"
                     :disabled="row.status === 0 || row.status === 3"
+                    @click="renewRent(row)"
                   >
                     续租
                   </el-button>
@@ -79,7 +80,8 @@
     </div>
 
     <!-- 新增合同的对话框 -->
-    <el-dialog title="添加合同" :visible.sync="rentDialogVisible" width="580px">
+    <el-dialog :visible.sync="rentDialogVisible" width="580px">
+      <div class="title">{{ title }}</div>
       <!-- 表单模版 -->
       <div class="form-container">
         <el-form ref="addForm" :model="rentForm" :rules="rentRules" label-position="top">
@@ -92,6 +94,44 @@
                 :value="item.id"
               />
             </el-select>
+          </el-form-item>
+          <el-form-item label="租赁起止日期" prop="rentTime">
+            <el-date-picker
+              v-model="rentForm.rentTime"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
+            />
+          </el-form-item>
+          <el-form-item label="租赁合同" prop="contractId">
+            <el-upload
+              action="#"
+              :http-request="uploadHandle"
+              :before-upload="beforeUpload"
+              :limit="1"
+            >
+              <el-button size="small" type="primary" plain>上传合同文件</el-button>
+              <div slot="tip" class="el-upload__tip">支持扩展名：.doc .pdf, 文件大小不超过5M</div>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+      </div>
+      <template #footer>
+        <el-button size="mini" @click="cancel">取 消</el-button>
+        <el-button size="mini" type="primary" @click="confirmAdd">确 定</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 续租合同的对话框 -->
+    <el-dialog :visible.sync="rentDialogVisible" width="580px">
+      <div class="title">{{ title }}</div>
+      <!-- 表单模版 -->
+      <div class="form-container">
+        <el-form ref="addForm" :model="rentForm" :rules="rentRules" label-position="top">
+          <el-form-item label="租赁楼宇" prop="buildingId">
+            <el-input v-model="buildingName" :disabled="isDisabled" />
           </el-form-item>
           <el-form-item label="租赁起止日期" prop="rentTime">
             <el-date-picker
@@ -142,6 +182,9 @@ export default {
         pageSize: 2, // 这是每一页的条数
         name: '' // 要查询的企业名字
       },
+      buildingName: '', // 楼宇名称
+      title: '', // 续租合同/添加合同
+      isDisabled: false, // 租赁楼宇的选择框是否禁用
       enterpriseList: [], // 企业列表
       enterpriseTotal: 0, // 企业总数
       rentDialogVisible: false, // 对话框显示/隐藏
@@ -193,6 +236,16 @@ export default {
           message: '已取消退租'
         })
       })
+    },
+    // 续租
+    renewRent(data) {
+      this.rentForm.enterpriseId = data.id
+      console.log(data)
+      this.title = '续租合同'
+      this.isDisabled = true
+      this.rentDialogVisible = true
+      this.rentForm.buildingId = data.buildingId
+      this.buildingName = data.buildingName
     },
     // 格式化合同状态的样式
     formatterStatus(status) {
@@ -308,6 +361,7 @@ export default {
     // 添加合同
     showAddRentDialog(id) {
       this.rentForm.enterpriseId = id
+      this.title = '添加合同'
       this.rentDialogVisible = true
     },
     // 删除合同
@@ -364,5 +418,13 @@ export default {
 }
 .form-container{
   padding:0px 80px;
+}
+
+.title{
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  font-size: 16px;
 }
 </style>

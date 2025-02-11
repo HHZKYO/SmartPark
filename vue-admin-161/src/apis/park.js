@@ -46,7 +46,7 @@ export function getRentBuildListAPI() {
 }
 
 /**
- * 给当前企业添加合同
+ * 给当前企业添加/续租合同
  * @param {*} data
  * @returns
  */
