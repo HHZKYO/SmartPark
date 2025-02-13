@@ -31,7 +31,7 @@
                     size="mini"
                     type="text"
                     :disabled="row.status === 0 || row.status === 3"
-                    @click="renewRent(row)"
+                    @click="renewRent(row, scope.row.id)"
                   >
                     续租
                   </el-button>
@@ -255,14 +255,14 @@ export default {
       })
     },
     // 续租
-    renewRent(data) {
+    renewRent(data, id) {
       // 续租弹出框
       this.title = '续租合同'
       this.isDisabled = true
       this.renewRentDialogVisible = true
       // 准备续租合同的提交数据
       this.renewRentForm.buildingId = data.buildingId
-      this.renewRentForm.enterpriseId = data.id
+      this.renewRentForm.enterpriseId = id
       const endDate = new Date(data.endTime)
       // 计算后一天
       endDate.setDate(endDate.getDate() + 1)
@@ -293,8 +293,7 @@ export default {
     // 确认提交租赁合同表单
     async confirmAdd() {
       if (this.buildingName) {
-        // await createRentAPI(this.renewRentForm)
-        console.log(this.renewRentForm)
+        await createRentAPI(this.renewRentForm)
       } else {
         const obj = { ...this.rentForm }
         obj.startTime = this.rentForm.rentTime[0]
@@ -305,11 +304,13 @@ export default {
       this.$refs.addForm.resetFields()
       this.rentDialogVisible = false
       this.renewRentDialogVisible = false
+      this.getList()
     },
     // 取消提交
     cancel() {
       this.$refs.addForm.resetFields()
       this.rentDialogVisible = false
+      this.renewRentDialogVisible = false
     },
     // 上传租赁合同文件
     async uploadHandle(file) {
