@@ -22,7 +22,6 @@
                 v-model="cardChargeInfo.cardStartDate"
                 value-format="yyyy-MM-dd"
                 type="date"
-                placeholder="结束日期"
                 :disabled-date="disabledStartDate"
                 format="yyyy-MM-dd"
                 readonly

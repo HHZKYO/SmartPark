@@ -125,20 +125,26 @@
     </el-dialog>
 
     <!-- 续租合同的对话框 -->
-    <el-dialog :visible.sync="rentDialogVisible" width="580px">
+    <el-dialog :visible.sync="renewRentDialogVisible" width="580px">
       <div class="title">{{ title }}</div>
       <!-- 表单模版 -->
       <div class="form-container">
-        <el-form ref="addForm" :model="rentForm" :rules="rentRules" label-position="top">
+        <el-form ref="addForm" :model="renewRentForm" :rules="rentRules" label-position="top">
           <el-form-item label="租赁楼宇" prop="buildingId">
             <el-input v-model="buildingName" :disabled="isDisabled" />
           </el-form-item>
-          <el-form-item label="租赁起止日期" prop="rentTime">
+          <el-form-item label="租赁起止日期" prop="endTime">
             <el-date-picker
-              v-model="rentForm.rentTime"
-              type="daterange"
+              v-model="renewRentForm.startTime"
+              type="date"
               range-separator="至"
-              start-placeholder="开始日期"
+              value-format="yyyy-MM-dd"
+              readonly
+            />
+            <span>至</span>
+            <el-date-picker
+              v-model="renewRentForm.endTime"
+              type="date"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd"
             />
@@ -187,7 +193,8 @@ export default {
       isDisabled: false, // 租赁楼宇的选择框是否禁用
       enterpriseList: [], // 企业列表
       enterpriseTotal: 0, // 企业总数
-      rentDialogVisible: false, // 对话框显示/隐藏
+      rentDialogVisible: false, // 添加合同对话框显示/隐藏
+      renewRentDialogVisible: false, // 续租合同对话框显示/隐藏
       rentForm: {
         buildingId: null, // 楼宇id
         contractId: null, // 合同id
@@ -195,6 +202,16 @@ export default {
         enterpriseId: null, // 企业id
         type: 0, // 合同类型(0代表添加合同，1代表续签合同)
         rentTime: [] // 合同时间
+      },
+      // 续租合同表单数据
+      renewRentForm: {
+        buildingId: null,
+        startTime: '',
+        endTime: '',
+        contractUrl: '',
+        contractId: null,
+        type: 1,
+        enterpriseId: null
       },
       rentBuildList: [], // 可租赁的楼宇列表
       rentRules: {
@@ -239,12 +256,19 @@ export default {
     },
     // 续租
     renewRent(data) {
-      this.rentForm.enterpriseId = data.id
-      console.log(data)
+      // 续租弹出框
       this.title = '续租合同'
       this.isDisabled = true
-      this.rentDialogVisible = true
-      this.rentForm.buildingId = data.buildingId
+      this.renewRentDialogVisible = true
+      // 准备续租合同的提交数据
+      this.renewRentForm.buildingId = data.buildingId
+      this.renewRentForm.enterpriseId = data.id
+      const endDate = new Date(data.endTime)
+      // 计算后一天
+      endDate.setDate(endDate.getDate() + 1)
+      // 设置开始时间为cardEndDate，且不可更改
+      this.renewRentForm.startTime = endDate.toISOString().split('T')[0]
+      // console.log(data)
       this.buildingName = data.buildingName
     },
     // 格式化合同状态的样式
@@ -268,11 +292,16 @@ export default {
     },
     // 确认提交租赁合同表单
     async confirmAdd() {
-      const obj = { ...this.rentForm }
-      obj.startTime = this.rentForm.rentTime[0]
-      obj.endTime = this.rentForm.rentTime[1]
-      delete obj.rentTime
-      await createRentAPI(obj)
+      if (this.buildingName) {
+        // await createRentAPI(this.renewRentForm)
+        console.log(this.renewRentForm)
+      } else {
+        const obj = { ...this.rentForm }
+        obj.startTime = this.rentForm.rentTime[0]
+        obj.endTime = this.rentForm.rentTime[1]
+        delete obj.rentTime
+        await createRentAPI(obj)
+      }
       this.$refs.addForm.resetFields()
       this.rentDialogVisible = false
     },
@@ -289,6 +318,8 @@ export default {
       const res = await uploadAPI(fd)
       this.rentForm.contractId = res.data.id
       this.rentForm.contractUrl = res.data.url
+      this.renewRentForm.contractId = res.data.id
+      this.renewRentForm.contractUrl = res.data.url
     },
     // 租赁文件合同的校验
     beforeUpload(file) {
