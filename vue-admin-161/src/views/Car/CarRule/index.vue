@@ -99,7 +99,6 @@ export default {
     // 请求列表
     async getList() {
       const res = await getRuleListAPI(this.params)
-      console.log(res)
       this.ruleList = res.data.rows
       this.total = res.data.total
     }

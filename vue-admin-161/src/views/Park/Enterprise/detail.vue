@@ -122,7 +122,6 @@ export default {
       })
       this.rentList = res.data.rent
       this.msg = res.data
-      console.log(this.msg)
     }
   }
 }
