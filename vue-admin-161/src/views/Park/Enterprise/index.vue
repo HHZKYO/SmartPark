@@ -304,6 +304,7 @@ export default {
       }
       this.$refs.addForm.resetFields()
       this.rentDialogVisible = false
+      this.renewRentDialogVisible = false
     },
     // 取消提交
     cancel() {
