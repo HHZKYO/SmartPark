@@ -86,7 +86,6 @@ export default {
     // 获取表单列表
     async getParkingFeeList() {
       const res = await getParkingFeeListAPI(this.query)
-      console.log(res)
       this.formList = res.data.rows
       this.total = res.data.total
     },
@@ -159,12 +158,5 @@ export default {
 .page-container {
   padding: 4px 0px;
   text-align: right;
-}
-
-.table {
-  line-height: 40px; /* 设置行内文字的行高，这也会影响行高 */
-  /* 或者使用padding来增加行内的垂直空间 */
-  /* padding-top: 10px; */
-  /* padding-bottom: 10px; */
 }
 </style>
