@@ -97,3 +97,15 @@ export function getRuleListAPI(params) {
     params
   })
 }
+
+/**
+ * 查看停车缴费列表
+ * @param { page, pageSize, carNumber(可选), paymentStatus(可选) } params
+ * @returns
+ */
+export function getParkingFeeListAPI(params) {
+  return request({
+    url: '/parking/payment/list',
+    params
+  })
+}
