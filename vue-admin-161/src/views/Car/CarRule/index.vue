@@ -26,6 +26,16 @@
         </el-table-column>
       </el-table>
     </div>
+    <div class="page-container">
+      <el-pagination
+        layout="total, prev, pager, next, sizes"
+        :total="total"
+        :page-sizes="[2, 4, 6, 8, 10]"
+        :page-size="params.pageSize"
+        @current-change="currentChangeFn"
+        @size-change="sizeChangeFn"
+      />
+    </div>
   </div>
 </template>
 
@@ -101,6 +111,17 @@ export default {
       const res = await getRuleListAPI(this.params)
       this.ruleList = res.data.rows
       this.total = res.data.total
+      console.log(res)
+    },
+    // 页码切换
+    currentChangeFn(nowPage) {
+      this.params.page = nowPage
+      this.getList()
+    },
+    // 条数切换
+    sizeChangeFn(pageSize) {
+      this.params.pageSize = pageSize
+      this.getList()
     }
   }
 }
