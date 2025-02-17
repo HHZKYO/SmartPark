@@ -8,6 +8,7 @@
     </div>
     <!-- 添加楼宇弹框 -->
     <el-button type="primary" @click="$router.push('/add-building')">添加楼宇</el-button>
+    <el-button type="primary" @click="exportToExcel">导出Excel</el-button>
     <!-- 表格区域 -->
     <div class="table">
       <el-table style="width: 100%" :data="buildingList">
@@ -41,6 +42,7 @@
 
 <script>
 import { delBuildingAPI, getBuildingListAPI } from '@/apis/building'
+import { utils, writeFileXLSX } from 'xlsx'
 
 export default {
   name: 'Building',
@@ -52,13 +54,57 @@ export default {
         pageSize: 4
       },
       buildingList: [],
-      buildingTotal: 0
+      buildingTotal: 0,
+      statusObj: {
+        '0': '闲置中',
+        '1': '租赁中'
+      }
     }
   },
   created() {
     this.getBuildingList()
   },
   methods: {
+    // 导出计费规则
+    // 处理数据
+    exportToExcel() {
+      const keys = ['id', 'name', 'floors', 'area', 'propertyFeePrice', 'status']
+      const newDataList = this.buildingList.map((obj, index) => {
+        const newObj = {}
+        keys.forEach(keyStr => {
+          if (keyStr === 'status') {
+            newObj[keyStr] = this.statusObj[obj[keyStr]]
+          } else if (keyStr === 'id') {
+            newObj[keyStr] = index + 1
+          } else {
+            newObj[keyStr] = obj[keyStr]
+          }
+        })
+        return newObj
+      })
+      // 1. 创建一个新的工作簿
+      const workbook = utils.book_new()
+      // 2. 创建一个工作表 要求一个对象数组格式（可以根据需要创建多个）
+      const worksheet = utils.json_to_sheet(newDataList)
+      // 3. 把工作表添加到工作簿  Data为工作表名称
+      utils.book_append_sheet(workbook, worksheet, '楼宇列表')
+      // 改写表头
+      // const keys = Object.keys(this.ruleList[0])
+      // 准备字典
+      const keyObj = {
+        'id': '序号',
+        'name': '楼宇名称',
+        'floors': '层数',
+        'area': '在管面积(㎡)',
+        'propertyFeePrice': '物业费(元/㎡)',
+        'status': '状态'
+      }
+      // 对象字段属性数组->中文字符串数组
+      const headerList = keys.map(item => keyObj[item])
+      utils.sheet_add_aoa(worksheet, [headerList], { origin: 'A1' })
+      // 4. 导出方法进行导出
+      writeFileXLSX(workbook, '园区管理-楼宇管理.xlsx')
+    },
     // 获取楼宇列表
     async getBuildingList() {
       const res = await getBuildingListAPI(this.params)
