@@ -19,8 +19,8 @@
         </el-table-column>
         <el-table-column label="计费规则" prop="ruleNameView" />
         <el-table-column label="操作" fixed="right" width="120">
-          <template>
-            <el-button size="mini" type="text">编辑</el-button>
+          <template #default="edi">
+            <el-button size="mini" type="text" @click="edit(edi.row.id)">编辑</el-button>
             <el-button size="mini" type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -38,7 +38,8 @@
     </div>
 
     <!-- 新增弹框 -->
-    <el-dialog :visible.sync="dialogVisible" width="680px" title="新增规则">
+    <el-dialog :visible.sync="dialogVisible" width="680px">
+      <div class="title"> {{ title }} </div>
       <!-- 表单接口 -->
       <div class="form-container">
         <el-form ref="addForm" :model="addForm" :rules="addFormRules" label-position="top">
@@ -139,7 +140,7 @@
 </template>
 
 <script>
-import { addRuleAPI, getRuleListAPI } from '@/apis/car'
+import { addRuleAPI, editRuleAPI, getRuleDetailAPI, getRuleListAPI } from '@/apis/car'
 import { utils, writeFileXLSX } from 'xlsx'
 
 export default {
@@ -152,12 +153,14 @@ export default {
         pageSize: 10
       },
       total: 0,
+      title: '新增规则',
       dialogVisible: false,
       chargeTypeObj: {
         'duration': '时长收费',
         'turn': '按次收费',
         'partition': '分段收费'
       },
+      id: null,
       // 计费规则表单对象
       addForm: {
         ruleNumber: '', // 计费规则编号
@@ -253,7 +256,6 @@ export default {
       const res = await getRuleListAPI(this.params)
       this.ruleList = res.data.rows
       this.total = res.data.total
-      console.log(res)
     },
     // 页码切换
     currentChangeFn(nowPage) {
@@ -272,7 +274,16 @@ export default {
     // 提交表单信息
     async addConfirm() {
       await this.$refs.addForm.validate()
-      await addRuleAPI(this.addForm)
+      const data = {
+        id: this.id,
+        ...this.addForm
+      }
+      if (this.id) {
+        await editRuleAPI(data)
+        this.id = null
+      } else {
+        await addRuleAPI(this.addForm)
+      }
       this.$refs.addForm.resetFields()
       this.dialogVisible = false
       this.getList()
@@ -281,6 +292,16 @@ export default {
     cancel() {
       this.$refs.addForm.resetFields()
       this.dialogVisible = false
+    },
+    // 编辑，回显数据内容
+    async edit(id) {
+      const res = await getRuleDetailAPI(id)
+      for (const key in this.addForm) {
+        this.addForm[key] = res.data[key]
+      }
+      this.id = res.data.id
+      this.title = '编辑规则'
+      this.dialogVisible = true
     }
   }
 }
@@ -296,21 +317,6 @@ export default {
   padding:0 10px;
 }
 
-.search-container {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid rgb(237, 237, 237, .9);
-  padding-bottom: 20px;
-
-  .search-label {
-    width: 100px;
-  }
-
-  .search-main {
-    width: 220px;
-    margin-right: 10px;
-  }
-}
 .create-container{
   margin: 10px 0px;
 }
@@ -320,5 +326,13 @@ export default {
 }
 .form-container{
   padding:0px 80px;
+}
+
+.title{
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  font-size: 16px;
 }
 </style>
