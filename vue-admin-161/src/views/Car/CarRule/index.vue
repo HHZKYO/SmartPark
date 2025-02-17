@@ -21,7 +21,7 @@
         <el-table-column label="操作" fixed="right" width="120">
           <template #default="edi">
             <el-button size="mini" type="text" @click="edit(edi.row.id)">编辑</el-button>
-            <el-button size="mini" type="text">删除</el-button>
+            <el-button size="mini" type="text" @click="del(edi.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -140,7 +140,7 @@
 </template>
 
 <script>
-import { addRuleAPI, editRuleAPI, getRuleDetailAPI, getRuleListAPI } from '@/apis/car'
+import { addRuleAPI, deleteRuleAPI, editRuleAPI, getRuleDetailAPI, getRuleListAPI } from '@/apis/car'
 import { utils, writeFileXLSX } from 'xlsx'
 
 export default {
@@ -302,6 +302,26 @@ export default {
       this.id = res.data.id
       this.title = '编辑规则'
       this.dialogVisible = true
+    },
+    // 删除规则
+    del(id) {
+      this.$confirm('此操作将永久删除该条规则, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        await deleteRuleAPI(id)
+        this.getList()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
