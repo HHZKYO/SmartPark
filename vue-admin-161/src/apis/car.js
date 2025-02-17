@@ -99,6 +99,62 @@ export function getRuleListAPI(params) {
 }
 
 /**
+ *
+ * 添加计费规则
+ * @export
+ * @param {*} data
+ * @return {*}
+ */
+export function addRuleAPI(data) {
+  return request({
+    url: '/parking/rule',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 获取计费规则详情
+ *
+ * @export
+ * @param {*} id
+ * @return {*}
+ */
+export function getRuleDetailAPI(id) {
+  return request({
+    url: `/parking/rule/${id}`
+  })
+}
+
+/**
+ *
+ * 编辑计费规则
+ * @export
+ * @param {*} data
+ * @return {*}
+ */
+export function editRuleAPI(data) {
+  return request({
+    url: `/parking/rule`,
+    method: 'put',
+    data
+  })
+}
+
+/**
+ * 删除规则
+ * @export
+ * @param {*} id
+ * @return {*}
+ */
+export function deleteRuleAPI(id) {
+  return request({
+    url: `/parking/rule/${id}`,
+    method: 'DELETE'
+  })
+}
+
+/**
  * 查看停车缴费列表
  * @param { page, pageSize, carNumber(可选), paymentStatus(可选) } params
  * @returns

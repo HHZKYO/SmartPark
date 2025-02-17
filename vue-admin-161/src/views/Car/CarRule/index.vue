@@ -1,7 +1,7 @@
 <template>
   <div class="rule-container">
     <div class="create-container">
-      <el-button type="primary">增加停车计费规则</el-button>
+      <el-button type="primary" @click="openDialog()">增加停车计费规则</el-button>
       <el-button @click="exportToExcel">导出Excel</el-button>
     </div>
     <!-- 表格区域 -->
@@ -36,11 +36,110 @@
         @size-change="sizeChangeFn"
       />
     </div>
+
+    <!-- 新增弹框 -->
+    <el-dialog :visible.sync="dialogVisible" width="680px" title="新增规则">
+      <!-- 表单接口 -->
+      <div class="form-container">
+        <el-form ref="addForm" :model="addForm" :rules="addFormRules" label-position="top">
+          <el-form-item label="计费规则编号" prop="ruleNumber">
+            <el-input v-model="addForm.ruleNumber" />
+          </el-form-item>
+          <el-form-item label="计费规则名称" prop="ruleName">
+            <el-input v-model="addForm.ruleName" />
+          </el-form-item>
+          <el-form-item label="计费方式" prop="chargeType">
+            <el-radio-group v-model="addForm.chargeType" size="small">
+              <el-radio label="duration" border>时长收费</el-radio>
+              <el-radio label="turn" border>按次收费</el-radio>
+              <el-radio label="partition" border>分段收费</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <div class="flex-container rules" style="display:flex">
+            <el-form-item label="免费时长">
+              <el-input-number
+                v-model="addForm.freeDuration"
+                controls-position="right"
+                :min="1"
+              />
+              分钟
+            </el-form-item>
+            <el-form-item label="收费上限">
+              <el-input v-model="addForm.chargeCeiling" style="width:120px" />
+              元
+            </el-form-item>
+          </div>
+          <!-- == 根据计费方式切换计费规则表单项 == -->
+          <el-form-item label="计费规则" class="rules" required>
+            <!-- 按时长收费区域 -->
+            <div v-if="addForm.chargeType==='duration'" class="duration" style="display:flex">
+              每
+              <el-form-item prop="durationTime">
+                <el-input-number
+                  v-model="addForm.durationTime"
+                  controls-position="right"
+                  :min="1"
+                />
+              </el-form-item>
+              小时
+              <el-form-item prop="durationPrice">
+                <el-input v-model="addForm.durationPrice" class="input-box" />
+              </el-form-item>
+              元
+            </div>
+            <!-- 按次收费区域 -->
+            <div v-if="addForm.chargeType==='turn'" class="turn" style="display:flex">
+              每次
+              <el-form-item prop="turnPrice">
+                <el-input v-model="addForm.turnPrice" class="input-box" />
+              </el-form-item>
+              元
+            </div>
+            <!-- 按分段收费区域 -->
+            <div v-if="addForm.chargeType==='partition'" class="partition">
+              <div class="item" style="display:flex">
+                <el-form-item prop="partitionFrameTime">
+                  <el-input-number
+                    v-model="addForm.partitionFrameTime"
+                    controls-position="right"
+                    :min="1"
+                  />
+                </el-form-item>
+                小时内,每小时收费
+                <el-form-item prop="partitionFramePrice">
+                  <el-input v-model="addForm.partitionFramePrice" class="input-box" style="width:100px" />
+                </el-form-item>
+                元
+              </div>
+              <div class="item" style="display:flex;margin:30px auto 0">
+                每增加
+                <el-form-item prop="partitionIncreaseTime">
+                  <el-input-number
+                    v-model="addForm.partitionIncreaseTime"
+                    controls-position="right"
+                    :min="1"
+                  />
+                </el-form-item>
+                小时,增加
+                <el-form-item prop="partitionIncreasePrice">
+                  <el-input v-model="addForm.partitionIncreasePrice" class="input-box" style="width:120px;" />
+                </el-form-item>
+                元
+              </div>
+            </div>
+          </el-form-item>
+        </el-form>
+      </div>
+      <template #footer>
+        <el-button size="mini" @click="cancel()">取 消</el-button>
+        <el-button size="mini" type="primary" @click="addConfirm()">确 定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getRuleListAPI } from '@/apis/car'
+import { addRuleAPI, getRuleListAPI } from '@/apis/car'
 import { utils, writeFileXLSX } from 'xlsx'
 
 export default {
@@ -58,6 +157,49 @@ export default {
         'duration': '时长收费',
         'turn': '按次收费',
         'partition': '分段收费'
+      },
+      // 计费规则表单对象
+      addForm: {
+        ruleNumber: '', // 计费规则编号
+        ruleName: '', // 计费规则名称
+        chargeType: 'duration', // 计费规则类型 duration / turn / partition
+        chargeCeiling: null,
+        freeDuration: null,
+        // 时长计费独有字段
+        durationTime: null, // 时长计费单位时间
+        durationPrice: null, // 时长计费单位价格
+        durationType: 'hour',
+        // 按次收费独有字段
+        turnPrice: null,
+        // 分段计费独有字段
+        partitionFrameTime: null, // 段内时间
+        partitionFramePrice: null, // 段内费用
+        partitionIncreaseTime: null, // 超出时间
+        partitionIncreasePrice: null // 超出费为收费价钱
+      },
+      // 计费规则校验规则对象
+      addFormRules: {
+        ruleNumber: [
+          {
+            required: true,
+            message: '请输入规则编号',
+            trigger: 'blur'
+          }
+        ],
+        ruleName: [
+          {
+            required: true,
+            message: '请输入规则名称',
+            trigger: 'blur'
+          }
+        ],
+        chargeType: [
+          {
+            required: true,
+            message: '请选择收费类型',
+            trigger: 'blur'
+          }
+        ]
       }
     }
   },
@@ -122,6 +264,23 @@ export default {
     sizeChangeFn(pageSize) {
       this.params.pageSize = pageSize
       this.getList()
+    },
+    // 添加/编辑计费规则显示框
+    async openDialog() {
+      this.dialogVisible = true
+    },
+    // 提交表单信息
+    async addConfirm() {
+      await this.$refs.addForm.validate()
+      await addRuleAPI(this.addForm)
+      this.$refs.addForm.resetFields()
+      this.dialogVisible = false
+      this.getList()
+    },
+    // 取消表单
+    cancel() {
+      this.$refs.addForm.resetFields()
+      this.dialogVisible = false
     }
   }
 }
