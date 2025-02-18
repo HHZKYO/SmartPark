@@ -91,6 +91,7 @@ export default {
     },
     // 车辆信息查询
     searchFn() {
+      this.query.page = 1
       this.getParkingFeeList()
     },
     // 页码切换
