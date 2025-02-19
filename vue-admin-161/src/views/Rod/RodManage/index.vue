@@ -236,6 +236,7 @@ export default {
     // 添加一体杆
     addRod() {
       this.areaDialogVisible = true
+      this.title = '添加一体杆'
     },
     // 一体杆Ip校验
     validatorPoleIp(rule, value, callback) {
@@ -268,6 +269,7 @@ export default {
     // 编辑
     edit(data) {
       this.areaDialogVisible = true
+      this.title = '编辑一体杆'
       for (const key in this.addForm) {
         this.addForm[key] = data[key]
       }
