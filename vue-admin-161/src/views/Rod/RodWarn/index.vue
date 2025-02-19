@@ -37,6 +37,17 @@
         </el-table-column>
       </el-table>
     </div>
+    <!-- 分页区域 -->
+    <div class="page-container">
+      <el-pagination
+        layout="total, prev, pager, next, sizes"
+        :total="total"
+        :page-sizes="[2, 4, 6, 8, 10]"
+        :page-size="query.pageSize"
+        @current-change="currentChangeFn"
+        @size-change="sizeChangeFn"
+      />
+    </div>
   </div>
 </template>
 
@@ -54,7 +65,8 @@ export default {
         poleNumber: '',
         handleStatus: '' // 处置状态0:未派单,1:已派单,2:已接单,3:已完成
       },
-      warningList: [] // 表单数据
+      warningList: [], // 表单数据
+      total: null // 总条数
     }
   },
   created() {
@@ -65,6 +77,8 @@ export default {
     async getPoleWarningList() {
       const res = await getPoleWaringListAPI(this.query)
       this.warningList = res.data.rows
+      console.log(res)
+      this.total = res.data.total
     },
     // 格式化处置状态内容
     formatterStatus(row) {
@@ -75,6 +89,16 @@ export default {
         '3': '已完成'
       }
       return keyObj[row.handleStatus]
+    },
+    // 切换页码
+    currentChangeFn(nowPage) {
+      this.query.page = nowPage
+      this.getPoleWarningList()
+    },
+    // 切换条数
+    sizeChangeFn(pageSize) {
+      this.query.pageSize = pageSize
+      this.getPoleWarningList()
     }
   }
 }
@@ -101,5 +125,10 @@ export default {
   .search-btn {
     margin-left: 20px;
   }
+}
+
+.page-container {
+  padding: 4px 0px;
+  text-align: right;
 }
 </style>
