@@ -51,8 +51,8 @@
         <el-table-column label="一体杆类型" prop="poleType" :formatter="formatterType" />
         <el-table-column label="运行状态" prop="poleStatus" :formatter="formatterStatus" />
         <el-table-column label="操作" fixed="right" width="180">
-          <template>
-            <el-button size="mini" type="text">编辑</el-button>
+          <template #default="scope">
+            <el-button size="mini" type="text" @click="edit(scope.row)">编辑</el-button>
             <el-button size="mini" type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -115,7 +115,7 @@
 
 <script>
 import { getRelevanceAreaListAPI } from '@/apis/area'
-import { addRodAPI, getRodListAPI } from '@/apis/rod'
+import { addRodAPI, editRodAPI, getRodListAPI } from '@/apis/rod'
 import { validPoleIp } from '@/utils/validate'
 
 export default {
@@ -157,6 +157,7 @@ export default {
         areaId: null,
         poleType: ''
       },
+      id: null, // 一体杆Id
       // 关联区域列表
       relevanceAreaList: [],
       // 一体杆类型列表
@@ -243,15 +244,33 @@ export default {
     // 提交确认
     async confirmAdd() {
       await this.$refs.rodForm.validate()
-      await addRodAPI(this.addForm)
+      if (this.id) {
+        const data = {
+          id: this.id,
+          ...this.addForm
+        }
+        await editRodAPI(data)
+      } else {
+        await addRodAPI(this.addForm)
+      }
       this.$refs.rodForm.resetFields()
+      this.id = null
       this.areaDialogVisible = false
       this.getList()
     },
     // 取消按钮
     cancel() {
       this.$refs.rodForm.resetFields()
+      this.id = null
       this.areaDialogVisible = false
+    },
+    // 编辑
+    edit(data) {
+      this.areaDialogVisible = true
+      for (const key in this.addForm) {
+        this.addForm[key] = data[key]
+      }
+      this.id = data.id
     }
   }
 }
