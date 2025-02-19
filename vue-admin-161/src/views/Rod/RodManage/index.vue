@@ -34,11 +34,11 @@
     <!-- 新增删除操作区域 -->
     <div class="create-container">
       <el-button type="primary" @click="addRod">添加一体杆</el-button>
-      <!-- <el-button @click="dels">批量删除</el-button> -->
+      <el-button @click="dels">批量删除</el-button>
     </div>
     <!-- 表格区域 -->
     <div class="table">
-      <el-table style="width: 100%" :data="formList">
+      <el-table style="width: 100%" :data="formList" @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
           width="55"
@@ -53,7 +53,7 @@
         <el-table-column label="操作" fixed="right" width="180">
           <template #default="scope">
             <el-button size="mini" type="text" @click="edit(scope.row)">编辑</el-button>
-            <el-button size="mini" type="text">删除</el-button>
+            <el-button size="mini" type="text" @click="del(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -115,7 +115,7 @@
 
 <script>
 import { getRelevanceAreaListAPI } from '@/apis/area'
-import { addRodAPI, editRodAPI, getRodListAPI } from '@/apis/rod'
+import { addRodAPI, delRodAPI, editRodAPI, getRodListAPI } from '@/apis/rod'
 import { validPoleIp } from '@/utils/validate'
 
 export default {
@@ -165,6 +165,7 @@ export default {
         { id: 'entrance', name: '入口' },
         { id: 'export', name: '出口' }
       ],
+      selectedCarList: [], // 批量删除时选中的集合
       addFormRules: {
         poleName: [
           { required: true, message: '请输入一体杆名称', trigger: 'blur' }
@@ -271,6 +272,52 @@ export default {
         this.addForm[key] = data[key]
       }
       this.id = data.id
+    },
+    // 删除
+    del(id) {
+      this.$confirm('此操作将永久删除该一体杆, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        await delRodAPI(id)
+        this.getList()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    // 批量删除
+    dels() {
+      const ids = this.selectedCarList.map(obj => obj.id)
+      this.$confirm('此操作将永久删除所选中的一体杆, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        await delRodAPI(ids.join(','))
+        this.getList()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    // 表格选择的选项发生变化时
+    handleSelectionChange(val) {
+      // val：是选中的这些行的数据对象的数组集合
+      this.selectedCarList = val
     }
   }
 }
