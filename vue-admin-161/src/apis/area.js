@@ -49,3 +49,13 @@ export function deleteAreaAPI(id) {
     method: 'DELETE'
   })
 }
+
+/**
+ * 获取关联区域下拉列表
+ * @returns
+ */
+export function getRelevanceAreaListAPI() {
+  return request({
+    url: '/parking/area/dropList'
+  })
+}

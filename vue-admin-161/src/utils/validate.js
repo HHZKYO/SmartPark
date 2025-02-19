@@ -44,3 +44,8 @@ export function validPropertyFeePrice(price) {
 export function validAreaOfRegion(area) {
   return /^[1-9]\d*$/.test(area)
 }
+
+// 校验一体杆IP
+export function validPoleIp(Ip) {
+  return /^172\.16\.39\.(1[0-9]{2}|[2-9][0-9]{2})$/.test(Ip)
+}
