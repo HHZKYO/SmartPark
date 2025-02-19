@@ -49,3 +49,15 @@ export function delRodAPI(id) {
     method: 'DELETE'
   })
 }
+
+/**
+ * 查看告警记录列表
+ * @param {*，page, pageSize, poleName, poleNumber, handleStatus (参数均可选)}params
+ * @returns
+ */
+export function getPoleWaringListAPI(params) {
+  return request({
+    url: '/pole/warning/list',
+    params
+  })
+}
