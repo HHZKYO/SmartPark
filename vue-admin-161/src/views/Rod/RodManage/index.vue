@@ -61,7 +61,7 @@
     <!-- 分页区域 -->
     <div class="page-container">
       <el-pagination
-        layout="total, prev, pager, next, sizes"
+        layout="total, prev, pager, next, sizes, jumper"
         :total="total"
         :page-sizes="[2, 4, 6, 8, 10]"
         :page-size="query.pageSize"
