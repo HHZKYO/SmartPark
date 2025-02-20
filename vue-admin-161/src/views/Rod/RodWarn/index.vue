@@ -4,19 +4,29 @@
     <div class="search-container">
       <span class="search-label">一体杆名称：</span>
       <el-input
+        v-model="query.poleName"
         placeholder="请输入一体杆内容"
         class="search-main"
       />
       <span class="search-label">一体杆编号：</span>
       <el-input
+        v-model="query.poleNumber"
         placeholder="请输入一体杆编号"
         class="search-main"
       />
       <span class="search-label">处置状态：</span>
-      <el-input class="search-main" />
+      <el-select v-model="query.handleStatus">
+        <el-option
+          v-for="item in statusList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
       <el-button
         type="primary"
         class="search-btn"
+        @click="search"
       >查询</el-button>
     </div>
     <!-- 表格区域 -->
@@ -66,7 +76,26 @@ export default {
         handleStatus: '' // 处置状态0:未派单,1:已派单,2:已接单,3:已完成
       },
       warningList: [], // 表单数据
-      total: null // 总条数
+      total: null, // 总条数
+      // 处置状态列表
+      statusList: [
+        {
+          value: '0',
+          label: '未派单'
+        },
+        {
+          value: '1',
+          label: '已派单'
+        },
+        {
+          value: '2',
+          label: '已接单'
+        },
+        {
+          value: '3',
+          label: '已完成'
+        }
+      ]
     }
   },
   created() {
@@ -98,6 +127,11 @@ export default {
     // 切换条数
     sizeChangeFn(pageSize) {
       this.query.pageSize = pageSize
+      this.getPoleWarningList()
+    },
+    // 查询功能
+    search() {
+      this.query.page = 1
       this.getPoleWarningList()
     }
   }
