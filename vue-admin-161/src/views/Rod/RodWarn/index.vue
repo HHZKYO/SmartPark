@@ -106,7 +106,6 @@ export default {
     async getPoleWarningList() {
       const res = await getPoleWaringListAPI(this.query)
       this.warningList = res.data.rows
-      console.log(res)
       this.total = res.data.total
     },
     // 格式化处置状态内容
