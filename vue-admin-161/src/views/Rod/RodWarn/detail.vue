@@ -35,7 +35,6 @@
 <script>
 import { getPoleWarningDetailAPI } from '@/apis/rod'
 
-
 export default {
   data() {
     return {
