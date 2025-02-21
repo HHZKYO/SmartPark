@@ -156,6 +156,11 @@ export const routes = [
     component: () => import('@/views/System/Role/add-role.vue')
   },
   {
+    // 一体杆管理-告警记录-查看详情
+    path: '/warn-detail',
+    component: () => import('@/views/Rod/RodWarn/detail.vue')
+  },
+  {
     path: '*',
     component: () => import('@/views/404'),
     hidden: true

@@ -61,3 +61,15 @@ export function getPoleWaringListAPI(params) {
     params
   })
 }
+
+/**
+ * 查看告警详情
+ * @param {*} id
+ * @returns
+ */
+export function getPoleWarningDetailAPI(id) {
+  return request({
+    url: `/pole/warning/${id}`,
+    id
+  })
+}
