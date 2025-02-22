@@ -3,8 +3,8 @@
     <!-- 搜索区域 -->
     <div class="search-container">
       <div class="search-label">员工姓名：</div>
-      <el-input clearable placeholder="请输入内容" class="search-main" />
-      <el-button type="primary">查询</el-button>
+      <el-input v-model="params.name" clearable placeholder="请输入内容" class="search-main" />
+      <el-button type="primary" @click="searchFn">查询</el-button>
     </div>
     <div class="create-container">
       <el-button type="primary" @click="addEmployee">添加员工</el-button>
@@ -91,14 +91,16 @@ export default {
   name: 'Employee',
   data() {
     return {
-      employeeList: [],
+      employeeList: [], // 员工列表数据
+      // 获取员工列表请求参数
       params: {
         page: 1,
         pageSize: 10,
         name: '' // 员工姓名
       },
-      total: null,
-      dialogVisible: false,
+      total: null, // 员工总数
+      dialogVisible: false, // 弹框显示/隐藏
+      // 弹框数据
       addForm: {
         name: '',
         phonenumber: '',
@@ -106,7 +108,7 @@ export default {
         status: 1,
         userName: ''
       },
-      roleList: [],
+      roleList: [], // 角色列表数据
       addFormRules: {
         name: [
           { required: true, message: '请输入员工姓名', trigger: 'blur' }
@@ -130,16 +132,18 @@ export default {
     this.getEmployeeList()
   },
   methods: {
+    // 获取员工列表
     async getEmployeeList() {
       const res = await getEmployeeListAPI(this.params)
-      console.log(res)
       this.employeeList = res.data.rows
       this.total = res.data.total
     },
+    // 切换页码
     pageChange(page) {
       this.params.page = page
       this.getEmployeeList()
     },
+    // 格式化状态列内容
     formatterStatus(row) {
       const keyObj = {
         0: '禁用',
@@ -147,11 +151,12 @@ export default {
       }
       return keyObj[row.status]
     },
+    // 弹框打开时的执行函数
     async openDialog() {
       const res = await getRoleListAPI()
       this.roleList = res.data
     },
-    // 关闭弹框
+    // 弹框关闭时的执行函数
     closeDialog() {
       this.dialogVisible = false
       this.$refs.addForm.resetFields()
@@ -191,6 +196,11 @@ export default {
         })
         this.getEmployeeList()
       })
+    },
+    // 查询
+    searchFn() {
+      this.params.page = 1
+      this.getEmployeeList()
     }
   }
 }
