@@ -5,12 +5,14 @@
       <span class="search-label">一体杆名称：</span>
       <el-input
         v-model="query.poleName"
+        clearable
         placeholder="请输入一体杆内容"
         class="search-main"
       />
       <span class="search-label">一体杆编号：</span>
       <el-input
         v-model="query.poleNumber"
+        clearable
         placeholder="请输入一体杆编号"
         class="search-main"
       />

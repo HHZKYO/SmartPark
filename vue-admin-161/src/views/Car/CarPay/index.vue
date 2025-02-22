@@ -3,7 +3,7 @@
     <!-- 搜索区域 -->
     <div class="search-container">
       <span class="search-label">车牌号码：</span>
-      <el-input v-model="query.carNumber" placeholder="请输入内容" class="search-main" />
+      <el-input v-model="query.carNumber" clearable placeholder="请输入内容" class="search-main" />
       <span class="search-label">缴费状态：</span>
       <el-select v-model="query.paymentStatus">
         <el-option
