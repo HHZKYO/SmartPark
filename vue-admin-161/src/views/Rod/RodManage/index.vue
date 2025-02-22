@@ -73,7 +73,7 @@
     <el-dialog :visible.sync="areaDialogVisible" width="500px" @close="closeDialog">
       <div class="title">{{ title }}</div>
       <div class="form-container">
-        <el-form ref="rodForm" label-position="top" :model="addForm" :rules="addFormRules">
+        <el-form ref="rodForm" label-position="left" :model="addForm" :rules="addFormRules" label-width="100px">
           <el-form-item label="一体杆名称" prop="poleName">
             <el-input v-model="addForm.poleName" placeholder="请输入一体杆名称" />
           </el-form-item>
