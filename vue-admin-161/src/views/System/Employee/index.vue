@@ -21,7 +21,7 @@
         <el-table-column label="添加时间" prop="createTime" width="210" />
         <el-table-column label="操作" fixed="right">
           <template #default="scope">
-            <el-button size="mini" type="text">编辑</el-button>
+            <el-button size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
             <el-button size="mini" type="text" @click="delEmployee(scope.row.id)">删除</el-button>
             <el-button size="mini" type="text">重置密码</el-button>
           </template>
@@ -39,12 +39,12 @@
     </div>
     <!-- 添加员工 -->
     <el-dialog
-      title="添加员工"
       :visible.sync="dialogVisible"
       width="480px"
       @open="openDialog"
       @close="closeDialog"
     >
+      <div class="title">{{ title }}</div>
       <!-- 表单接口 -->
       <div class="form-container">
         <el-form ref="addForm" :model="addForm" :rules="addFormRules" label-width="80px">
@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { createEmployeeAPI, delEmployeeAPI, getEmployeeListAPI } from '@/apis/employee'
+import { createEmployeeAPI, delEmployeeAPI, editEmployeeAPI, getEmployeeDetailAPI, getEmployeeListAPI } from '@/apis/employee'
 import { getRoleListAPI } from '@/apis/system'
 
 export default {
@@ -108,6 +108,8 @@ export default {
         status: 1,
         userName: ''
       },
+      title: '添加员工',
+      id: null, // 员工id
       roleList: [], // 角色列表数据
       addFormRules: {
         name: [
@@ -164,17 +166,25 @@ export default {
     // 打开弹框
     addEmployee() {
       this.dialogVisible = true
+      this.title = '添加员工'
     },
     // 确认添加
     async confirmAdd() {
       await this.$refs.addForm.validate()
-      // 1. 调用接口
-      await createEmployeeAPI(this.addForm)
-      // 2. 关闭弹框
+      if (this.id) {
+        const obj = {
+          id: this.id,
+          ...this.addForm
+        }
+        await editEmployeeAPI(obj)
+      } else {
+        await createEmployeeAPI(this.addForm)
+      }
+      // 关闭弹框
       this.dialogVisible = false
-      // 3. 重新刷新列表
+      // 重新刷新列表
       this.getEmployeeList()
-      // 4. 清空表单记录
+      // 清空表单记录
       this.$refs.addForm.resetFields()
     },
     // 取消添加
@@ -201,6 +211,16 @@ export default {
     searchFn() {
       this.params.page = 1
       this.getEmployeeList()
+    },
+    // 编辑
+    async edit(id) {
+      const res = await getEmployeeDetailAPI(id)
+      for (const key in this.addForm) {
+        this.addForm[key] = res.data[key]
+      }
+      this.id = id
+      this.title = '编辑员工信息'
+      this.dialogVisible = true
     }
   }
 }
@@ -236,5 +256,12 @@ export default {
 }
 .form-container{
   padding:0px 80px;
+}
+.title{
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 16px;
+  font-size: 16px;
 }
 </style>

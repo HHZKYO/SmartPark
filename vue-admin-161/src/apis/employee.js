@@ -34,3 +34,28 @@ export function delEmployeeAPI(id) {
     method: 'DELETE'
   })
 }
+
+/**
+ * 获取员工详情
+ * @param {*} id
+ * @returns
+ */
+export function getEmployeeDetailAPI(id) {
+  return request({
+    url: `/park/sys/user/${id}`,
+    id
+  })
+}
+
+/**
+ * 编辑员工信息
+ * @param {*} data
+ * @returns
+ */
+export function editEmployeeAPI(data) {
+  return request({
+    url: '/park/sys/user',
+    method: 'PUT',
+    data
+  })
+}
