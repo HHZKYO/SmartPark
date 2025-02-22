@@ -38,7 +38,7 @@
     </div>
 
     <!-- 新增弹框 -->
-    <el-dialog :visible.sync="dialogVisible" width="680px">
+    <el-dialog :visible.sync="dialogVisible" @close="closeDialog" width="680px">
       <div class="title"> {{ title }} </div>
       <!-- 表单接口 -->
       <div class="form-container">
@@ -322,6 +322,11 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    // 弹框关闭时的执行函数
+    closeDialog() {
+      this.dialogVisible = false
+      this.$refs.addForm.resetFields()
     }
   }
 }

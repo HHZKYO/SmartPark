@@ -70,7 +70,7 @@
       />
     </div>
     <!-- 添加一体杆对话框 -->
-    <el-dialog :visible.sync="areaDialogVisible" width="500px">
+    <el-dialog :visible.sync="areaDialogVisible" @close="closeDialog" width="500px">
       <div class="title">{{ title }}</div>
       <div class="form-container">
         <el-form ref="rodForm" label-position="top" :model="addForm" :rules="addFormRules">
@@ -320,6 +320,11 @@ export default {
     handleSelectionChange(val) {
       // val：是选中的这些行的数据对象的数组集合
       this.selectedCarList = val
+    },
+    // 弹框关闭时的执行函数
+    closeDialog() {
+      this.areaDialogVisible = false
+      this.$refs.rodForm.resetFields()
     }
   }
 }

@@ -31,7 +31,7 @@
       />
     </div>
     <!-- 新增区域对话框 -->
-    <el-dialog :visible.sync="areaDialogVisible" width="580px">
+    <el-dialog :visible.sync="areaDialogVisible" @close="closeDialog" width="580px">
       <div class="title">{{ formTitle }}</div>
       <div class="form-container">
         <el-form ref="areaForm" label-position="top" :model="areaForm" :rules="areaFormRules">
@@ -196,6 +196,11 @@ export default {
       for (const key in this.areaForm) {
         this.areaForm[key] = row[key]
       }
+    },
+    // 弹框关闭时的执行函数
+    closeDialog() {
+      this.areaDialogVisible = false
+      this.$refs.areaForm.resetFields()
     }
   }
 }
