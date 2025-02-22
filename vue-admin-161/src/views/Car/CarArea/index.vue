@@ -31,7 +31,7 @@
       />
     </div>
     <!-- 新增区域对话框 -->
-    <el-dialog :visible.sync="areaDialogVisible" @close="closeDialog" width="580px">
+    <el-dialog :visible.sync="areaDialogVisible" width="580px" @close="closeDialog">
       <div class="title">{{ formTitle }}</div>
       <div class="form-container">
         <el-form ref="areaForm" label-position="top" :model="areaForm" :rules="areaFormRules">

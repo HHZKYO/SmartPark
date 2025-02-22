@@ -70,7 +70,7 @@
       />
     </div>
     <!-- 添加一体杆对话框 -->
-    <el-dialog :visible.sync="areaDialogVisible" @close="closeDialog" width="500px">
+    <el-dialog :visible.sync="areaDialogVisible" width="500px" @close="closeDialog">
       <div class="title">{{ title }}</div>
       <div class="form-container">
         <el-form ref="rodForm" label-position="top" :model="addForm" :rules="addFormRules">

@@ -38,7 +38,7 @@
     </div>
 
     <!-- 新增弹框 -->
-    <el-dialog :visible.sync="dialogVisible" @close="closeDialog" width="680px">
+    <el-dialog :visible.sync="dialogVisible" width="680px" @close="closeDialog">
       <div class="title"> {{ title }} </div>
       <!-- 表单接口 -->
       <div class="form-container">
