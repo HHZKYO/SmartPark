@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { getProfileAPI } from '@/apis/user'
 
 Vue.use(Router)
 
@@ -185,11 +186,24 @@ export function resetRouter() {
 }
 
 // 页面权限拦截
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   const token = store.state.user.token
   const whiteList = ['/login']
   if (token) {
     next()
+    // 获取用户信息
+    // 没有 id 的情况
+    // 情况1：刚用网站修改了自己的相关信息，然后信息清空，在下一次切换页面的时候获取
+    // 情况2：登录跳转到内容页面（第一次登此网站），进入获取一次当前用户的信息
+    // 情况3：refresh_token，不重新登录也能获取最新的 token，代码删除用户的信息，
+    // 下一次跳转页面时，id 无值，就会带着最新的 token 再去获取最新的用户信息
+    if (!store.state.user.profile.id) {
+      // 获取原始权限列表
+      // const permissions = await store.dispatch('user/getProfile')
+      // console.log(permissions)
+      const permission = await getProfileAPI()
+      console.log(permission)
+    }
   } else {
     if (whiteList.includes(to.path)) {
       next()

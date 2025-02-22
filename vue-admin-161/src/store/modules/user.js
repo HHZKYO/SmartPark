@@ -5,7 +5,8 @@ export default {
   namespaced: true,
   state() {
     return {
-      token: getToken() || ''
+      token: getToken() || '',
+      profile: [] // 当前登录用户的相关信息数据
     }
   },
   mutations: {
