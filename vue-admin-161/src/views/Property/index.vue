@@ -4,15 +4,25 @@
     <div class="search-container">
       <span>企业名称：</span>
       <el-input
+        v-model="query.enterpriseName"
         clearable
         placeholder="请输入企业名称"
         class="search-main"
       />
       <span>缴费时间：</span>
-      <el-input class="search-main" />
+      <el-date-picker
+        v-model="payTime"
+        value-format="yyyy-MM-dd"
+        type="daterange"
+        range-separator="→"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        class="search-main"
+      />
       <el-button
         type="primary"
         class="search-btn"
+        @click="searchFn"
       >查询</el-button>
     </div>
     <!-- 添加账单区域 -->
@@ -66,7 +76,8 @@ export default {
         pageSize: 10 // 可选
       },
       formList: [], // 物业费账单列表
-      total: null // 列表信息总数
+      total: null, // 列表信息总数
+      payTime: []
     }
   },
   created() {
@@ -89,6 +100,12 @@ export default {
     sizeChangeFn(pageSize) {
       this.query.pageSize = pageSize
       this.getPropertyList()
+    },
+    // 查询账单
+    searchFn() {
+      this.query.start = this.payTime[0]
+      this.query.end = this.payTime[1]
+      this.getPropertyList()
     }
   }
 }
@@ -108,7 +125,7 @@ export default {
   font-size: 14px;
 
   .search-main {
-    width: 220px;
+    width: 240px;
     margin-right: 10px;
   }
 
