@@ -27,7 +27,7 @@
     </div>
     <!-- 添加账单区域 -->
     <div class="create-container">
-      <el-button type="primary">添加账单</el-button>
+      <el-button type="primary" @click="add">添加账单</el-button>
     </div>
     <!-- 表单 -->
     <div class="table">
@@ -58,11 +58,67 @@
         @size-change="sizeChangeFn"
       />
     </div>
+    <!-- 添加账单对话框 -->
+    <el-dialog :visible.sync="addDialogVisible" title="添加账单" width="500px" @close="closeDialog">
+      <div class="form-container">
+        <el-form ref="addForm" :model="addForm" :rules="addFormRules">
+          <el-form-item label="选择租户" prop="enterpriseId">
+            <el-select v-model="addForm.enterpriseId" placeholder="请选择租户">
+              <el-option
+                v-for="item in allEnterpriseList"
+                :key="item.id"
+                :value="item.id"
+                :label="item.name"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="租赁楼宇" prop="buildingId">
+            <el-select v-model="addForm.buildingId" placeholder="请选择租赁楼宇">
+              <el-option
+                v-for="item in allBuildingList"
+                :key="item.id"
+                :value="item.id"
+                :label="item.name"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="缴费周期" prop="time">
+            <el-date-picker
+              v-model="addForm.time"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="→"
+              clearable
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              @change="calculateAmount"
+            />
+          </el-form-item>
+          <el-form-item label="支付金额" prop="paymentAmount">
+            <el-input v-model="addForm.paymentAmount" :disabled="true" />
+          </el-form-item>
+          <el-form-item label="支付方式" prop="paymentMethod">
+            <el-select v-model="addForm.paymentMethod" placeholder="请选择支付方式">
+              <el-option
+                v-for="item in paymentMethodList"
+                :key="item.id"
+                :value="item.id"
+                :label="item.name"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+      <template #footer>
+        <el-button size="mini" @click="cancel()">取 消</el-button>
+        <el-button size="mini" type="primary" @click="confirmAdd()">确 定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getPropertyListAPI } from '@/apis/property'
+import { addBillAPI, calculateAmountAPI, getAllBuildingAPI, getAllEnterpriseAPI, getPropertyListAPI } from '@/apis/property'
 
 export default {
   data() {
@@ -77,7 +133,47 @@ export default {
       },
       formList: [], // 物业费账单列表
       total: null, // 列表信息总数
-      payTime: []
+      payTime: [],
+      addDialogVisible: false, // 添加账单对话框显示/隐藏
+      // 添加账单信息表单
+      addForm: {
+        enterpriseId: null,
+        buildingId: null,
+        paymentAmount: null,
+        paymentMethod: null,
+        time: []
+      },
+      allEnterpriseList: [], // 所有企业列表
+      allBuildingList: [], // 所有楼宇列表
+      paymentMethodList: [
+        {
+          id: 2,
+          name: '支付宝'
+        },
+        {
+          id: 1,
+          name: '微信'
+        },
+        {
+          id: 3,
+          name: '现金'
+        }
+      ],
+      // 规则校验
+      addFormRules: {
+        enterpriseId: [
+          { required: true, message: '请选择租户', trigger: 'blur' }
+        ],
+        buildingId: [
+          { required: true, message: '请选择租赁楼宇', trigger: 'blur' }
+        ],
+        time: [
+          { required: true, message: '请输入缴费周期', trigger: 'blur' }
+        ],
+        paymentMethod: [
+          { required: true, message: '请选择支付方式', trigger: 'change' }
+        ]
+      }
     }
   },
   created() {
@@ -87,7 +183,6 @@ export default {
     // 获取物业费列表信息
     async getPropertyList() {
       const res = await getPropertyListAPI(this.query)
-      console.log(res)
       this.formList = res.data.rows
       this.total = res.data.total
     },
@@ -105,6 +200,46 @@ export default {
     searchFn() {
       this.query.start = this.payTime[0]
       this.query.end = this.payTime[1]
+      this.getPropertyList()
+    },
+    // 添加账单
+    async add() {
+      this.addDialogVisible = true
+      const res = await getAllEnterpriseAPI()
+      this.allEnterpriseList = res.data
+      const msg = await getAllBuildingAPI()
+      this.allBuildingList = msg.data
+    },
+    // 计算支付金额
+    async calculateAmount(value) {
+      const obj = {
+        buildingId: this.addForm.buildingId,
+        startTime: value[0],
+        endTime: value[1]
+      }
+      const res = await calculateAmountAPI(obj)
+      this.addForm.paymentAmount = res.data
+    },
+    // 关闭添加账单对话框时的执行函数
+    closeDialog() {
+      this.$refs.addForm.resetFields()
+      this.addDialogVisible = false
+    },
+    // 取消添加
+    cancel() {
+      this.$refs.addForm.resetFields()
+      this.addDialogVisible = false
+    },
+    // 确认添加
+    async confirmAdd() {
+      await this.$refs.addForm.validate()
+      const obj = { ...this.addForm }
+      obj.startTime = this.addForm.time[0]
+      obj.endTime = this.addForm.time[1]
+      delete obj.time
+      await addBillAPI(obj)
+      this.$refs.addForm.resetFields()
+      this.addDialogVisible = false
       this.getPropertyList()
     }
   }
