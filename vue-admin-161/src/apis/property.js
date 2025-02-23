@@ -57,3 +57,15 @@ export function addBillAPI(data) {
     data
   })
 }
+
+/**
+ * 查看账单详情
+ * @param {*} id
+ * @returns
+ */
+export function getBillDetailAPI(id) {
+  return request({
+    url: `/park/propertyfee/${id}`,
+    id
+  })
+}

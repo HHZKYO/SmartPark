@@ -40,8 +40,8 @@
         <el-table-column label="账单金额（元）" prop="paymentAmount" width="120px" />
         <el-table-column label="缴费时间" prop="createTime" width="150px" />
         <el-table-column label="操作" fixed="right" width="90">
-          <template>
-            <el-button size="mini" type="text">查看</el-button>
+          <template #default="scope">
+            <el-button size="mini" type="text" @click="viewBillDetail(scope.row.id)">查看</el-button>
             <el-button size="mini" type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -114,11 +114,31 @@
         <el-button size="mini" type="primary" @click="confirmAdd()">确 定</el-button>
       </template>
     </el-dialog>
+    <!-- 查看账单对话框 -->
+    <el-dialog :visible.sync="viewBillVisible" title="查看账单" width="500px" @close="closeDetail">
+      <div class="form-container">
+        <el-form :model="billDetail">
+          <el-form-item label="租户名称" prop="enterpriseId" />
+          <div>{{ billDetail.enterpriseName }}</div>
+          <el-form-item label="租赁楼宇" prop="buildingId" />
+          <div>2</div>
+          <el-form-item label="缴费周期" prop="time" />
+          <el-form-item label="物业费（元/㎡）" prop="paymentAmount" />
+          <el-form-item label="账单金额（元）" prop="paymentMethod" />
+          <el-form-item label="支付方式" prop="paymentMethod" />
+          <el-form-item label="缴费时间" prop="paymentMethod" />
+        </el-form>
+      </div>
+      <template #footer>
+        <el-button size="mini">取 消</el-button>
+        <el-button size="mini" type="primary">确 定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { addBillAPI, calculateAmountAPI, getAllBuildingAPI, getAllEnterpriseAPI, getPropertyListAPI } from '@/apis/property'
+import { addBillAPI, calculateAmountAPI, getAllBuildingAPI, getAllEnterpriseAPI, getBillDetailAPI, getPropertyListAPI } from '@/apis/property'
 
 export default {
   data() {
@@ -135,6 +155,7 @@ export default {
       total: null, // 列表信息总数
       payTime: [],
       addDialogVisible: false, // 添加账单对话框显示/隐藏
+      viewBillVisible: false, // 查看账单对话框显示/隐藏
       // 添加账单信息表单
       addForm: {
         enterpriseId: null,
@@ -143,6 +164,7 @@ export default {
         paymentMethod: null,
         time: []
       },
+      billDetail: {}, // 账单详情
       allEnterpriseList: [], // 所有企业列表
       allBuildingList: [], // 所有楼宇列表
       paymentMethodList: [
@@ -241,6 +263,17 @@ export default {
       this.$refs.addForm.resetFields()
       this.addDialogVisible = false
       this.getPropertyList()
+    },
+    // 查看账单详情
+    async viewBillDetail(id) {
+      this.viewBillVisible = true
+      const res = await getBillDetailAPI(id)
+      console.log(res)
+      this.billDetail = res.data
+    },
+    closeDetail() {
+      this.billDetail = {}
+      this.viewBillVisible = false
     }
   }
 }
