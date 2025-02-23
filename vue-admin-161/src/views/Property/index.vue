@@ -42,7 +42,7 @@
         <el-table-column label="操作" fixed="right" width="90">
           <template #default="scope">
             <el-button size="mini" type="text" @click="viewBillDetail(scope.row.id)">查看</el-button>
-            <el-button size="mini" type="text">删除</el-button>
+            <el-button size="mini" type="text" @click="delBill(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -138,7 +138,7 @@
 </template>
 
 <script>
-import { addBillAPI, calculateAmountAPI, getAllBuildingAPI, getAllEnterpriseAPI, getBillDetailAPI, getPropertyListAPI } from '@/apis/property'
+import { addBillAPI, calculateAmountAPI, delBillAPI, getAllBuildingAPI, getAllEnterpriseAPI, getBillDetailAPI, getPropertyListAPI } from '@/apis/property'
 
 export default {
   data() {
@@ -271,9 +271,30 @@ export default {
       console.log(res)
       this.billDetail = res.data
     },
+    // 关闭查看账单详情对话框时的执行函数
     closeDetail() {
       this.billDetail = {}
       this.viewBillVisible = false
+    },
+    // 删除账单
+    async delBill(id) {
+      this.$confirm('此操作将永久删除该账单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        await delBillAPI(id)
+        this.getPropertyList()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }

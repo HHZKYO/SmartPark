@@ -69,3 +69,15 @@ export function getBillDetailAPI(id) {
     id
   })
 }
+
+/**
+ * 删除账单
+ * @param {*} id
+ * @returns
+ */
+export function delBillAPI(id) {
+  return request({
+    url: `/park/propertyfee/${id}`,
+    method: 'DELETE'
+  })
+}
