@@ -228,35 +228,44 @@ router.beforeEach(async(to, from, next) => {
       })
       secondPerList = Array.from(new Set(secondPerList))
 
-      // 4.动态路由数组和权限点标记进行匹配筛选
-      const routeArr = asyncRoutes.filter(obj => {
-        return firstPerList.includes(obj.permission)
-      })
-      console.log(routeArr) // 筛选后该有权限对应的路由对象集合
-
-      // 5.再次筛选二级匹配路由对象
-      const routesList = routeArr.map(obj => {
-        const resultArr = obj.children.filter(item => {
-          return secondPerList.includes(item.permission)
+      if (firstPerList[0] === '*') {
+        // 管理员
+        routes.push(...asyncRoutes)
+        store.commit('user/setUserRoutes', routes)
+        asyncRoutes.forEach(routeObj => {
+          router.addRoute(routeObj)
         })
-        // 新组织一个路由对象
-        const newObj = { ...obj }
-        newObj.children = resultArr
-        return newObj
-      })
-      console.log(routesList)
+      } else {
+        // 4.动态路由数组和权限点标记进行匹配筛选
+        const routeArr = asyncRoutes.filter(obj => {
+          return firstPerList.includes(obj.permission)
+        })
+        console.log(routeArr) // 筛选后该有权限对应的路由对象集合
 
-      // 6.路由数组交给 vuex 影响左侧菜单使用循环生成
-      routes.push(...routesList) // 把筛选后的动态路由对象合并到 routes 路由规则数组中
-      store.commit('user/setUserRoutes', routes) // 把筛选后的动态路由对象集存储到 vuex 中
+        // 5.再次筛选二级匹配路由对象
+        const routesList = routeArr.map(obj => {
+          const resultArr = obj.children.filter(item => {
+            return secondPerList.includes(item.permission)
+          })
+          // 新组织一个路由对象
+          const newObj = { ...obj }
+          newObj.children = resultArr
+          return newObj
+        })
+        console.log(routesList)
 
-      // 问题：点击筛选后的路由对象，跳转不了
-      // 原因：new Router 时，routes 里只有静态的路由规则对象，匹配的只有这些静态的
-      // 动态：网络请求回来给 routes 数组本身添加，影响不了 router 路由对象里使用的路由规则
-      // 解决：5.router 给我们一个 addRoute 方法可以动态追加可以“匹配”用的路由对象
-      routesList.forEach(routeObj => {
-        router.addRoute(routeObj)
-      })
+        // 6.路由数组交给 vuex 影响左侧菜单使用循环生成
+        routes.push(...routesList) // 把筛选后的动态路由对象合并到 routes 路由规则数组中
+        store.commit('user/setUserRoutes', routes) // 把筛选后的动态路由对象集存储到 vuex 中
+
+        // 问题：点击筛选后的路由对象，跳转不了
+        // 原因：new Router 时，routes 里只有静态的路由规则对象，匹配的只有这些静态的
+        // 动态：网络请求回来给 routes 数组本身添加，影响不了 router 路由对象里使用的路由规则
+        // 解决：5.router 给我们一个 addRoute 方法可以动态追加可以“匹配”用的路由对象
+        routesList.forEach(routeObj => {
+          router.addRoute(routeObj)
+        })
+      }
     }
   } else {
     if (whiteList.includes(to.path)) {
