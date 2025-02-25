@@ -46,7 +46,73 @@ export const routes = [
       component: () => import('@/views/Park/Enterprise/index')
     }]
   },
+  {
+    // 行车管理-月卡管理-新增月卡
+    path: '/add-card',
+    component: () => import('@/views/Car/CarCard/addCard.vue')
+  },
+  {
+    // 园区管理-企业管理-新增企业
+    path: '/add-ep',
+    component: () => import('@/views/Park/Enterprise/add-ep.vue')
+  },
+  {
+    // 园区管理-楼宇管理-新增楼宇
+    path: '/add-building',
+    component: () => import('@/views/Park/Building/building.vue')
+  },
+  {
+    // 园区管理-企业管理-查看企业详情
+    path: '/ep-detail',
+    component: () => import('@/views/Park/Enterprise/detail.vue')
+  },
+  {
+    // 行车管理-月卡管理-查看月卡详情
+    path: '/card-detail',
+    component: () => import('@/views/Car/CarCard/detail.vue')
+  },
+  {
+    // 行车管理-月卡管理-月卡续费
+    path: '/card-renew',
+    component: () => import('@/views/Car/CarCard/renewCharge.vue')
+  },
+  {
+    // 系统管理-角色管理-新增角色
+    path: '/add-role',
+    component: () => import('@/views/System/Role/add-role.vue')
+  },
+  {
+    // 一体杆管理-告警记录-查看详情
+    path: '/warn-detail',
+    component: () => import('@/views/Rod/RodWarn/detail.vue')
+  },
+  {
+    path: '*',
+    component: () => import('@/views/404'),
+    hidden: true
+  }
+]
 
+// 动态路由表：需要权限控制访问的路由页面对象
+export const asyncRoutes = [
+  {
+    path: '/park',
+    component: Layout,
+    permission: 'park',
+    meta: { title: '园区管理', icon: 'el-icon-office-building' },
+    children: [{
+      path: 'building',
+      permission: 'park:building',
+      meta: { title: '楼宇管理' },
+      component: () => import('@/views/Park/Building/index')
+    },
+    {
+      path: 'enterprise',
+      permission: 'park:enterprise',
+      meta: { title: '企业管理' },
+      component: () => import('@/views/Park/Enterprise/index')
+    }]
+  },
   {
     path: '/parking',
     component: Layout,
@@ -112,58 +178,17 @@ export const routes = [
   {
     path: '/property',
     component: Layout,
-    children: [
-      {
-        path: '',
-        component: () => import('@/views/Property/index.vue'),
-        meta: { title: '物业费管理', icon: 'el-icon-wallet' }
-      }
-    ]
-  },
-  {
-    // 行车管理-月卡管理-新增月卡
-    path: '/add-card',
-    component: () => import('@/views/Car/CarCard/addCard.vue')
-  },
-  {
-    // 园区管理-企业管理-新增企业
-    path: '/add-ep',
-    component: () => import('@/views/Park/Enterprise/add-ep.vue')
-  },
-  {
-    // 园区管理-楼宇管理-新增楼宇
-    path: '/add-building',
-    component: () => import('@/views/Park/Building/building.vue')
-  },
-  {
-    // 园区管理-企业管理-查看企业详情
-    path: '/ep-detail',
-    component: () => import('@/views/Park/Enterprise/detail.vue')
-  },
-  {
-    // 行车管理-月卡管理-查看月卡详情
-    path: '/card-detail',
-    component: () => import('@/views/Car/CarCard/detail.vue')
-  },
-  {
-    // 行车管理-月卡管理-月卡续费
-    path: '/card-renew',
-    component: () => import('@/views/Car/CarCard/renewCharge.vue')
-  },
-  {
-    // 系统管理-角色管理-新增角色
-    path: '/add-role',
-    component: () => import('@/views/System/Role/add-role.vue')
-  },
-  {
-    // 一体杆管理-告警记录-查看详情
-    path: '/warn-detail',
-    component: () => import('@/views/Rod/RodWarn/detail.vue')
-  },
-  {
-    path: '*',
-    component: () => import('@/views/404'),
-    hidden: true
+    permission: 'property',
+    children: [{
+      // 注意：这里路径字符串为空，代表一级菜单无二级菜单
+      path: '',
+      name: 'cost',
+      permission: 'propertyFee',
+      // 二级路由点，要挂载的组件
+      component: () => import('@/views/Property/index'),
+      // 左侧路由上标题和图标（图标使用 element-ui 组件库里图标类名（因为左侧导航组件是基于 element-ui 组件库）
+      meta: { title: '物业费管理', icon: 'el-icon-wallet' }
+    }]
   }
 ]
 
@@ -207,10 +232,15 @@ router.beforeEach(async(to, from, next) => {
       res.data.permissions.forEach(item => {
         resultList.push(item.split(':')[0])
       })
-      console.log(resultList)
+      // console.log(resultList)
       // 数组去重
-      const permissionList = Array.from(new Set(resultList))
-      console.log(permissionList)
+      const firstPerList = Array.from(new Set(resultList))
+      console.log(firstPerList)
+      // 动态路由数组和权限点标记进行匹配筛选
+      const routeArr = asyncRoutes.filter(obj => {
+        return firstPerList.includes(obj.permission)
+      })
+      console.log(routeArr) // 筛选后该有权限对应的路由对象集合
     }
   } else {
     if (whiteList.includes(to.path)) {
