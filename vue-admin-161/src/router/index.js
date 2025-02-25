@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import { getProfileAPI } from '@/apis/user'
 
 Vue.use(Router)
 
@@ -199,10 +198,9 @@ router.beforeEach(async(to, from, next) => {
     // 下一次跳转页面时，id 无值，就会带着最新的 token 再去获取最新的用户信息
     if (!store.state.user.profile.id) {
       // 获取原始权限列表
-      // const permissions = await store.dispatch('user/getProfile')
-      // console.log(permissions)
-      const permission = await getProfileAPI()
-      console.log(permission)
+      // dispatch 原地是一个Promise 对象，而值来自于调用的 actions 函数内 return 的结果
+      const permissions = await store.dispatch('user/getProfile')
+      console.log(permissions)
     }
   } else {
     if (whiteList.includes(to.path)) {
