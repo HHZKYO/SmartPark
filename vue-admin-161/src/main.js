@@ -14,6 +14,9 @@ import router from './router'
 // 注册svg
 import '@/icons'
 
+// 注册全局指令
+import '@/directives'
+
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
