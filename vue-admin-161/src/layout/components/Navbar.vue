@@ -23,12 +23,16 @@
 </template>
 
 <script>
+import { resetRouter } from '@/router'
+
 export default {
   methods: {
     // 退出登录
     logout() {
       this.$store.commit('user/delTokens')
       this.$store.commit('user/delProfile')
+      // 重置路由匹配记录（防止下一个用户还能使用上一个用户的 addRoute 添加的路由记录）
+      resetRouter()
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }
