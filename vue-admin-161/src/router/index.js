@@ -67,11 +67,6 @@ export const routes = [
     // 一体杆管理-告警记录-查看详情
     path: '/warn-detail',
     component: () => import('@/views/Rod/RodWarn/detail.vue')
-  },
-  {
-    path: '*',
-    component: () => import('@/views/404'),
-    hidden: true
   }
 ]
 
@@ -234,7 +229,13 @@ router.beforeEach(async(to, from, next) => {
         userRoutes.push(...routes)
         userRoutes.push(...asyncRoutes)
         store.commit('user/setUserRoutes', userRoutes)
-        asyncRoutes.forEach(routeObj => {
+        const arr = [...asyncRoutes]
+        arr.push({
+          path: '*',
+          component: () => import('@/views/404'),
+          hidden: true
+        })
+        arr.forEach(routeObj => {
           router.addRoute(routeObj)
         })
       } else {
@@ -261,11 +262,17 @@ router.beforeEach(async(to, from, next) => {
         userRoutes.push(...routesList) // 把筛选后的动态路由对象合并到 routes 路由规则数组中
         store.commit('user/setUserRoutes', userRoutes) // 把筛选后的动态路由对象集存储到 vuex 中
 
+        const arr = [...routesList]
+        arr.push({
+          path: '*',
+          component: () => import('@/views/404'),
+          hidden: true
+        })
         // 问题：点击筛选后的路由对象，跳转不了
         // 原因：new Router 时，routes 里只有静态的路由规则对象，匹配的只有这些静态的
         // 动态：网络请求回来给 routes 数组本身添加，影响不了 router 路由对象里使用的路由规则
         // 解决：5.router 给我们一个 addRoute 方法可以动态追加可以“匹配”用的路由对象
-        routesList.forEach(routeObj => {
+        arr.forEach(routeObj => {
           router.addRoute(routeObj)
         })
       }
