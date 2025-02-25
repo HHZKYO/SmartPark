@@ -199,8 +199,18 @@ router.beforeEach(async(to, from, next) => {
     if (!store.state.user.profile.id) {
       // 获取原始权限列表
       // dispatch 原地是一个Promise 对象，而值来自于调用的 actions 函数内 return 的结果
-      const permissions = await store.dispatch('user/getProfile')
-      console.log(permissions)
+      const res = await store.dispatch('user/getProfile')
+      console.log(res)
+      // 现在：后台给我返回的权限点标记是一个英文字符串数组 ['parking:rule:list', 'parking:rule:add_edit']
+      // 目标：得到 ['parking']
+      const resultList = []
+      res.data.permissions.forEach(item => {
+        resultList.push(item.split(':')[0])
+      })
+      console.log(resultList)
+      // 数组去重
+      const permissionList = Array.from(new Set(resultList))
+      console.log(permissionList)
     }
   } else {
     if (whiteList.includes(to.path)) {
