@@ -223,6 +223,8 @@ router.beforeEach(async(to, from, next) => {
         return firstPerList.includes(obj.permission)
       })
       console.log(routeArr) // 筛选后该有权限对应的路由对象集合
+      routes.push(...routeArr) // 把筛选后的动态路由对象合并到 routes 路由规则数组中
+      store.commit('user/setUserRoutes', routes) // 把筛选后的动态路由对象集存储到 vuex 中
     }
   } else {
     if (whiteList.includes(to.path)) {

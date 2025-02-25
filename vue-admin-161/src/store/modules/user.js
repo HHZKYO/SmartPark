@@ -6,7 +6,8 @@ export default {
   state() {
     return {
       token: getToken() || '',
-      profile: [] // 当前登录用户的相关信息数据
+      profile: {}, // 当前登录用户的相关信息数据
+      userRoutes: [] // 静态+筛选后的所有路由对象数组
     }
   },
   mutations: {
@@ -20,6 +21,9 @@ export default {
     },
     setProfile(state, data) {
       state.profile = data
+    },
+    setUserRoutes(state, data) {
+      state.userRoutes = data
     }
   },
   actions: {
