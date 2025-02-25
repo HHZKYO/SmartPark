@@ -204,12 +204,13 @@ router.beforeEach(async(to, from, next) => {
     // 情况3：refresh_token，不重新登录也能获取最新的 token，代码删除用户的信息，
     // 下一次跳转页面时，id 无值，就会带着最新的 token 再去获取最新的用户信息
     if (!store.state.user.profile.id) {
-      // 获取原始权限列表
+      // 1.获取原始权限列表
       // dispatch 原地是一个Promise 对象，而值来自于调用的 actions 函数内 return 的结果
       const res = await store.dispatch('user/getProfile')
       console.log(res)
       // 现在：后台给我返回的权限点标记是一个英文字符串数组 ['parking:rule:list', 'parking:rule:add_edit']
-      // 目标：得到 ['parking']
+
+      // 2.目标：得到 ['parking']
       const resultList = []
       res.data.permissions.forEach(item => {
         resultList.push(item.split(':')[0])
@@ -218,18 +219,21 @@ router.beforeEach(async(to, from, next) => {
       // 数组去重
       const firstPerList = Array.from(new Set(resultList))
       console.log(firstPerList)
-      // 动态路由数组和权限点标记进行匹配筛选
+
+      // 3.动态路由数组和权限点标记进行匹配筛选
       const routeArr = asyncRoutes.filter(obj => {
         return firstPerList.includes(obj.permission)
       })
       console.log(routeArr) // 筛选后该有权限对应的路由对象集合
+
+      // 4.路由数组交给 vuex 影响左侧菜单使用循环生成
       routes.push(...routeArr) // 把筛选后的动态路由对象合并到 routes 路由规则数组中
       store.commit('user/setUserRoutes', routes) // 把筛选后的动态路由对象集存储到 vuex 中
 
       // 问题：点击筛选后的路由对象，跳转不了
       // 原因：new Router 时，routes 里只有静态的路由规则对象，匹配的只有这些静态的
       // 动态：网络请求回来给 routes 数组本身添加，影响不了 router 路由对象里使用的路由规则
-      // 解决：router 给我们一个 addRoute 方法可以动态追加可以“匹配”用的路由对象
+      // 解决：5.router 给我们一个 addRoute 方法可以动态追加可以“匹配”用的路由对象
       routeArr.forEach(routeObj => {
         router.addRoute(routeObj)
       })
