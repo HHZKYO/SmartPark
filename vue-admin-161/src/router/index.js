@@ -204,6 +204,7 @@ router.beforeEach(async(to, from, next) => {
     // 情况3：refresh_token，不重新登录也能获取最新的 token，代码删除用户的信息，
     // 下一次跳转页面时，id 无值，就会带着最新的 token 再去获取最新的用户信息
     if (!store.state.user.profile.id) {
+      const userRoutes = []
       // 1.获取原始权限列表
       // dispatch 原地是一个Promise 对象，而值来自于调用的 actions 函数内 return 的结果
       const res = await store.dispatch('user/getProfile')
@@ -230,8 +231,9 @@ router.beforeEach(async(to, from, next) => {
 
       if (firstPerList[0] === '*') {
         // 管理员
-        routes.push(...asyncRoutes)
-        store.commit('user/setUserRoutes', routes)
+        userRoutes.push(...routes)
+        userRoutes.push(...asyncRoutes)
+        store.commit('user/setUserRoutes', userRoutes)
         asyncRoutes.forEach(routeObj => {
           router.addRoute(routeObj)
         })
@@ -255,8 +257,9 @@ router.beforeEach(async(to, from, next) => {
         console.log(routesList)
 
         // 6.路由数组交给 vuex 影响左侧菜单使用循环生成
-        routes.push(...routesList) // 把筛选后的动态路由对象合并到 routes 路由规则数组中
-        store.commit('user/setUserRoutes', routes) // 把筛选后的动态路由对象集存储到 vuex 中
+        userRoutes.push(...routes)
+        userRoutes.push(...routesList) // 把筛选后的动态路由对象合并到 routes 路由规则数组中
+        store.commit('user/setUserRoutes', userRoutes) // 把筛选后的动态路由对象集存储到 vuex 中
 
         // 问题：点击筛选后的路由对象，跳转不了
         // 原因：new Router 时，routes 里只有静态的路由规则对象，匹配的只有这些静态的
@@ -275,5 +278,15 @@ router.beforeEach(async(to, from, next) => {
     }
   }
 })
+
+// 问题：第一次登录没问题，第二次登录时（切换账号），左侧菜单没有更新
+// 原因：第一次登录时，vuex 里的 profile 没有值，所以路由守卫里 profile.id 判断进去获取第一次登录账号的用户信息
+// 保存到 vuex 的 profile 上，退出登录后，第二次切换账号登录时（浏览器不会刷新，单页面应用考路由跳转切换展示 DOM 标签）
+// 所以，vuex 中 profile 的值还在，路由守卫里的 profile.id 判断进不去，所以不会获取第二次登录账号的最新权限信息，
+// 所以影响不了左侧菜单的渲染。
+// 尝试解决办法：第二次登录后，手动刷新页面就可以了，因为刷新后 vuex 里的 profile 值回归初始化 {} 了，
+// 所以路由守卫里 profile.id 是空的，进入获取了第二个用户的权限信息，并生成左侧菜单，就对应上了。
+// 根本解决：在退出登录时，把 profile 信息清空，让下一次登录跳转路由时，路由守卫 profile.id 进入，
+// 获取当前这次登录用户的最新路由信息并筛选生成左侧菜单
 
 export default router

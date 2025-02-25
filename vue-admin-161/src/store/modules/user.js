@@ -22,6 +22,9 @@ export default {
     setProfile(state, data) {
       state.profile = data
     },
+    delProfile(state) {
+      state.profile = {}
+    },
     setUserRoutes(state, data) {
       state.userRoutes = data
     }
