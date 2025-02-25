@@ -29,24 +29,6 @@ export const routes = [
     }]
   },
   {
-    path: '/park',
-    component: Layout,
-    permission: 'park',
-    meta: { title: '园区管理', icon: 'el-icon-office-building' },
-    children: [{
-      path: 'building',
-      permission: 'park:building',
-      meta: { title: '楼宇管理' },
-      component: () => import('@/views/Park/Building/index')
-    },
-    {
-      path: 'enterprise',
-      permission: 'park:enterprise',
-      meta: { title: '企业管理' },
-      component: () => import('@/views/Park/Enterprise/index')
-    }]
-  },
-  {
     // 行车管理-月卡管理-新增月卡
     path: '/add-card',
     component: () => import('@/views/Car/CarCard/addCard.vue')
