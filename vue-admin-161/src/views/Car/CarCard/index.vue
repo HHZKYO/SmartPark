@@ -54,8 +54,19 @@
           <template #default="scope">
             <el-button size="mini" type="text" @click="$router.push(`/card-renew?id=${scope.row.id}`)">续费</el-button>
             <el-button size="mini" type="text" @click="$router.push(`/card-detail?id=${scope.row.id}`)">查看</el-button>
-            <el-button v-auth-dir="`parking:card:add_edit`" size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
-            <el-button size="mini" type="text" @click="del(scope.row.id)">删除</el-button>
+            <el-button
+              v-auth-dir="`parking:card:add_edit`"
+              size="mini"
+              type="text"
+              @click="edit(scope.row.id)"
+            >编辑</el-button>
+            <auth-btn btn-perm="parking:card:remove">
+              <el-button
+                size="mini"
+                type="text"
+                @click="del(scope.row.id)"
+              >删除</el-button>
+            </auth-btn>
           </template>
         </el-table-column>
       </el-table>

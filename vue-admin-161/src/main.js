@@ -17,6 +17,10 @@ import '@/icons'
 // 注册全局指令
 import '@/directives'
 
+// 注册全局组件（权限控制）
+import AuthDir from './components/AuthDir.vue'
+Vue.component('AuthBtn', AuthDir)
+
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
