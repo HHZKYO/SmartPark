@@ -9,7 +9,8 @@ export default {
   computed: {
     isShow() {
       const perms = this.$store.state.user.profile.permissions
-      return perms.includes(this.btnPerm) || perms.includes('*:*:*')
+      if (!perms) return false
+      else return perms.includes(this.btnPerm) || perms.includes('*:*:*')
     }
   },
   // return 什么 auth-btn 位置就显示什么

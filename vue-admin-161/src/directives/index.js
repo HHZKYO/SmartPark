@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import store from '@/store'
 // 管理员权限特殊处理
-// const adminPerms = '*:*:*'
+const adminPerms = '*:*:*'
 Vue.directive('auth-dir', {
   // 指令所在标签第一次插入到真实 DOM 触发回调
   inserted(el, binding) {
@@ -12,7 +12,7 @@ Vue.directive('auth-dir', {
     // console.log(el, data.value)
     const perms = store.state.user.profile.permissions
     // 管理员账号单独处理
-    if (perms.includes(binding.value)) {
+    if (perms.includes(adminPerms)) {
       return
     }
     // 其他员工
