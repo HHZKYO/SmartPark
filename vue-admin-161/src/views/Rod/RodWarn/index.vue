@@ -42,9 +42,24 @@
         <el-table-column label="告警时间" prop="warningTime" />
         <el-table-column label="操作" fixed="right" width="200">
           <template #default="{row}">
-            <el-button size="mini" type="text" :disabled="row.handleStatus !== 0">派单</el-button>
-            <el-button size="mini" type="text" @click="$router.push(`/warn-detail?id=${row.id}`)">详情</el-button>
-            <el-button size="mini" type="text" :disabled="row.handleStatus === 1 || row.handleStatus === 2">删除</el-button>
+            <el-button
+              v-auth-dir="`pole:warning:send`"
+              size="mini"
+              type="text"
+              :disabled="row.handleStatus !== 0"
+            >派单</el-button>
+            <el-button
+              v-auth-dir="`pole:warning:query`"
+              size="mini"
+              type="text"
+              @click="$router.push(`/warn-detail?id=${row.id}`)"
+            >详情</el-button>
+            <el-button
+              v-auth-dir="`pole:warning:remove`"
+              size="mini"
+              type="text"
+              :disabled="row.handleStatus === 1 || row.handleStatus === 2"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
