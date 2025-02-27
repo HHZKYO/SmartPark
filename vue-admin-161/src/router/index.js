@@ -160,7 +160,7 @@ export const asyncRoutes = [
       // 注意：这里路径字符串为空，代表一级菜单无二级菜单
       path: '',
       name: 'cost',
-      permission: 'propertyFee',
+      permission: 'property:propertyFee',
       // 二级路由点，要挂载的组件
       component: () => import('@/views/Property/index'),
       // 左侧路由上标题和图标（图标使用 element-ui 组件库里图标类名（因为左侧导航组件是基于 element-ui 组件库）
