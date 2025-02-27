@@ -33,8 +33,12 @@
     </div>
     <!-- 新增删除操作区域 -->
     <div class="create-container">
-      <el-button type="primary" @click="addRod">添加一体杆</el-button>
-      <el-button @click="dels">批量删除</el-button>
+      <auth-btn btn-perm="pole:info:add_edit">
+        <el-button type="primary" @click="addRod">添加一体杆</el-button>
+      </auth-btn>
+      <auth-btn btn-perm="pole:info:remove">
+        <el-button @click="dels">批量删除</el-button>
+      </auth-btn>
     </div>
     <!-- 表格区域 -->
     <div class="table">
@@ -52,8 +56,12 @@
         <el-table-column label="运行状态" prop="poleStatus" :formatter="formatterStatus" />
         <el-table-column label="操作" fixed="right" width="180">
           <template #default="scope">
-            <el-button size="mini" type="text" @click="edit(scope.row)">编辑</el-button>
-            <el-button size="mini" type="text" @click="del(scope.row.id)">删除</el-button>
+            <auth-btn btn-perm="pole:info:add_edit">
+              <el-button size="mini" type="text" @click="edit(scope.row)">编辑</el-button>
+            </auth-btn>
+            <auth-btn btn-perm="pole:info:remove">
+              <el-button size="mini" type="text" @click="del(scope.row.id)">删除</el-button>
+            </auth-btn>
           </template>
         </el-table-column>
       </el-table>
