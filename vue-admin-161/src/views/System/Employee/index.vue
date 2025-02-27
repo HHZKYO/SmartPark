@@ -7,7 +7,9 @@
       <el-button type="primary" @click="searchFn">查询</el-button>
     </div>
     <div class="create-container">
-      <el-button type="primary" @click="addEmployee">添加员工</el-button>
+      <auth-btn btn-perm="sys:user:add_edit">
+        <el-button type="primary" @click="addEmployee">添加员工</el-button>
+      </auth-btn>
     </div>
     <!-- 表格区域 -->
     <div class="table">
@@ -21,9 +23,15 @@
         <el-table-column label="添加时间" prop="createTime" width="210" />
         <el-table-column label="操作" fixed="right">
           <template #default="scope">
-            <el-button size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
-            <el-button size="mini" type="text" @click="delEmployee(scope.row.id)">删除</el-button>
-            <el-button size="mini" type="text">重置密码</el-button>
+            <auth-btn btn-perm="sys:user:add_edit">
+              <el-button size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
+            </auth-btn>
+            <auth-btn btn-perm="sys:user:remove">
+              <el-button size="mini" type="text" @click="delEmployee(scope.row.id)">删除</el-button>
+            </auth-btn>
+            <auth-btn btn-perm="sys:user:resetPwd">
+              <el-button size="mini" type="text">重置密码</el-button>
+            </auth-btn>
           </template>
         </el-table-column>
       </el-table>
