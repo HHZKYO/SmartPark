@@ -12,6 +12,7 @@ Vue.directive('auth-dir', {
     // console.log(el, data.value)
     const perms = store.state.user.profile.permissions
     // 管理员账号单独处理
+    console.log(store.state.user.profile)
     if (perms.includes(adminPerms)) {
       return
     }

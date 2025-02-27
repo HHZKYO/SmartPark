@@ -7,7 +7,7 @@
       <el-button type="primary" @click="searchFn">查询</el-button>
     </div>
     <div class="create-container">
-      <el-button type="primary" @click="$router.push('/add-ep')">添加企业</el-button>
+      <el-button v-auth-dir="`park:enterprise:add_edit`" type="primary" @click="$router.push('/add-ep')">添加企业</el-button>
     </div>
     <!-- 表格区域 -->
     <div class="table">
@@ -28,6 +28,7 @@
               <el-table-column label="操作" width="180">
                 <template #default="{row}">
                   <el-button
+                    v-auth-dir="`park:rent:add_surrender`"
                     size="mini"
                     type="text"
                     :disabled="row.status === 0 || row.status === 3"
@@ -36,6 +37,7 @@
                     续租
                   </el-button>
                   <el-button
+                    v-auth-dir="`park:rent:add_surrender`"
                     size="mini"
                     type="text"
                     :disabled="row.status === 3"
@@ -44,6 +46,7 @@
                     退租
                   </el-button>
                   <el-button
+                    v-auth-dir="`park:rent:remove`"
                     size="mini"
                     type="text"
                     :disabled="row.status !== 3"
@@ -62,10 +65,10 @@
         <el-table-column label="联系电话" prop="contactNumber" />
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button size="mini" type="text" @click="showAddRentDialog(scope.row.id)">添加合同</el-button>
-            <el-button size="mini" type="text" @click="$router.push(`/ep-detail?id=${scope.row.id}`)">查看</el-button>
-            <el-button size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
-            <el-button size="mini" type="text" @click="del(scope.row.id)">删除</el-button>
+            <el-button v-auth-dir="`park:rent:add_surrender`" size="mini" type="text" @click="showAddRentDialog(scope.row.id)">添加合同</el-button>
+            <el-button v-auth-dir="`park:enterprise:query`" size="mini" type="text" @click="$router.push(`/ep-detail?id=${scope.row.id}`)">查看</el-button>
+            <el-button v-auth-dir="`park:enterprise:add_edit`" size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
+            <el-button v-auth-dir="`park:enterprise:remove`" size="mini" type="text" @click="del(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
