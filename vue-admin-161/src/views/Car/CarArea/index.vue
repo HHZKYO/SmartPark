@@ -1,6 +1,8 @@
 <template>
   <div class="area-container">
-    <el-button type="primary" @click="showAddAreaDialog">添加区域</el-button>
+    <AuthBtn btn-perm="parking:area:add_edit">
+      <el-button type="primary" @click="showAddAreaDialog">添加区域</el-button>
+    </AuthBtn>
     <!-- 表格区域 -->
     <div class="table">
       <el-table style="width: 100%" :data="areaList">
@@ -12,8 +14,12 @@
         <el-table-column label="备注" prop="remark" />
         <el-table-column label="操作" width="166">
           <template #default="scope">
-            <el-button size="mini" type="text" @click="edit(scope.row)">编辑</el-button>
-            <el-button size="mini" type="text" @click="deleteArea(scope.row.id)">删除</el-button>
+            <AuthBtn btn-perm="parking:area:add_edit">
+              <el-button size="mini" type="text" @click="edit(scope.row)">编辑</el-button>
+            </AuthBtn>
+            <AuthBtn btn-perm="parking:area:remove">
+              <el-button size="mini" type="text" @click="deleteArea(scope.row.id)">删除</el-button>
+            </AuthBtn>
           </template>
         </el-table-column>
       </el-table>
