@@ -33,8 +33,14 @@
     </div>
     <!-- 新增删除操作区域 -->
     <div class="create-container">
-      <el-button v-auth-dir="`parking:card:add_edit`" type="primary" @click="$router.push('/add-card')">添加月卡</el-button>
-      <el-button @click="dels">批量删除</el-button>
+      <el-button
+        v-auth-dir="`parking:card:add_edit`"
+        type="primary"
+        @click="$router.push('/add-card')"
+      >添加月卡</el-button>
+      <auth-btn btn-perm="parking:card:remove">
+        <el-button @click="dels">批量删除</el-button>
+      </auth-btn>
     </div>
     <!-- 表格区域 -->
     <div class="table">
@@ -52,8 +58,18 @@
         <el-table-column label="状态" prop="cardStatus" :formatter="formatterFn" />
         <el-table-column label="操作" fixed="right" width="180">
           <template #default="scope">
-            <el-button size="mini" type="text" @click="$router.push(`/card-renew?id=${scope.row.id}`)">续费</el-button>
-            <el-button size="mini" type="text" @click="$router.push(`/card-detail?id=${scope.row.id}`)">查看</el-button>
+            <el-button
+              v-auth-dir="`parking:card:recharge`"
+              size="mini"
+              type="text"
+              @click="$router.push(`/card-renew?id=${scope.row.id}`)"
+            >续费</el-button>
+            <el-button
+              v-auth-dir="`parking:card:query`"
+              size="mini"
+              type="text"
+              @click="$router.push(`/card-detail?id=${scope.row.id}`)"
+            >查看</el-button>
             <el-button
               v-auth-dir="`parking:card:add_edit`"
               size="mini"
