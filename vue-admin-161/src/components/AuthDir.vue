@@ -15,7 +15,6 @@ export default {
   },
   // return 什么 auth-btn 位置就显示什么
   render() {
-    console.log(this.$slots.default)
     // this.$slots.default拿到的就是要控制显示和隐藏的按钮组件
     return this.isShow && this.$slots.default
   }

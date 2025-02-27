@@ -19,13 +19,21 @@
               <svg-icon icon-class="more" />
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="$router.push(`/add-role?roleId=${item.roleId}`)">编辑角色</el-dropdown-item>
-              <el-dropdown-item @click.native="delRole(item.roleId)">删除</el-dropdown-item>
+              <auth-btn btn-perm="sys:role:add_edit">
+                <el-dropdown-item
+                  @click.native="$router.push(`/add-role?roleId=${item.roleId}`)"
+                >编辑角色</el-dropdown-item>
+              </auth-btn>
+              <auth-btn btn-perm="sys:role:remove">
+                <el-dropdown-item @click.native="delRole(item.roleId)">删除</el-dropdown-item>
+              </auth-btn>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
       </div>
-      <el-button class="addBtn" size="mini" @click="$router.push('/add-role')">添加角色</el-button>
+      <auth-btn btn-perm="sys:role:add_edit">
+        <el-button class="addBtn" size="mini" @click="$router.push('/add-role')">添加角色</el-button>
+      </auth-btn>
     </div>
     <!-- 右侧权限和成员 -->
     <div class="right-wrapper">
