@@ -7,7 +7,9 @@
       <el-button type="primary" @click="searchFn">查询</el-button>
     </div>
     <!-- 添加楼宇弹框 -->
-    <el-button type="primary" @click="$router.push('/add-building')">添加楼宇</el-button>
+    <auth-btn btn-perm="park:building:add_edit">
+      <el-button type="primary" @click="$router.push('/add-building')">添加楼宇</el-button>
+    </auth-btn>
     <el-button type="primary" @click="exportToExcel">导出Excel</el-button>
     <!-- 表格区域 -->
     <div class="table">
@@ -20,8 +22,12 @@
         <el-table-column label="状态" prop="status" :formatter="formatterFn" />
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
-            <el-button size="mini" type="text" @click="delBuilding(scope.row.id)">删除</el-button>
+            <auth-btn btn-perm="park:building:add_edit">
+              <el-button size="mini" type="text" @click="edit(scope.row.id)">编辑</el-button>
+            </auth-btn>
+            <auth-btn btn-perm="park:building:remove">
+              <el-button size="mini" type="text" @click="delBuilding(scope.row.id)">删除</el-button>
+            </auth-btn>
           </template>
         </el-table-column>
       </el-table>
