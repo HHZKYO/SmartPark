@@ -13,3 +13,32 @@ vue-admin-161/*.ntvs*
 vue-admin-161/*.njsproj
 vue-admin-161/*.sln
 vue-admin-161/*.lock
+
+# Logs
+hmzs-screen/logs
+hmzs-screen/*.log
+hmzs-screen/npm-debug.log*
+hmzs-screen/yarn-debug.log*
+hmzs-screen/yarn-error.log*
+hmzs-screen/pnpm-debug.log*
+hmzs-screen/lerna-debug.log*
+
+hmzs-screen/node_modules
+hmzs-screen/.DS_Store
+hmzs-screen/dist
+hmzs-screen/dist-ssr
+hmzs-screen/coverage
+hmzs-screen/*.local
+
+hmzs-screen//cypress/videos/
+hmzs-screen//cypress/screenshots/
+
+# Editor directories and files
+hmzs-screen/.vscode/*
+hmzs-screen/!.vscode/extensions.json
+hmzs-screen/.idea
+hmzs-screen/*.suo
+hmzs-screen/*.ntvs*
+hmzs-screen/*.njsproj
+hmzs-screen/*.sln
+hmzs-screen/*.sw?
