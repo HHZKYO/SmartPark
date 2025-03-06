@@ -8,6 +8,6 @@ import request from '@/utils/request'
  */
 export function getParkInfoAPI () {
   return request({
-    url: "/park/statistics/info"
+    url: '/park/statistics/info'
   })
 }
