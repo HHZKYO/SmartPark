@@ -14,7 +14,7 @@
             <div class="item">
               <div class="icons-item building-icon">
                 <span class="number">
-                  {{ 28 }}
+                  {{ parkInfo.buildingTotal }}
                 </span>
               </div>
               <span class="title">楼宇总数</span>
@@ -23,7 +23,7 @@
             <div class="item">
               <div class="icons-item enterprise-icon">
                 <span class="number">
-                  {{ 28 }}
+                  {{ parkInfo.enterpriseTotal }}
                 </span>
               </div>
               <span class="title">入驻企业总数</span>
@@ -32,7 +32,7 @@
             <div class="item">
               <div class="icons-item car-icon">
                 <span class="number">
-                  {{ 20 }}
+                  {{ parkInfo.parkingTotal }}
                 </span>
               </div>
               <span class="title">车位总数</span>
@@ -41,7 +41,7 @@
             <div class="item">
               <div class="icons-item rod-icon">
                 <span class="number">
-                  {{ 30 }}
+                  {{ parkInfo.chargePoleTotal }}
                 </span>
               </div>
               <span class="title">一体杆总数</span>
@@ -63,13 +63,13 @@
   // 1.下载v-scale-screen
   // 2.引入插件暴露的组件使用
   import VScaleScreen from 'v-scale-screen'
-  // import { ref } from 'vue'
+  import { ref } from 'vue'
   import { getParkInfoAPI } from '@/apis/index'
-  // const parkInfo = ref({})
+  const parkInfo = ref({})
   const getParkInfo = async () => {
     const res = await getParkInfoAPI()
     console.log(res)
-    // parkInfo.value = res.data
+    parkInfo.value = res.data.base
   }
   getParkInfo()
 </script>
