@@ -280,6 +280,11 @@ setTimeout(async () => {
         hoverMesh.scale.copy(target.scale);
         hoverMesh.visible = true
       })
+    } else if (/^地面$/.test(obj3d.name)) {
+      // 地面物体
+      MouseHandler.getInstance().addHoverMesh(obj3d, () => {
+        hoverMesh.visible = false
+      })
     }
   })
 
