@@ -128,10 +128,10 @@ setTimeout(async () => {
 
   // 技巧：找摄像机最佳的起始位置
   // 给轨道控制器绑定 change 事件并打印摄像机当前的位置和观察的坐标点
-  controls.addEventListener('change', () => {
-    console.log(camera.position) // 摄像机坐标点
-    console.log(controls.target) // 轨道控制器影响摄像机观察的坐标点
-  })
+  // controls.addEventListener('change', () => {
+  //   console.log(camera.position) // 摄像机坐标点
+  //   console.log(controls.target) // 轨道控制器影响摄像机观察的坐标点
+  // })
 
   // 把模型文件->加载成模型数据对象
   const modelList = await LoadingManager([
@@ -145,7 +145,19 @@ setTimeout(async () => {
     new URL("@/assets/glb/car007.glb", import.meta.url).href,
   ])
   // 把第一个园区对象加载到场景中
-  scene.add(modelList[0])
+  const park3d = modelList[0]
+  scene.add(park3d)
+
+
+  // 经验：找到一个 3D 物体，可以通过名字查找
+  // 语法：父级物体对象.getObjectByName(物体名字) => 原地值：物体对象（找一个）
+  // 语法：物体对象.traverse(obj3d => {}) => 遍历指定物体中所有子物体对象
+  park3d.traverse(obj3d => {
+    // 筛选我想要的物体（在物体名字上找规律）
+    if (/(路线)$/.test(obj3d.name)) {
+      obj3d.visible = false;
+    }
+  })
 
   // 渲染循环
   function renderLoop() {
