@@ -299,7 +299,8 @@ setTimeout(async () => {
 
       // 办公楼绑定点击事件（注意里面是按下+抬起+判断坐标点来确认是否进行了完整的点击动作）
       MouseHandler.getInstance().addClickMesh(obj3d, (target) => {
-        alert(target.name)
+        // 把2D物体位移到点击的建筑物位置
+        buildDiv2d.position.copy(target.position)
       })
     } else if (/^地面$/.test(obj3d.name)) {
       // 地面物体
