@@ -83,6 +83,9 @@
       </div>
     </VScaleScreen>
   </div>
+
+  <!-- 加载建筑说明标签 -->
+  <build-info-vue></build-info-vue>
 </template>
 
 <script setup>
@@ -124,6 +127,9 @@ import { LoadingManager } from '../utils/LoadingManager'
 import { Car } from '../three3d/Model/Car'
 import * as THREE from 'three'
 import { MouseHandler } from '../utils/MouseHandler' // 鼠标管理类
+import BuildInfoVue from '../components/build-info.vue'
+import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
+
 // onMounted 拿不到真实 DOM 计算后的高度，所以用 setTimeout
 setTimeout(async () => {
   // 初始化 3d 基础环境
@@ -261,6 +267,15 @@ setTimeout(async () => {
   const hoverMesh = new THREE.Mesh(hoverGeometry, hoverMaterial);
   hoverMesh.visible = false;
   scene.add(hoverMesh);
+
+  // 获取 div 标签物体
+  const buildInfoDiv = document.querySelector('.build-info')
+  // div 标签 => 2D物体
+  const buildDiv2d = new CSS2DObject(buildInfoDiv)
+  // 加载到场景中
+  scene.add(buildDiv2d)
+
+
   // 经验：找到一个 3D 物体，可以通过名字查找
   // 语法：父级物体对象.getObjectByName(物体名字) => 原地值：物体对象（找一个）
   // 语法：物体对象.traverse(obj3d => {}) => 遍历指定物体中所有子物体对象
@@ -297,7 +312,7 @@ setTimeout(async () => {
   // 渲染循环
   function renderLoop() {
     renderer.render(scene, camera)
-    // 在它的 div 盒子上进行渲染改变位置（进行 translate 等位移用）
+    // 3.在它的 div 盒子上进行渲染改变位置（进行 translate 等位移用）
     css2dRenderer.render(scene, camera)
     controls.update()
     requestAnimationFrame(renderLoop)
