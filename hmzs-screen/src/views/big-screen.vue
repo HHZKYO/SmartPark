@@ -115,6 +115,22 @@ init()
 
 // // 调用组合函数，得到一个水平、垂直方向滚动距离的响应式对象
 // const { x, y } = useWindowScroll()
+
+
+/********************************************************************* */
+// 3D
+import { Create3d } from '@/three3d/index.js'
+// onMounted 拿不到真实 DOM 计算后的高度，所以用 setTimeout
+setTimeout(() => {
+  const { scene, camera, renderer, controls } = new Create3d('.canvas-3d')
+
+  function renderLoop() {
+    renderer.render(scene, camera)
+    controls.update()
+    requestAnimationFrame(renderLoop)
+  }
+  renderLoop()
+})
 </script>
 
 <style lang='scss' scoped>
@@ -224,5 +240,9 @@ init()
     width: 80%;
     height: calc(100% - 40px);
   }
+}
+
+.model-container, .canvas-3d {
+  height: 100%;
 }
 </style>
