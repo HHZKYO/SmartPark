@@ -129,6 +129,7 @@ import * as THREE from 'three'
 import { MouseHandler } from '../utils/MouseHandler' // 鼠标管理类
 import BuildInfoVue from '../components/build-info.vue'
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
+import { getBuildInfoAPI } from '../apis'
 
 // onMounted 拿不到真实 DOM 计算后的高度，所以用 setTimeout
 setTimeout(async () => {
@@ -298,9 +299,13 @@ setTimeout(async () => {
       })
 
       // 办公楼绑定点击事件（注意里面是按下+抬起+判断坐标点来确认是否进行了完整的点击动作）
-      MouseHandler.getInstance().addClickMesh(obj3d, (target) => {
+      MouseHandler.getInstance().addClickMesh(obj3d, async (target) => {
         // 把2D物体位移到点击的建筑物位置
         buildDiv2d.position.copy(target.position)
+
+        // 开始请求点击的这个楼的详情信息
+        const res = await getBuildInfoAPI(target.userData.uid)
+        console.log(res)
       })
     } else if (/^地面$/.test(obj3d.name)) {
       // 地面物体
