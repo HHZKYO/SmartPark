@@ -125,6 +125,14 @@ import { LoadingManager } from '../utils/LoadingManager'
 setTimeout(async () => {
   // 初始化 3d 基础环境
   const { scene, camera, renderer, controls } = new Create3d('.canvas-3d')
+
+  // 技巧：找摄像机最佳的起始位置
+  // 给轨道控制器绑定 change 事件并打印摄像机当前的位置和观察的坐标点
+  // controls.addEventListener('change', () => {
+  //   console.log(camera.position) // 摄像机坐标点
+  //   console.log(controls.target) // 轨道控制器影响摄像机观察的坐标点
+  // })
+
   // 把模型文件->加载成模型数据对象
   const modelList = await LoadingManager([
     new URL("@/assets/glb/park.glb", import.meta.url).href,
