@@ -138,6 +138,18 @@ setTimeout(async () => {
   //   console.log(controls.target) // 轨道控制器影响摄像机观察的坐标点
   // })
 
+  // 加载背景图
+  const cubeTextureLoader = new THREE.CubeTextureLoader();
+  const envMap = cubeTextureLoader.load([
+    new URL("@/assets/sky/1.jpg", import.meta.url).href,
+    new URL("@/assets/sky/2.jpg", import.meta.url).href,
+    new URL("@/assets/sky/3.jpg", import.meta.url).href,
+    new URL("@/assets/sky/4.jpg", import.meta.url).href,
+    new URL("@/assets/sky/5.jpg", import.meta.url).href,
+    new URL("@/assets/sky/6.jpg", import.meta.url).href,
+  ]);
+  scene.background = envMap;
+
   // 把模型文件->加载成模型数据对象
   const modelList = await LoadingManager([
     new URL("@/assets/glb/park.glb", import.meta.url).href,
