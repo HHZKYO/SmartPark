@@ -121,6 +121,7 @@ init()
 // 3D
 import { Create3d } from '@/three3d/index.js'
 import { LoadingManager } from '../utils/LoadingManager'
+import { Car } from '../three3d/Model/Car'
 // onMounted 拿不到真实 DOM 计算后的高度，所以用 setTimeout
 setTimeout(async () => {
   // 初始化 3d 基础环境
@@ -147,6 +148,70 @@ setTimeout(async () => {
   // 把第一个园区对象加载到场景中
   const park3d = modelList[0]
   scene.add(park3d)
+
+  // 添加车辆到场景中
+  const initObj = {
+    type: "PARKING_LIST",
+    list: [
+      {
+        areaId: 4,
+        areaName: "停车场1号", // 停车场区域名字
+        car: {
+          carNumber: "赣H11J9F",
+          carTypeName: "小型车",
+          chargeType: "temp",
+          chargeTypeName: "临时停车",
+          driverName: "莫苛",
+          entranceTime: "2023-12-09 15:56:11",
+          modelIndex: 3, // 模型下标
+          parkingTime: "48分钟",
+          status: 2, // 2 已在场，1 待进场，0 待出场
+        },
+        id: 31, // 车辆 id
+        parkNum: "停车位1号", // 车辆所占车位名
+        parkNumber: 1, // 车辆所占车位数字
+      },
+      {
+        areaId: 4,
+        areaName: "停车场1号",
+        car: {
+          carNumber: "甘H80106",
+          carTypeName: "小型车",
+          chargeType: "temp",
+          chargeTypeName: "临时停车",
+          driverName: "陈督丙",
+          entranceTime: "2023-12-09 15:56:11",
+          modelIndex: 1,
+          parkingTime: "48分钟",
+          status: 2,
+        },
+        id: 32,
+        parkNum: "停车位6号",
+        parkNumber: 6,
+      },
+      {
+        areaId: 5,
+        areaName: "停车场2号",
+        car: {
+          carNumber: "浙B93871",
+          carTypeName: "小型车",
+          chargeType: "temp",
+          chargeTypeName: "临时停车",
+          driverName: "岑迢",
+          entranceTime: "2023-12-09 15:56:11",
+          modelIndex: 5,
+          parkingTime: "48分钟",
+          status: 2,
+        },
+        id: 33,
+        parkNum: "停车位9号",
+        parkNumber: 9,
+      },
+    ],
+  }
+  initObj.list.forEach(dataObj => {
+    new Car(scene, camera, controls, modelList[dataObj.car.modelIndex], dataObj)
+  })
 
 
   // 经验：找到一个 3D 物体，可以通过名字查找
