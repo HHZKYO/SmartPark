@@ -122,6 +122,7 @@ init()
 import { Create3d } from '@/three3d/index.js'
 import { LoadingManager } from '../utils/LoadingManager'
 import { Car } from '../three3d/Model/Car'
+import * as THREE from 'three'
 import { MouseHandler } from '../utils/MouseHandler' // 鼠标管理类
 // onMounted 拿不到真实 DOM 计算后的高度，所以用 setTimeout
 setTimeout(async () => {
@@ -237,6 +238,17 @@ setTimeout(async () => {
   })
 
 
+
+  // 空白缓冲几何体图形
+  const hoverGeometry = new THREE.BufferGeometry();
+  const hoverMaterial = new THREE.MeshBasicMaterial({
+    color: 0x1dd6ff,
+    transparent: true,
+    opacity: 0.5,
+  });
+  const hoverMesh = new THREE.Mesh(hoverGeometry, hoverMaterial);
+  hoverMesh.visible = false;
+  scene.add(hoverMesh);
   // 经验：找到一个 3D 物体，可以通过名字查找
   // 语法：父级物体对象.getObjectByName(物体名字) => 原地值：物体对象（找一个）
   // 语法：物体对象.traverse(obj3d => {}) => 遍历指定物体中所有子物体对象
@@ -249,6 +261,12 @@ setTimeout(async () => {
       MouseHandler.getInstance().addHoverMesh(obj3d, (target) => {
         // target 等价于 obj3d
         console.log(target)
+        // 目标：把楼宇几何图形和位置与旋转角度+缩放大小给 hover 物体
+        hoverMesh.geometry.copy(target.geometry);
+        hoverMesh.position.copy(target.position);
+        hoverMesh.rotation.copy(target.rotation);
+        hoverMesh.scale.copy(target.scale);
+        hoverMesh.visible = true
       })
     }
   })
