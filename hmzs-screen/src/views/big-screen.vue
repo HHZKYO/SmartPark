@@ -244,6 +244,12 @@ setTimeout(async () => {
     // 筛选我想要的物体（在物体名字上找规律）
     if (/(路线)$/.test(obj3d.name)) {
       obj3d.visible = false;
+    } else if (/^办公楼\d+栋$/.test(obj3d.name)) {
+      // 进到这里 obj3d 就是办公楼物体
+      MouseHandler.getInstance().addHoverMesh(obj3d, (target) => {
+        // target 等价于 obj3d
+        console.log(target)
+      })
     }
   })
 
