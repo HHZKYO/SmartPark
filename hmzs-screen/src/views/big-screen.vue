@@ -120,10 +120,26 @@ init()
 /********************************************************************* */
 // 3D
 import { Create3d } from '@/three3d/index.js'
+import { LoadingManager } from '../utils/LoadingManager'
 // onMounted 拿不到真实 DOM 计算后的高度，所以用 setTimeout
-setTimeout(() => {
+setTimeout(async () => {
+  // 初始化 3d 基础环境
   const { scene, camera, renderer, controls } = new Create3d('.canvas-3d')
+  // 把模型文件->加载成模型数据对象
+  const modelList = await LoadingManager([
+    new URL("@/assets/glb/park.glb", import.meta.url).href,
+    new URL("@/assets/glb/car001.glb", import.meta.url).href,
+    new URL("@/assets/glb/car002.glb", import.meta.url).href,
+    new URL("@/assets/glb/car003.glb", import.meta.url).href,
+    new URL("@/assets/glb/car004.glb", import.meta.url).href,
+    new URL("@/assets/glb/car005.glb", import.meta.url).href,
+    new URL("@/assets/glb/car006.glb", import.meta.url).href,
+    new URL("@/assets/glb/car007.glb", import.meta.url).href,
+  ])
+  // 把第一个园区对象加载到场景中
+  scene.add(modelList[0])
 
+  // 渲染循环
   function renderLoop() {
     renderer.render(scene, camera)
     controls.update()
