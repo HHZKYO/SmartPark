@@ -127,7 +127,7 @@ import { MouseHandler } from '../utils/MouseHandler' // 鼠标管理类
 // onMounted 拿不到真实 DOM 计算后的高度，所以用 setTimeout
 setTimeout(async () => {
   // 初始化 3d 基础环境
-  const { scene, camera, renderer, controls, dom } = new Create3d('.canvas-3d')
+  const { scene, camera, renderer, controls, dom, css2dRenderer } = new Create3d('.canvas-3d')
   // 初始化鼠标管理类（内部就在dom身上注册了鼠标移动和点击的事件监听）
   MouseHandler.getInstance().init(scene, camera, dom)
 
@@ -297,6 +297,8 @@ setTimeout(async () => {
   // 渲染循环
   function renderLoop() {
     renderer.render(scene, camera)
+    // 在它的 div 盒子上进行渲染改变位置（进行 translate 等位移用）
+    css2dRenderer.render(scene, camera)
     controls.update()
     requestAnimationFrame(renderLoop)
   }
