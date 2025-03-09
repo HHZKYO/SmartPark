@@ -14,15 +14,15 @@ export function Car(scene, camera, controls, carModel, carDataObj) {
   // 把车辆设置在停车位的位置上
   this.carModel.position.copy(parkingSpace.position)
   // 发现车辆默认朝着 z 轴正方向，但我的停车场是歪着的，所以要把车辆旋转过来
-  this.carModel.rotation.y = 0.1666 * Math.PI
+  // this.carModel.rotation.y = 0.1666 * Math.PI
 
 
   // 根据车位奇数偶数来调整车辆
-  // if (this.carDataObj.parkNumber % 2 === 0) {
-  //   // 上排汽车
-  //   carModel.rotation.y = 1.1714 * Math.PI
-  // } else if (this.carDataObj.parkNumber % 2 != 0) {
-  //   // 下排汽车
-  //   carModel.rotation.y = 0.1666 * Math.PI
-  // }
+  if (this.carDataObj.parkNumber % 2 === 0) {
+    // 上排汽车
+    carModel.rotation.y = 1.1714 * Math.PI
+  } else if (this.carDataObj.parkNumber % 2 != 0) {
+    // 下排汽车
+    carModel.rotation.y = 0.1666 * Math.PI
+  }
 }

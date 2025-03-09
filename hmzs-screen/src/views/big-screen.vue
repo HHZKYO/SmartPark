@@ -173,6 +173,24 @@ setTimeout(async () => {
       },
       {
         areaId: 4,
+        areaName: "停车场1号", // 停车场区域名字
+        car: {
+          carNumber: "赣H11J9F",
+          carTypeName: "小型车",
+          chargeType: "temp",
+          chargeTypeName: "临时停车",
+          driverName: "莫苛",
+          entranceTime: "2023-12-09 15:56:11",
+          modelIndex: 3, // 模型下标
+          parkingTime: "48分钟",
+          status: 2, // 2 已在场，1 待进场，0 待出场
+        },
+        id: 31, // 车辆 id
+        parkNum: "停车位5号", // 车辆所占车位名
+        parkNumber: 5, // 车辆所占车位数字
+      },
+      {
+        areaId: 4,
         areaName: "停车场1号",
         car: {
           carNumber: "甘H80106",
@@ -210,7 +228,9 @@ setTimeout(async () => {
     ],
   }
   initObj.list.forEach(dataObj => {
-    new Car(scene, camera, controls, modelList[dataObj.car.modelIndex], dataObj)
+    // 问题：如果多个车用同一个车辆模型对象，会共用一个
+    // 解决：物体可以通过调用 clone 方法克隆一个完全一致的物体对象出来
+    new Car(scene, camera, controls, modelList[dataObj.car.modelIndex].clone(), dataObj)
   })
 
 
