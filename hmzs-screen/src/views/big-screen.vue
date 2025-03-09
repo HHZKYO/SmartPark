@@ -122,10 +122,13 @@ init()
 import { Create3d } from '@/three3d/index.js'
 import { LoadingManager } from '../utils/LoadingManager'
 import { Car } from '../three3d/Model/Car'
+import { MouseHandler } from '../utils/MouseHandler' // 鼠标管理类
 // onMounted 拿不到真实 DOM 计算后的高度，所以用 setTimeout
 setTimeout(async () => {
   // 初始化 3d 基础环境
-  const { scene, camera, renderer, controls } = new Create3d('.canvas-3d')
+  const { scene, camera, renderer, controls, dom } = new Create3d('.canvas-3d')
+  // 初始化鼠标管理类（内部就在dom身上注册了鼠标移动和点击的事件监听）
+  MouseHandler.getInstance().init(scene, camera, dom)
 
   // 技巧：找摄像机最佳的起始位置
   // 给轨道控制器绑定 change 事件并打印摄像机当前的位置和观察的坐标点
