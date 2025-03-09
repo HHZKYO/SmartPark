@@ -109,6 +109,12 @@ const init = async () => {
   initPieChart(parkInfo)
 }
 init()
+
+
+// import { useWindowScroll } from '@vueuse/core'
+
+// // 调用组合函数，得到一个水平、垂直方向滚动距离的响应式对象
+// const { x, y } = useWindowScroll()
 </script>
 
 <style lang='scss' scoped>
