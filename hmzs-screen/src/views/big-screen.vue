@@ -270,15 +270,21 @@ setTimeout(async () => {
       obj3d.visible = false;
     } else if (/^办公楼\d+栋$/.test(obj3d.name)) {
       // 进到这里 obj3d 就是办公楼物体
+      // 办公楼鼠标移动事件
       MouseHandler.getInstance().addHoverMesh(obj3d, (target) => {
         // target 等价于 obj3d
-        console.log(target)
+        // console.log(target)
         // 目标：把楼宇几何图形和位置与旋转角度+缩放大小给 hover 物体
         hoverMesh.geometry.copy(target.geometry);
         hoverMesh.position.copy(target.position);
         hoverMesh.rotation.copy(target.rotation);
         hoverMesh.scale.copy(target.scale);
         hoverMesh.visible = true
+      })
+
+      // 办公楼绑定点击事件（注意里面是按下+抬起+判断坐标点来确认是否进行了完整的点击动作）
+      MouseHandler.getInstance().addClickMesh(obj3d, (target) => {
+        alert(target.name)
       })
     } else if (/^地面$/.test(obj3d.name)) {
       // 地面物体
