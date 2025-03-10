@@ -137,7 +137,6 @@ import { CameraBuildPositon, CameraParams } from '../const'
 import gsap from 'gsap'
 // 车辆信息标签组件
 import CarInfoVue from '../components/car-info.vue'
-import { getPoints } from '../utils/points'
 const store = useStore()
 
 
@@ -430,15 +429,9 @@ setTimeout(async () => {
     };
 
     const carModel = modelList[newCarInfoObj.car.modelIndex].clone();
-    new Car(scene, camera, controls, carModel, newCarInfoObj);
-
-    const points = getPoints(scene.getObjectByName(`${newCarInfoObj.areaName}_进场路线`))
-    console.log(points)
+    const car = new Car(scene, camera, controls, carModel, newCarInfoObj);
+    car.moveEnterFormStartToPole()
   }, 3000)
-
-  // 目标：3D物体运动的路径规划
-  // 方式1：自己计算几个关键的三维坐标点，然后生成一个曲线路径物体，并分割成指定段数，并返回所有坐标点集合
-  // 方式2：根据建模师建好的线段物体，收集对应的坐标点集合
 
 
   // 渲染循环
