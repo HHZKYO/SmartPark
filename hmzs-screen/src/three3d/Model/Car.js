@@ -41,7 +41,8 @@ Car.prototype.moveEnterFormStartToPole = function(){
   console.log(points)
 
   let i = 0
-  setInterval(() => {
+  const t = setInterval(() => {
+    if (i === points.length -1) return clearInterval(t)
     const position = points[i++]
     const nextPos = points[i]
     this.carModel.position.copy(position)
