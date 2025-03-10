@@ -131,7 +131,24 @@ import BuildInfoVue from '../components/build-info.vue'
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 import { getBuildInfoAPI } from '../apis'
 import { useStore } from 'vuex'
+import { CameraBuildPositon } from '../const'
+import gsap from 'gsap'
 const store = useStore()
+
+
+function cameraMove(camera, controls, position, targetPosition) {
+  gsap.to(camera.position, {
+    x: position.x,
+    y: position.y,
+    z: position.z,
+    duration: 1.0,
+    onUpdate() {
+      controls.target = targetPosition;
+      controls.update();
+    },
+  });
+}
+
 
 // onMounted 拿不到真实 DOM 计算后的高度，所以用 setTimeout
 setTimeout(async () => {
@@ -312,6 +329,11 @@ setTimeout(async () => {
         // 把2D物体位移到点击的建筑物位置
         buildDiv2d.position.copy(target.position)
         buildDiv2d.visible = true
+
+        // 思路：点击建筑楼宇拿到名字，去数据对象里换取摄像机坐标，设置给摄像机
+        // 视角切换
+        const targetP = CameraBuildPositon[target.name]
+        cameraMove(camera, controls, targetP, target.position)
 
         // 开始请求点击的这个楼的详情信息
         const res = await getBuildInfoAPI(target.userData.uid)
