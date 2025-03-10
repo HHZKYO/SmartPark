@@ -131,7 +131,7 @@ import BuildInfoVue from '../components/build-info.vue'
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 import { getBuildInfoAPI } from '../apis'
 import { useStore } from 'vuex'
-import { CameraBuildPositon } from '../const'
+import { CameraBuildPositon, CameraParams } from '../const'
 import gsap from 'gsap'
 const store = useStore()
 
@@ -300,7 +300,12 @@ setTimeout(async () => {
   buildInfoCloseImg.style.pointerEvents = 'all'
   buildInfoCloseImg.addEventListener('click', () => {
     buildDiv2d.visible = false
+    // 把视角恢复到最起始位置
+    cameraMove(camera, controls, CameraParams.initPos, new THREE.Vector3(...Object.values(CameraParams.initControlsTarget)))
+    controls.enabled = true
   })
+  // 防止点击 x 让 canvas-3d 标签的按下事件触发，导致关闭说明标签又去到了另一个楼的点击效果
+  buildInfoCloseImg.addEventListener('mousedown', e => e.stopPropagation())
 
 
   // 经验：找到一个 3D 物体，可以通过名字查找
@@ -334,6 +339,7 @@ setTimeout(async () => {
         // 视角切换
         const targetP = CameraBuildPositon[target.name]
         cameraMove(camera, controls, targetP, target.position)
+        controls.enabled = false
 
         // 开始请求点击的这个楼的详情信息
         const res = await getBuildInfoAPI(target.userData.uid)
