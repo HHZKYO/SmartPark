@@ -2,31 +2,36 @@
   <div ref="target" class="modal-container build-info">
     <img class="close-icon" src="@/assets/modal-close.png" alt="" />
     <div class="extra">
-      <span> 空置中 </span>
-      <!-- <span> 已租赁 </span> -->
+      <span v-if="buildInfo.status === 0"> 空置中 </span>
+      <span v-if="buildInfo.status === 1"> 已租赁 </span>
     </div>
     <div class="title">
-      办公楼 x 栋
+      {{ buildInfo.name }}
     </div>
     <div class="info">
       <div class="info-line">
         <span>楼层数：</span>
-        <span> 5 </span>
+        <span> {{ buildInfo.floors }} </span>
       </div>
       <div class="info-line">
         <span>总面积(m²)：</span>
-        <span> 120㎡ </span>
+        <span> {{ buildInfo.area }}㎡ </span>
       </div>
       <div class="info-line">
         <span>承租单位：</span>
-        <span> 暂无 </span>
+        <span> {{ buildInfo.rentEnterpriseName || '暂无' }} </span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-
+import { useStore } from 'vuex'
+import { computed } from 'vue' 
+const store = useStore()
+const buildInfo = computed(() => {
+  return store.getters.buildInfo
+})
 </script>
 
 <style scoped lang="scss">
