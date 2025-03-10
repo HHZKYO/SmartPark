@@ -2,35 +2,40 @@
   <div ref="target" class="modal-container car-info">
     <img class="close-icon" src="@/assets/modal-close.png" alt="" />
     <div class="extra">
-      <span> 临时 </span>
-      <!-- <span> 月卡 </span> -->
+      <span v-if="carInfo.car?.chargeType === 'temp'"> 临时 </span>
+      <span v-else> 月卡 </span>
     </div>
     <div class="title">
-      京A00001
+      {{  carInfo.car?.carNumber }}
     </div>
     <div class="info">
       <div class="info-line">
         <span>车型：</span>
-        <span> 小型车 </span>
+        <span> {{  carInfo.car?.carTypeName }} </span>
       </div>
       <div class="info-line">
         <span>车主姓名：</span>
-        <span> 小花 </span>
+        <span> {{ carInfo.car?.driverName }} </span>
       </div>
       <div class="info-line">
         <span>停车时间：</span>
-        <span> 2023-04-05 </span>
+        <span> {{ carInfo.car?.entranceTime }} </span>
       </div>
       <div>
         <span>已停车：</span>
-        <span> 48 分钟</span>
+        <span>{{ carInfo.car?.parkingTime }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-
+import { useStore } from 'vuex'
+import { computed } from 'vue'
+const store = useStore()
+const carInfo = computed(() => {
+  return store.getters.carInfo
+})
 </script>
 
 <style scoped lang="scss">

@@ -286,6 +286,7 @@ setTimeout(async () => {
       carInfo2d.visible = true
       carInfo2d.position.copy(car.carModel.position)
       console.log(car.carDataObj.car)
+      store.commit('car/setCarInfo', car.carDataObj)
     })
   })
 
