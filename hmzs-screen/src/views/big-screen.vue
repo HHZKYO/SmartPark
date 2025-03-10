@@ -275,8 +275,15 @@ setTimeout(async () => {
   const buildInfoDiv = document.querySelector('.build-info')
   // div 标签 => 2D物体
   const buildDiv2d = new CSS2DObject(buildInfoDiv)
+  buildDiv2d.visible = false
   // 加载到场景中
   scene.add(buildDiv2d)
+  // 给 x 绑定点击事件
+  const buildInfoCloseImg = document.querySelector('.build-info .close-icon')
+  buildInfoCloseImg.style.pointerEvents = 'all'
+  buildInfoCloseImg.addEventListener('click', () => {
+    buildDiv2d.visible = false
+  })
 
 
   // 经验：找到一个 3D 物体，可以通过名字查找
@@ -304,6 +311,7 @@ setTimeout(async () => {
       MouseHandler.getInstance().addClickMesh(obj3d, async (target) => {
         // 把2D物体位移到点击的建筑物位置
         buildDiv2d.position.copy(target.position)
+        buildDiv2d.visible = true
 
         // 开始请求点击的这个楼的详情信息
         const res = await getBuildInfoAPI(target.userData.uid)
