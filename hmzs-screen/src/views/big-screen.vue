@@ -86,6 +86,8 @@
 
   <!-- 加载建筑说明标签 -->
   <build-info-vue></build-info-vue>
+  <!-- 汽车说明标签 -->
+  <car-info-vue></car-info-vue>
 </template>
 
 <script setup>
@@ -133,6 +135,8 @@ import { getBuildInfoAPI } from '../apis'
 import { useStore } from 'vuex'
 import { CameraBuildPositon, CameraParams } from '../const'
 import gsap from 'gsap'
+// 车辆信息标签组件
+import CarInfoVue from '../components/car-info.vue'
 const store = useStore()
 
 
@@ -190,7 +194,12 @@ setTimeout(async () => {
   // 把第一个园区对象加载到场景中
   const park3d = modelList[0]
   scene.add(park3d)
-
+  
+  // 车辆说明标签物体准备
+  const carInfoDiv = document.querySelector('.car-info')
+  const carInfo2d = new CSS2DObject(carInfoDiv)
+  carInfo2d.visible = false
+  scene.add(carInfo2d)
   // 添加车辆到场景中
   const initObj = {
     type: "PARKING_LIST",
@@ -272,7 +281,11 @@ setTimeout(async () => {
   initObj.list.forEach(dataObj => {
     // 问题：如果多个车用同一个车辆模型对象，会共用一个
     // 解决：物体可以通过调用 clone 方法克隆一个完全一致的物体对象出来
-    new Car(scene, camera, controls, modelList[dataObj.car.modelIndex].clone(), dataObj)
+    const car = new Car(scene, camera, controls, modelList[dataObj.car.modelIndex].clone(), dataObj)
+    MouseHandler.getInstance().addClickMesh(car.carModel, () => {
+      carInfo2d.visible = true
+      carInfo2d.position.copy(car.carModel.position)
+    })
   })
 
 
