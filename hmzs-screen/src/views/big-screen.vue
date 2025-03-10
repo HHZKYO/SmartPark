@@ -406,6 +406,33 @@ setTimeout(async () => {
     }
   })
 
+
+  // 目标：等待3秒钟，新进一辆入场的汽车
+  setTimeout(() => {
+    // 新车数据（将来是后台给我的，这里我先根据字段自己编一辆出来做效果）
+    const newCarInfoObj = {
+      areaId: 4,
+      areaName: "停车场1号",
+      car: {
+        carNumber: "宁B86H67",
+        carTypeName: "小型车",
+        chargeType: "temp",
+        chargeTypeName: "临时停车",
+        driverName: "党耗罩",
+        entranceTime: "2023-12-09 22:57:15",
+        modelIndex: 6,
+        parkingTime: "1分钟",
+        status: 1, // status 2: 已进场，1：待入场，0 待出场
+      },
+      parkNum: "停车位2号",
+      parkNumber: 2,
+    };
+
+    const carModel = modelList[newCarInfoObj.car.modelIndex].clone();
+    new Car(scene, camera, controls, carModel, newCarInfoObj);
+  }, 3000)
+
+
   // 渲染循环
   function renderLoop() {
     renderer.render(scene, camera)
