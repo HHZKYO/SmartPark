@@ -39,6 +39,28 @@ Car.prototype.moveEnterFormStartToPole = function(){
     this.scene.getObjectByName(`${this.carDataObj.areaName}_进场路线`)
   )
   console.log(points)
+
+  let i = 0
+  setInterval(() => {
+    const position = points[i++]
+    const nextPos = points[i]
+    this.carModel.position.copy(position)
+    // this.camera.position.set(position.x, position.y + 5, position.z)
+    // this.controls.target = points[i + 20]
+    // lookAt 物体 z 正方向观察指定的坐标点
+    this.carModel.lookAt(nextPos.x, nextPos.y, nextPos.z)
+  }, 10)
+
+  // let i = 0
+  // const t = setInterval(() => {
+  //   const point = points[i++]
+  //   if (i >= points.length) return clearInterval(t);
+  //   this.carModel.position.copy(point)
+  //   const nextPoint = points[i]
+  //   this.carModel.lookAt(nextPoint.x, nextPoint.y, nextPoint.z)
+  // }, 10)
+
+
   // return new Promise(() => {
   //   const lx = this.scene.getObjectByName(`${this.carDataObj.areaName}_进场路线`)
   //   const points = getPointsByLine(lx)
