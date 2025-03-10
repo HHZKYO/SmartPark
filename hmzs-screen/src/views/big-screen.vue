@@ -197,9 +197,15 @@ setTimeout(async () => {
   
   // 车辆说明标签物体准备
   const carInfoDiv = document.querySelector('.car-info')
+  carInfoDiv.style.pointerEvents = 'all'
   const carInfo2d = new CSS2DObject(carInfoDiv)
   carInfo2d.visible = false
   scene.add(carInfo2d)
+  carInfoDiv.addEventListener('click', () => {
+    carInfo2d.visible = false
+    // 把视角恢复到最起始位置
+    cameraMove(camera, controls, CameraParams.initPos, new THREE.Vector3(...Object.values(CameraParams.initControlsTarget)))
+  })
   // 添加车辆到场景中
   const initObj = {
     type: "PARKING_LIST",
@@ -287,6 +293,37 @@ setTimeout(async () => {
       carInfo2d.position.copy(car.carModel.position)
       console.log(car.carDataObj.car)
       store.commit('car/setCarInfo', car.carDataObj)
+
+      // 调整摄像机位置
+      // 视角切换
+      // 切换摄像机视角
+      // status 2: 已进场，1：待入场，0 待出场
+      if (car.carDataObj.parkNumber % 2 === 0) {
+        // 这里的汽车模型是世界坐标系，相对于世界坐标轴进行位移
+        // 下排车位
+        cameraMove(
+          camera,
+          controls,
+          new THREE.Vector3(
+            car.carModel.position.x - 9,
+            car.carModel.position.y + 8,
+            car.carModel.position.z - 16
+          ),
+          car.carModel.position
+        );
+      } else {
+        // 上排车位
+        cameraMove(
+          camera,
+          controls,
+          new THREE.Vector3(
+            car.carModel.position.x + 9,
+            car.carModel.position.y + 8,
+            car.carModel.position.z + 16
+          ),
+          car.carModel.position
+        );
+      }
     })
   })
 
