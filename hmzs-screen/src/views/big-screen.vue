@@ -140,7 +140,7 @@ import CarInfoVue from '../components/car-info.vue'
 import { EffectManager } from '../utils/EffectManager'
 const store = useStore()
 
-
+// 摄像机补间动画移动
 function cameraMove(camera, controls, position, targetPosition) {
   gsap.to(camera.position, {
     x: position.x,
@@ -151,6 +151,40 @@ function cameraMove(camera, controls, position, targetPosition) {
       controls.target = targetPosition;
       controls.update();
     },
+  });
+}
+// 抬杆/落杆方法
+function liftingRod(scene, carDataObj, isOpen) {
+  return new Promise((resolve) => {
+    // 根据车辆信息，找到对应一体杆
+    let statusObj = {
+      0: "出场",
+      1: "进场",
+    };
+    let poleAngle = {
+      0: {
+        // 出场杆子
+        open: Math.PI / 2,
+        close: 0,
+      },
+      1: {
+        // 进场杆子
+        open: -Math.PI / 2,
+        close: 0,
+      },
+    };
+    const pole = scene.getObjectByName(
+      `${carDataObj.areaName}_${statusObj[carDataObj.car.status]}一体杆`
+    );
+    gsap.to(pole.rotation, {
+      z: poleAngle[carDataObj.car.status][isOpen ? "open" : "close"],
+      duration: 2,
+      ease: "none", // 匀速
+      onComplete: () => {
+        // 杆子已经抬起，执行汽车效果
+        resolve();
+      },
+    });
   });
 }
 
@@ -409,7 +443,7 @@ setTimeout(async () => {
 
 
   // 目标：等待3秒钟，新进一辆入场的汽车
-  setTimeout(() => {
+  setTimeout(async () => {
     // 新车数据（将来是后台给我的，这里我先根据字段自己编一辆出来做效果）
     const newCarInfoObj = {
       areaId: 4,
@@ -431,7 +465,9 @@ setTimeout(async () => {
 
     const carModel = modelList[newCarInfoObj.car.modelIndex].clone();
     const car = new Car(scene, camera, controls, carModel, newCarInfoObj);
-    car.moveEnterFormStartToPole()
+    await car.moveEnterFormStartToPole()
+    // 抬杆
+    liftingRod(scene, newCarInfoObj, true)
   }, 3000)
 
 

@@ -34,7 +34,8 @@ export function Car(scene, camera, controls, carModel, carDataObj) {
 
 // 创建入场车辆->运动到进场一体杆
 Car.prototype.moveEnterFormStartToPole = function(){
-  // 目标：3D物体运动的路径规划
+  return new Promise(resolve => {
+     // 目标：3D物体运动的路径规划
   // 方式1：自己计算几个关键的三维坐标点，然后生成一个曲线路径物体，并分割成指定段数，并返回所有坐标点集合
   // 方式2：根据建模师建好的线段物体，收集对应的坐标点集合
   const points = getPoints(
@@ -47,6 +48,7 @@ Car.prototype.moveEnterFormStartToPole = function(){
   const fn = function() {
     if (i === points.length -1) {
       EffectManager.getInstance().removeEffect(fn)
+      resolve() // 动画执行完毕，兑现 resolve 状态让外面 await 放行往下走
       return
     }
     const position = points[i++]
@@ -88,4 +90,5 @@ Car.prototype.moveEnterFormStartToPole = function(){
   //   const points = getPointsByLine(lx)
   //   console.log(points)
   // })
+  })
 }
