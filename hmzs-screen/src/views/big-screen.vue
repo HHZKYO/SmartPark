@@ -467,7 +467,9 @@ setTimeout(async () => {
     const car = new Car(scene, camera, controls, carModel, newCarInfoObj);
     await car.moveEnterFormStartToPole()
     // 抬杆
-    liftingRod(scene, newCarInfoObj, true)
+    await liftingRod(scene, newCarInfoObj, true)
+    // 车辆移动到车位
+    car.movePoleToParkingSpace()
   }, 3000)
 
 

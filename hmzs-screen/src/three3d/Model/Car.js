@@ -92,3 +92,37 @@ Car.prototype.moveEnterFormStartToPole = function(){
   // })
   })
 }
+
+// 一体杆前 -> 车位
+Car.prototype.movePoleToParkingSpace = function(){
+  // 停车位数据拼接，模型里线段物体，获取并转换坐标集合
+  // 进场路线物体
+  const lineOne = this.scene.getObjectByName(`${this.carDataObj.parkNum}_进场路线`)
+  const lineTwo = this.scene.getObjectByName(`${this.carDataObj.parkNum}_倒车入库路线`)
+  // 物体 => 坐标集合
+  const lineOnePoints = getPoints(lineOne)
+  const lineTwoPoints = getPoints(lineTwo)
+
+
+  let i = 0
+  let j = 0
+  const fn = () => {
+    if (i === lineOnePoints.length - 1) {
+      if (j === lineTwoPoints.length - 1) {
+        EffectManager.getInstance().removeEffect(fn)
+        return
+      }
+      let lastIndex = j
+      const points = lineTwoPoints[++j]
+      const nextPos = lineTwoPoints[lastIndex]
+      this.carModel.position.copy(points)
+      this.carModel.lookAt(nextPos.x, nextPos.y, nextPos.z)
+      return
+    }
+    const points = lineOnePoints[i++]
+    const nextPos = lineOnePoints[i]
+    this.carModel.position.copy(points)
+    this.carModel.lookAt(nextPos.x, nextPos.y, nextPos.z)
+  }
+  EffectManager.getInstance().addEffect(fn)
+}
