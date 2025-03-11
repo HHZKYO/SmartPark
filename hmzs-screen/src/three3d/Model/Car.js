@@ -1,5 +1,6 @@
 // import { getPointsByLine } from '@/utils/points'
 import { getPoints } from '@/utils/points'
+import { EffectManager } from '../../utils/EffectManager';
 // import { Vector3 } from 'three';
 
 // 车辆类
@@ -41,22 +42,36 @@ Car.prototype.moveEnterFormStartToPole = function(){
   )
   console.log(points)
 
+  // 改装成借助渲染循环函数执行汽车运动
   let i = 0
-  const t = setInterval(() => {
-    if (i === points.length -1) return clearInterval(t)
+  const fn = function() {
+    if (i === points.length -1) {
+      EffectManager.getInstance().removeEffect(fn)
+      return
+    }
     const position = points[i++]
     const nextPos = points[i]
     this.carModel.position.copy(position)
-    // this.camera.position.set(position.x, position.y + 5, position.z)
-    // this.controls.target = points[i + 20]
-    // lookAt 物体 z 正方向观察指定的坐标点
     this.carModel.lookAt(nextPos.x, nextPos.y, nextPos.z)
+  }
+  EffectManager.getInstance().addEffect(fn.bind(this))
 
-    // // 玩一下：让摄像头跟着动
-    // this.camera.position.set(position.x, position.y + 4, position.z)
-    // // 因为有轨道控制器控制着摄像机，所以要改变轨道控制的 target 影响摄像机的 lookAt
-    // this.controls.target = new Vector3(nextPos.x, nextPos.y + 4, nextPos.z)
-  }, 10)
+  // let i = 0
+  // const t = setInterval(() => {
+  //   if (i === points.length -1) return clearInterval(t)
+  //   const position = points[i++]
+  //   const nextPos = points[i]
+  //   this.carModel.position.copy(position)
+  //   // this.camera.position.set(position.x, position.y + 5, position.z)
+  //   // this.controls.target = points[i + 20]
+  //   // lookAt 物体 z 正方向观察指定的坐标点
+  //   this.carModel.lookAt(nextPos.x, nextPos.y, nextPos.z)
+
+  //   // // 玩一下：让摄像头跟着动
+  //   // this.camera.position.set(position.x, position.y + 4, position.z)
+  //   // // 因为有轨道控制器控制着摄像机，所以要改变轨道控制的 target 影响摄像机的 lookAt
+  //   // this.controls.target = new Vector3(nextPos.x, nextPos.y + 4, nextPos.z)
+  // }, 10)
 
   // let i = 0
   // const t = setInterval(() => {

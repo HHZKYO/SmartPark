@@ -137,6 +137,7 @@ import { CameraBuildPositon, CameraParams } from '../const'
 import gsap from 'gsap'
 // 车辆信息标签组件
 import CarInfoVue from '../components/car-info.vue'
+import { EffectManager } from '../utils/EffectManager'
 const store = useStore()
 
 
@@ -440,6 +441,7 @@ setTimeout(async () => {
     // 3.在它的 div 盒子上进行渲染改变位置（进行 translate 等位移用）
     css2dRenderer.render(scene, camera)
     controls.update()
+    EffectManager.getInstance().update()
     requestAnimationFrame(renderLoop)
   }
   renderLoop()
