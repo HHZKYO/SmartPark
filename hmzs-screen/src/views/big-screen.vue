@@ -469,7 +469,9 @@ setTimeout(async () => {
     // 抬杆
     await liftingRod(scene, newCarInfoObj, true)
     // 车辆移动到车位
-    car.movePoleToParkingSpace()
+    await car.movePoleToParkingSpace()
+    // 落杆
+    await liftingRod(scene, newCarInfoObj, false)
   }, 3000)
 
 
