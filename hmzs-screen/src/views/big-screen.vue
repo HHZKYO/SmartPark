@@ -457,6 +457,14 @@ setTimeout(async () => {
     await targetCar.moveParkingSpaceToPole()
     // 4.抬杆
     await liftingRod(scene, newCarInfoObj, true)
+    // 5.出场
+    await targetCar.movePoleToLeavePark()
+    // 6.把车辆模型删除，数据从 carList 里移除
+    scene.remove(targetCar.carModel)
+    const ind = carList.findIndex(carObj => carObj.carDataObj.id === newCarInfoObj.id)
+    carList.splice(ind, 1)
+    // 7.落杆
+    liftingRod(scene, newCarInfoObj, false)
   }, 3000)
 
   // 渲染循环
