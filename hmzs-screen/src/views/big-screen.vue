@@ -135,6 +135,7 @@ import { getBuildInfoAPI } from '../apis'
 import { useStore } from 'vuex'
 import { CameraBuildPositon, CameraParams } from '../const'
 import gsap from 'gsap'
+import { getCookie } from '@/utils/cookie.js'
 // 车辆信息标签组件
 import CarInfoVue from '../components/car-info.vue'
 import { EffectManager } from '../utils/EffectManager'
@@ -466,6 +467,27 @@ setTimeout(async () => {
     // 7.落杆
     liftingRod(scene, newCarInfoObj, false)
   }, 3000)
+
+
+// 链接服务器-获取实际场景数据，到 3D 场景中模拟效果
+function connect() {
+  // 因为现在大家都用的 demo 用户（数据共享）
+  // 每个人想要不同的车辆数据（管理进场出场） -> 每个人传递不同的类型 id （后台会根据不同模型 id 返回不同车辆数据）
+  const modelUuid = "0ec7e449-ee95-4f22-9ed4-9d4e96a50a02";
+  let url = `wss://api-hmzs.itheima.net/tj/websocket/${modelUuid}?accessToken=${getCookie()}`;
+  const socket = new WebSocket(url);
+  socket.onopen = () => {
+    console.log("WebSocket 连接已建立");
+  };
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    console.log("WebSocket 收到消息：", data);
+  };
+  socket.onclose = (event) => {
+    console.log("WebSocket 连接已关闭：", event);
+  };
+}
+connect();
 
   // 渲染循环
   function renderLoop() {
