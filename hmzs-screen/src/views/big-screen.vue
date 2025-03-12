@@ -398,37 +398,37 @@ setTimeout(async () => {
 
 
   // 目标：等待3秒钟，新进一辆入场的汽车
-  // setTimeout(async () => {
-  //   // 新车数据（将来是后台给我的，这里我先根据字段自己编一辆出来做效果）
-  //   const newCarInfoObj = {
-  //     areaId: 4,
-  //     areaName: "停车场1号",
-  //     car: {
-  //       carNumber: "宁B86H67",
-  //       carTypeName: "小型车",
-  //       chargeType: "temp",
-  //       chargeTypeName: "临时停车",
-  //       driverName: "党耗罩",
-  //       entranceTime: "2023-12-09 22:57:15",
-  //       modelIndex: 6,
-  //       parkingTime: "1分钟",
-  //       status: 1, // status 2: 已进场，1：待入场，0 待出场
-  //     },
-  //     parkNum: "停车位2号",
-  //     parkNumber: 2,
-  //   };
+  setTimeout(async () => {
+    // 新车数据（将来是后台给我的，这里我先根据字段自己编一辆出来做效果）
+    const newCarInfoObj = {
+      areaId: 4,
+      areaName: "停车场1号",
+      car: {
+        carNumber: "宁B86H67",
+        carTypeName: "小型车",
+        chargeType: "temp",
+        chargeTypeName: "临时停车",
+        driverName: "党耗罩",
+        entranceTime: "2023-12-09 22:57:15",
+        modelIndex: 6,
+        parkingTime: "1分钟",
+        status: 1, // status 2: 已进场，1：待入场，0 待出场
+      },
+      parkNum: "停车位2号",
+      parkNumber: 2,
+    };
 
-  //   const carModel = modelList[newCarInfoObj.car.modelIndex].clone();
-  //   const car = new Car(scene, camera, controls, carModel, newCarInfoObj, carInfo2d);
-  //   carList.push(car)
-  //   await car.moveEnterFormStartToPole()
-  //   // 抬杆
-  //   await liftingRod(scene, newCarInfoObj, true)
-  //   // 车辆移动到车位
-  //   await car.movePoleToParkingSpace()
-  //   // 落杆
-  //   await liftingRod(scene, newCarInfoObj, false)
-  // }, 3000)
+    const carModel = modelList[newCarInfoObj.car.modelIndex].clone();
+    const car = new Car(scene, camera, controls, carModel, newCarInfoObj, carInfo2d);
+    carList.push(car)
+    await car.moveEnterFormStartToPole()
+    // 抬杆
+    await liftingRod(scene, newCarInfoObj, true)
+    // 车辆移动到车位
+    await car.movePoleToParkingSpace()
+    // 落杆
+    await liftingRod(scene, newCarInfoObj, false)
+  }, 3000)
 
   // 目标：等待3秒钟，模拟一辆等待出场的汽车
   setTimeout(async () => {

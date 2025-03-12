@@ -94,7 +94,7 @@ Car.prototype.moveEnterFormStartToPole = function(){
 
   // 改装成借助渲染循环函数执行汽车运动
   let i = 0
-  const fn = function() {
+  const fn = () => {
     if (i === points.length -1) {
       EffectManager.getInstance().removeEffect(fn)
       resolve() // 动画执行完毕，兑现 resolve 状态让外面 await 放行往下走
@@ -105,7 +105,9 @@ Car.prototype.moveEnterFormStartToPole = function(){
     this.carModel.position.copy(position)
     this.carModel.lookAt(nextPos.x, nextPos.y, nextPos.z)
   }
-  EffectManager.getInstance().addEffect(fn.bind(this))
+  // 改变本次 fn 调用的 this 指向为你传入进入的参数值
+  // fn.bind(this) 会在原地返回一个全新的函数
+  EffectManager.getInstance().addEffect(fn)
 
   // let i = 0
   // const t = setInterval(() => {
