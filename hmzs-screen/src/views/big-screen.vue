@@ -184,6 +184,9 @@ setTimeout(async () => {
   // 初始化鼠标管理类（内部就在dom身上注册了鼠标移动和点击的事件监听）
   MouseHandler.getInstance().init(scene, camera, dom)
 
+  // 保存车场里现有的所有车辆的实例对象
+  const carList = []
+
   // 技巧：找摄像机最佳的起始位置
   // 给轨道控制器绑定 change 事件并打印摄像机当前的位置和观察的坐标点
   // controls.addEventListener('change', () => {
@@ -310,7 +313,8 @@ setTimeout(async () => {
   initObj.list.forEach(dataObj => {
     // 问题：如果多个车用同一个车辆模型对象，会共用一个
     // 解决：物体可以通过调用 clone 方法克隆一个完全一致的物体对象出来
-    new Car(scene, camera, controls, modelList[dataObj.car.modelIndex].clone(), dataObj, carInfo2d)
+    const car = new Car(scene, camera, controls, modelList[dataObj.car.modelIndex].clone(), dataObj, carInfo2d)
+    carList.push(car)
   })
 
 
@@ -394,37 +398,64 @@ setTimeout(async () => {
 
 
   // 目标：等待3秒钟，新进一辆入场的汽车
-  setTimeout(async () => {
-    // 新车数据（将来是后台给我的，这里我先根据字段自己编一辆出来做效果）
+  // setTimeout(async () => {
+  //   // 新车数据（将来是后台给我的，这里我先根据字段自己编一辆出来做效果）
+  //   const newCarInfoObj = {
+  //     areaId: 4,
+  //     areaName: "停车场1号",
+  //     car: {
+  //       carNumber: "宁B86H67",
+  //       carTypeName: "小型车",
+  //       chargeType: "temp",
+  //       chargeTypeName: "临时停车",
+  //       driverName: "党耗罩",
+  //       entranceTime: "2023-12-09 22:57:15",
+  //       modelIndex: 6,
+  //       parkingTime: "1分钟",
+  //       status: 1, // status 2: 已进场，1：待入场，0 待出场
+  //     },
+  //     parkNum: "停车位2号",
+  //     parkNumber: 2,
+  //   };
+
+  //   const carModel = modelList[newCarInfoObj.car.modelIndex].clone();
+  //   const car = new Car(scene, camera, controls, carModel, newCarInfoObj, carInfo2d);
+  //   carList.push(car)
+  //   await car.moveEnterFormStartToPole()
+  //   // 抬杆
+  //   await liftingRod(scene, newCarInfoObj, true)
+  //   // 车辆移动到车位
+  //   await car.movePoleToParkingSpace()
+  //   // 落杆
+  //   await liftingRod(scene, newCarInfoObj, false)
+  // }, 3000)
+
+  // 目标：等待3秒钟，模拟一辆等待出场的汽车
+  setTimeout(() => {
+    // 1.拿到要出场汽车的数据
     const newCarInfoObj = {
       areaId: 4,
-      areaName: "停车场1号",
+      areaName: "停车场1号", // 停车场区域名字
       car: {
-        carNumber: "宁B86H67",
+        carNumber: "赣H11J9F",
         carTypeName: "小型车",
         chargeType: "temp",
         chargeTypeName: "临时停车",
-        driverName: "党耗罩",
-        entranceTime: "2023-12-09 22:57:15",
-        modelIndex: 6,
-        parkingTime: "1分钟",
-        status: 1, // status 2: 已进场，1：待入场，0 待出场
+        driverName: "莫苛",
+        entranceTime: "2023-12-09 15:56:11",
+        modelIndex: 3, // 模型下标
+        parkingTime: "48分钟",
+        status: 0, // 2 已在场，1 待进场，0 待出场
       },
-      parkNum: "停车位2号",
-      parkNumber: 2,
+      id: 31, // 车辆 id
+      parkNum: "停车位1号", // 车辆所占车位名
+      parkNumber: 1, // 车辆所占车位数字
     };
-
-    const carModel = modelList[newCarInfoObj.car.modelIndex].clone();
-    const car = new Car(scene, camera, controls, carModel, newCarInfoObj, carInfo2d);
-    await car.moveEnterFormStartToPole()
-    // 抬杆
-    await liftingRod(scene, newCarInfoObj, true)
-    // 车辆移动到车位
-    await car.movePoleToParkingSpace()
-    // 落杆
-    await liftingRod(scene, newCarInfoObj, false)
+    // 2.根据数据找到 carList 现有的这辆车的实例对象
+    const targetCar = carList.find(carObj => carObj.carDataObj.id === newCarInfoObj.id)
+    // 3.让汽车模型出场到一体杆前
+    targetCar.moveParkingSpaceToPole()
   }, 3000)
-
 
   // 渲染循环
   function renderLoop() {

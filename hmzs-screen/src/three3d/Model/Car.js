@@ -178,3 +178,26 @@ Car.prototype.movePoleToParkingSpace = function(){
     EffectManager.getInstance().addEffect(fn)
   })
 }
+
+// 车位出场 -> 一体杆前
+Car.prototype.moveParkingSpaceToPole = function(){ 
+  // 找到路线物体
+  return new Promise((resolve) => {
+    const lx = this.scene.getObjectByName(`${this.carDataObj.parkNum}_出场路线`)
+    const points = getPoints(lx)
+
+    let i = 0
+    const fn = () => {
+      // 先进场
+      if (i < points.length - 1) {
+        this.carModel.position.copy(points[i++])
+        this.carModel.lookAt(points[i])
+      } else {
+        // 动画完成
+        resolve()
+        EffectManager.getInstance().removeEffect(fn)
+      }
+    }
+    EffectManager.getInstance().addEffect(fn)
+  })
+}
