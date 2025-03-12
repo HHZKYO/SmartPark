@@ -140,19 +140,7 @@ import CarInfoVue from '../components/car-info.vue'
 import { EffectManager } from '../utils/EffectManager'
 const store = useStore()
 
-// 摄像机补间动画移动
-function cameraMove(camera, controls, position, targetPosition) {
-  gsap.to(camera.position, {
-    x: position.x,
-    y: position.y,
-    z: position.z,
-    duration: 1.0,
-    onUpdate() {
-      controls.target = targetPosition;
-      controls.update();
-    },
-  });
-}
+import { cameraMove } from '@/utils/helper.js'
 // 抬杆/落杆方法
 function liftingRod(scene, carDataObj, isOpen) {
   return new Promise((resolve) => {
@@ -322,44 +310,7 @@ setTimeout(async () => {
   initObj.list.forEach(dataObj => {
     // 问题：如果多个车用同一个车辆模型对象，会共用一个
     // 解决：物体可以通过调用 clone 方法克隆一个完全一致的物体对象出来
-    const car = new Car(scene, camera, controls, modelList[dataObj.car.modelIndex].clone(), dataObj)
-    MouseHandler.getInstance().addClickMesh(car.carModel, () => {
-      carInfo2d.visible = true
-      carInfo2d.position.copy(car.carModel.position)
-      console.log(car.carDataObj.car)
-      store.commit('car/setCarInfo', car.carDataObj)
-
-      // 调整摄像机位置
-      // 视角切换
-      // 切换摄像机视角
-      // status 2: 已进场，1：待入场，0 待出场
-      if (car.carDataObj.parkNumber % 2 === 0) {
-        // 这里的汽车模型是世界坐标系，相对于世界坐标轴进行位移
-        // 下排车位
-        cameraMove(
-          camera,
-          controls,
-          new THREE.Vector3(
-            car.carModel.position.x - 9,
-            car.carModel.position.y + 8,
-            car.carModel.position.z - 16
-          ),
-          car.carModel.position
-        );
-      } else {
-        // 上排车位
-        cameraMove(
-          camera,
-          controls,
-          new THREE.Vector3(
-            car.carModel.position.x + 9,
-            car.carModel.position.y + 8,
-            car.carModel.position.z + 16
-          ),
-          car.carModel.position
-        );
-      }
-    })
+    new Car(scene, camera, controls, modelList[dataObj.car.modelIndex].clone(), dataObj, carInfo2d)
   })
 
 
@@ -464,7 +415,7 @@ setTimeout(async () => {
     };
 
     const carModel = modelList[newCarInfoObj.car.modelIndex].clone();
-    const car = new Car(scene, camera, controls, carModel, newCarInfoObj);
+    const car = new Car(scene, camera, controls, carModel, newCarInfoObj, carInfo2d);
     await car.moveEnterFormStartToPole()
     // 抬杆
     await liftingRod(scene, newCarInfoObj, true)

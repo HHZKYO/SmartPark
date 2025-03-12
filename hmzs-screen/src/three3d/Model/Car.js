@@ -1,18 +1,25 @@
 // import { getPointsByLine } from '@/utils/points'
 import { getPoints } from '@/utils/points'
 import { EffectManager } from '../../utils/EffectManager';
+import { MouseHandler } from '../../utils/MouseHandler';
+import store from '@/store'
+import { cameraMove } from '../../utils/helper';
+import * as THREE from 'three'
 // import { Vector3 } from 'three';
 
 // 车辆类
 // 场景，摄像机，控制器，车辆模型，车辆数据
-export function Car(scene, camera, controls, carModel, carDataObj) {
+export function Car(scene, camera, controls, carModel, carDataObj, carInfo2d) {
   this.scene = scene;
   this.camera = camera;
   this.controls = controls;
   this.carModel = carModel;
   this.carDataObj = carDataObj;
+  this.carInfo2d = carInfo2d
   this.scene.add(this.carModel)
   this.carModel.scale.set(0.8, 0.8, 0.8)
+
+  this.bindClick() // 在new car 的同时给这辆车订阅点击事件
 
   // 根据数据关联的停车位，找到停车位物体
   const parkingSpace = this.scene.getObjectByName(this.carDataObj.parkNum)
@@ -30,6 +37,48 @@ export function Car(scene, camera, controls, carModel, carDataObj) {
     // 下排汽车
     carModel.rotation.y = 0.1666 * Math.PI
   }
+}
+
+
+Car.prototype.bindClick = function() {
+  // 车辆订阅点击事件
+  MouseHandler.getInstance().addClickMesh(this.carModel, () => {
+    this.carInfo2d.visible = true
+    this.carInfo2d.position.copy(this.carModel.position)
+    console.log(this.carDataObj.car)
+    store.commit('car/setCarInfo', this.carDataObj)
+
+    // 调整摄像机位置
+    // 视角切换
+    // 切换摄像机视角
+    // status 2: 已进场，1：待入场，0 待出场
+    if (this.carDataObj.parkNumber % 2 === 0) {
+      // 这里的汽车模型是世界坐标系，相对于世界坐标轴进行位移
+      // 下排车位
+      cameraMove(
+        this.camera,
+        this.controls,
+        new THREE.Vector3(
+          this.carModel.position.x - 9,
+          this.carModel.position.y + 8,
+          this.carModel.position.z - 16
+        ),
+        this.carModel.position
+      );
+    } else {
+      // 上排车位
+      cameraMove(
+        this.camera,
+        this.controls,
+        new THREE.Vector3(
+          this.carModel.position.x + 9,
+          this.carModel.position.y + 8,
+          this.carModel.position.z + 16
+        ),
+        this.carModel.position
+      );
+    }
+  })
 }
 
 // 创建入场车辆->运动到进场一体杆
