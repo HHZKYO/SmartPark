@@ -431,7 +431,7 @@ setTimeout(async () => {
   // }, 3000)
 
   // 目标：等待3秒钟，模拟一辆等待出场的汽车
-  setTimeout(() => {
+  setTimeout(async () => {
     // 1.拿到要出场汽车的数据
     const newCarInfoObj = {
       areaId: 4,
@@ -454,7 +454,9 @@ setTimeout(async () => {
     // 2.根据数据找到 carList 现有的这辆车的实例对象
     const targetCar = carList.find(carObj => carObj.carDataObj.id === newCarInfoObj.id)
     // 3.让汽车模型出场到一体杆前
-    targetCar.moveParkingSpaceToPole()
+    await targetCar.moveParkingSpaceToPole()
+    // 4.抬杆
+    await liftingRod(scene, newCarInfoObj, true)
   }, 3000)
 
   // 渲染循环
