@@ -1,4 +1,7 @@
 // 目标：上线代码的console.log 全部失效，但开发环境有效
+// 错误点1：.env 环境变量文件里变量名自定义的都要以 VUE_APP_ 开头
+// 错误点2：环境变量和值之间的 = 两边必须有空格
+// 错误点3：环境相关的东西发生改变，vuecli 脚手架需要重新运行/打包才能生效
 if (process.env.NODE_ENV === 'production') {
   console.log = function() {}
   console.error = function() {}
