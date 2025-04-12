@@ -1,3 +1,18 @@
+// 目标：上线代码的console.log 全部失效，但开发环境有效
+if (process.env.NODE_ENV === 'production') {
+  console.log = function () {}
+  console.error = function () {}
+  console.warn = function () {}
+  console.info = function () {}
+  console.debug = function () {}
+  console.trace = function () {}
+  console.dir = function () {}
+  console.dirxml = function () {}
+  console.group = function () {}
+  console.groupEnd = function () {}
+}
+
+
 import Vue from 'vue'
 import 'normalize.css/normalize.css' // 重置样式
 import ElementUI from 'element-ui'
