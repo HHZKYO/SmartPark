@@ -21,6 +21,9 @@ import '@/directives'
 import AuthDir from './components/AuthDir.vue'
 Vue.component('AuthBtn', AuthDir)
 
+// 注册乾坤服务
+import '@/registerMicroApp'
+
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false

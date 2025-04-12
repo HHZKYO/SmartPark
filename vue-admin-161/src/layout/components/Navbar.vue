@@ -3,6 +3,11 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
+          <el-button
+            size="small"
+            type="primary"
+            @click="$router.push('/big-screen')"
+          >可视化大屏</el-button>
           <!-- 用户名称 -->
           <span class="name">{{ $store.state.user.profile.name }}</span>
         </div>
@@ -122,6 +127,7 @@ export default {
         .name{
           font-weight: 600;
           cursor: pointer;
+          padding-left: 10px;
         }
       }
     }
