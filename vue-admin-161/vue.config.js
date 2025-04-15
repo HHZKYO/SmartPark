@@ -8,7 +8,10 @@ function resolve(dir) {
 const port = process.env.port || 8081 // dev port
 
 module.exports = {
-  publicPath: '/',
+  // publicPath: 影响打包输出 index.html 引入其他打包资源文件的公共前缀地址
+  // 开发环境： '/'
+  // 生产环境： './'
+  publicPath: process.env.NODE_ENV === 'development' ? '/' : './',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
