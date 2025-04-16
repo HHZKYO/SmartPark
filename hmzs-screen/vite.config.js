@@ -6,6 +6,7 @@ import qiankun from 'vite-plugin-qiankun'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: process.env.NODE_ENV === 'development' ? '/' : '/',
   plugins: [
     vue(),
     // 这里的名称要和主应用改造是配置项中的name保持一致

@@ -2,8 +2,9 @@ import axios from 'axios'
 import { getCookie } from './cookie'
 // import { Message } from 'element-ui'
 // import router from '@/router'
+console.log(import.meta.env)
 const service = axios.create({
-  baseURL: 'https://api-hmzs.itheima.net/v1',
+  baseURL: import.meta.env.MODE === 'development' ? 'https://api-hmzs.itheima.net/v1' : 'https://api-hmzs.itheima.net/v1',
   timeout: 5000 // request timeout
 })
 
