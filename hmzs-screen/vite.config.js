@@ -6,7 +6,8 @@ import qiankun from 'vite-plugin-qiankun'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.NODE_ENV === 'development' ? '/' : '/',
+  // 等价于 publicPath （vite 打包这个 vue 项目时 html 引入其他资源的前缀公共地址）- 默认值为 /
+  base: process.env.NODE_ENV === 'development' ? '/' : 'http://localhost:8089/',
   plugins: [
     vue(),
     // 这里的名称要和主应用改造是配置项中的name保持一致
